@@ -83,6 +83,7 @@ public class GenericTokenParser {
                     builder.append(src, start, src.length - start);
                     offset = src.length;
                 } else {
+                    // 将 expression 提交给 handler 处理 ，并将处理结果添加到 builder 中
                     builder.append(handler.handleToken(expression.toString()));
                     offset = end + closeToken.length();
                 }

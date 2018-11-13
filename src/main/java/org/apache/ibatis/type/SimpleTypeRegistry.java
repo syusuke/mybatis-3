@@ -42,7 +42,7 @@ public class SimpleTypeRegistry {
     SIMPLE_TYPE_SET.add(Class.class);
     SIMPLE_TYPE_SET.add(BigInteger.class);
     SIMPLE_TYPE_SET.add(BigDecimal.class);
-  }
+}
 
   private SimpleTypeRegistry() {
     // Prevent Instantiation
