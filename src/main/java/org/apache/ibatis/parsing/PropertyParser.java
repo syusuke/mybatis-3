@@ -50,7 +50,7 @@ public class PropertyParser {
      */
     private static final String ENABLE_DEFAULT_VALUE = "false";
     /**
-     * 默认分隔符
+     * 默认分隔符,${username:kerry},找不到时,默认kerry
      */
     private static final String DEFAULT_VALUE_SEPARATOR = ":";
 
@@ -68,8 +68,22 @@ public class PropertyParser {
     }
 
     private static class VariableTokenHandler implements TokenHandler {
+        /**
+         * <pre>
+         *     <properties>
+         *         ....
+         *     </properties>
+         * </pre>
+         * 下的一些Key,Value
+         */
         private final Properties variables;
+        /**
+         * 占位符中支持默认值功能
+         */
         private final boolean enableDefaultValue;
+        /**
+         * 占位符与默认分割符之间的分割符
+         */
         private final String defaultValueSeparator;
 
         private VariableTokenHandler(Properties variables) {
@@ -87,13 +101,17 @@ public class PropertyParser {
             if (variables != null) {
                 String key = content;
                 if (enableDefaultValue) {
+
+                    //${username:kerry},用户名,默认kerry
+
                     // 分隔符的开始
                     final int separatorIndex = content.indexOf(defaultValueSeparator);
                     // 有默认值的情况
                     String defaultValue = null;
                     if (separatorIndex >= 0) {
-                        // 找到了
+                        // 找到 username
                         key = content.substring(0, separatorIndex);
+                        // kerry
                         defaultValue = content.substring(separatorIndex + defaultValueSeparator.length());
                     }
                     if (defaultValue != null) {
@@ -104,6 +122,7 @@ public class PropertyParser {
                     return variables.getProperty(key);
                 }
             }
+            //variables 集合为空
             return "${" + content + "}";
         }
     }

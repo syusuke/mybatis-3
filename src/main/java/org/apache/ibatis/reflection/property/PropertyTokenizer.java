@@ -46,7 +46,7 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
         indexedName = name;
         delim = name.indexOf('[');
         if (delim > -1) {
-            // #1 order[0] => order
+            // #1 order[0] => 0
             index = name.substring(delim + 1, name.length() - 1);
             name = name.substring(0, delim);
         }

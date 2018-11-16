@@ -21,11 +21,11 @@ package org.apache.ibatis.parsing;
 public class GenericTokenParser {
 
     /**
-     * 开始Token
+     * 属性占位符开始Token,默认 ${
      */
     private final String openToken;
     /**
-     * 结束Token
+     * 属性占位符结束Token,默认 }
      */
     private final String closeToken;
     private final TokenHandler handler;

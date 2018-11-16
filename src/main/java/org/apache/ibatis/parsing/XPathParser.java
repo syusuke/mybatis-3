@@ -39,10 +39,25 @@ import java.util.Properties;
  */
 public class XPathParser {
 
+    /**
+     * DOM对象
+     */
     private final Document document;
+    /**
+     * 验证
+     */
     private boolean validation;
+    /**
+     * 用于加载本地DTD文件
+     */
     private EntityResolver entityResolver;
+    /**
+     * mybatis-config.xml 中的 <properities></properities> 中定义的属性
+     */
     private Properties variables;
+    /**
+     * XPath对象
+     */
     private XPath xpath;
 
     public XPathParser(String xml) {

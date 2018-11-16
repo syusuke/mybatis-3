@@ -28,7 +28,9 @@ public class TypeParameterResolver {
      * they will be resolved to the actual runtime {@link Type}s.
      */
     public static Type resolveFieldType(Field field, Type srcType) {
+        // 获取字段的声明类型
         Type fieldType = field.getGenericType();
+        // 获取字段定义所在的类的Class 对象
         Class<?> declaringClass = field.getDeclaringClass();
         return resolveType(fieldType, srcType, declaringClass);
     }
@@ -64,7 +66,7 @@ public class TypeParameterResolver {
     }
 
     /**
-     * @param type           当前方法返回类型
+     * @param type           声明类型
      * @param srcType        原始类型
      * @param declaringClass 从方法中获取的类型
      * @return
@@ -80,6 +82,7 @@ public class TypeParameterResolver {
             // 一种元素类型是参数化类型或者类型变量的数组类型
             return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
         } else {
+            // Class 类型
             return type;
         }
     }

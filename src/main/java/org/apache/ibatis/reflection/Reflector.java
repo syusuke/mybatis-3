@@ -44,7 +44,13 @@ public class Reflector {
      */
     private final Map<String, Invoker> setMethods = new HashMap<>();
     private final Map<String, Invoker> getMethods = new HashMap<>();
+    /**
+     * setter 方法参数类型
+     */
     private final Map<String, Class<?>> setTypes = new HashMap<>();
+    /**
+     * getter 方法返回值
+     */
     private final Map<String, Class<?>> getTypes = new HashMap<>();
     private Constructor<?> defaultConstructor;
 
