@@ -49,6 +49,9 @@ import java.util.Properties;
  */
 public class XMLConfigBuilder extends BaseBuilder {
 
+    /**
+     * 是否解析过 mybatis-config.xml 配置文件
+     */
     private boolean parsed;
     private final XPathParser parser;
     private String environment;
@@ -116,6 +119,7 @@ public class XMLConfigBuilder extends BaseBuilder {
             settingsElement(settings);
             // read it after objectFactory and objectWrapperFactory issue #631
             environmentsElement(root.evalNode("environments"));
+            // <databaseIdProvider/> My Batis 会根据 databaseld 选择合适的SQL 进行执行,Mybatis 不能自动区分数据库类型
             databaseIdProviderElement(root.evalNode("databaseIdProvider"));
             typeHandlerElement(root.evalNode("typeHandlers"));
             mapperElement(root.evalNode("mappers"));
@@ -192,10 +196,14 @@ public class XMLConfigBuilder extends BaseBuilder {
     private void pluginElement(XNode parent) throws Exception {
         if (parent != null) {
             for (XNode child : parent.getChildren()) {
+                // <plugin interceptor=""/>
                 String interceptor = child.getStringAttribute("interceptor");
                 Properties properties = child.getChildrenAsProperties();
+                // 创建plugin 实例
                 Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
+                // 设置属性
                 interceptorInstance.setProperties(properties);
+                // 添加
                 configuration.addInterceptor(interceptorInstance);
             }
         }
@@ -314,6 +322,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         if (context != null) {
             String type = context.getStringAttribute("type");
             // awful patch to keep backward compatibility
+            // 兼容性
             if ("VENDOR".equals(type)) {
                 type = "DB_VENDOR";
             }

@@ -30,6 +30,7 @@ import java.util.Properties;
  *
  * @author Clinton Begin
  */
+@SuppressWarnings("Duplicates")
 public class SqlSessionFactoryBuilder {
 
     public SqlSessionFactory build(Reader reader) {
@@ -54,7 +55,10 @@ public class SqlSessionFactoryBuilder {
      */
     public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
         try {
+            //读取配置文件
             XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);
+            // parser.parse() 解析XML文件
+            // create DefaultSqlSessionFactory object
             return build(parser.parse());
         } catch (Exception e) {
             throw ExceptionFactory.wrapException("Error building SqlSession.", e);
