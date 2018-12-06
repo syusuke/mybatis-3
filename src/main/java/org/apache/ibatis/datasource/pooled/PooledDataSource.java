@@ -37,6 +37,8 @@ import java.util.logging.Logger;
  * <p>
  * <p>
  * 事实上,我们基本不用Mybatis自带的连接池,都是用三方的连接池的.
+ * <p>
+ * 不会直接管理 {@link java.sql.Connection} 而是管理 {@link PooledConnection}
  */
 public class PooledDataSource implements DataSource {
 

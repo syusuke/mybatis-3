@@ -32,8 +32,17 @@ import java.util.logging.Logger;
  */
 public class UnpooledDataSource implements DataSource {
 
+    /**
+     * classLoader
+     */
     private ClassLoader driverClassLoader;
+    /**
+     * 连接驱动相关属性
+     */
     private Properties driverProperties;
+    /**
+     * Cache
+     */
     private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
 
     private String driver;
@@ -42,12 +51,16 @@ public class UnpooledDataSource implements DataSource {
     private String password;
 
     private Boolean autoCommit;
+    /**
+     * 事务隔离级别
+     */
     private Integer defaultTransactionIsolationLevel;
 
     static {
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
+            // registered
             registeredDrivers.put(driver.getClass().getName(), driver);
         }
     }
@@ -193,15 +206,22 @@ public class UnpooledDataSource implements DataSource {
 
     private Connection doGetConnection(Properties properties) throws SQLException {
         initializeDriver();
+        // 连接
         Connection connection = DriverManager.getConnection(url, properties);
         configureConnection(connection);
         return connection;
     }
 
+    /**
+     * 初始化驱动
+     *
+     * @throws SQLException
+     */
     private synchronized void initializeDriver() throws SQLException {
         if (!registeredDrivers.containsKey(driver)) {
             Class<?> driverType;
             try {
+                // load jdbc driver
                 if (driverClassLoader != null) {
                     driverType = Class.forName(driver, true, driverClassLoader);
                 } else {

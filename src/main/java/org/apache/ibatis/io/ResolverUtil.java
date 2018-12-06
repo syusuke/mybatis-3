@@ -94,6 +94,7 @@ public class ResolverUtil<T> {
          */
         @Override
         public boolean matches(Class<?> type) {
+            // 子类
             return type != null && parent.isAssignableFrom(type);
         }
 

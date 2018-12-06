@@ -36,9 +36,12 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BlockingCache implements Cache {
 
     /**
-     * 阻塞等待时间
+     * 阻塞等待时间; MILLISECONDS
      */
     private long timeout;
+    /**
+     * 被装饰的底层Cache对象
+     */
     private final Cache delegate;
     private final ConcurrentHashMap<Object, ReentrantLock> locks;
 
@@ -62,6 +65,7 @@ public class BlockingCache implements Cache {
         try {
             delegate.putObject(key, value);
         } finally {
+            // 这里释放锁
             releaseLock(key);
         }
     }
@@ -116,6 +120,7 @@ public class BlockingCache implements Cache {
     private void acquireLock(Object key) {
         Lock lock = getLockForKey(key);
         if (timeout > 0) {
+            // 阻塞超时的
             try {
                 boolean acquired = lock.tryLock(timeout, TimeUnit.MILLISECONDS);
                 if (!acquired) {

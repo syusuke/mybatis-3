@@ -155,6 +155,7 @@ public class TypeParameterResolver {
 
     private static Type resolveTypeVar(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass) {
         Type result = null;
+        // 原始类型
         Class<?> clazz = null;
         if (srcType instanceof Class) {
             clazz = (Class<?>) srcType;
@@ -177,6 +178,7 @@ public class TypeParameterResolver {
 
         // 泛型的super类
         Type superclass = clazz.getGenericSuperclass();
+        // 通过扫描父类进行后续解析，这是递归的入口
         result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superclass);
         if (result != null) {
             return result;

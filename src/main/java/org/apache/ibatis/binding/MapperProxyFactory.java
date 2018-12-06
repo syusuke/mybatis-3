@@ -42,12 +42,19 @@ public class MapperProxyFactory<T> {
         return methodCache;
     }
 
+    /**
+     * jdk 动态代理
+     *
+     * @param mapperProxy
+     * @return
+     */
     @SuppressWarnings("unchecked")
     protected T newInstance(MapperProxy<T> mapperProxy) {
         return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[]{mapperInterface}, mapperProxy);
     }
 
     public T newInstance(SqlSession sqlSession) {
+        // MapperProxy implentment InvocationHandler
         final MapperProxy<T> mapperProxy = new MapperProxy<>(sqlSession, mapperInterface, methodCache);
         return newInstance(mapperProxy);
     }

@@ -27,12 +27,14 @@ public interface ObjectFactory {
 
     /**
      * Sets configuration properties.
+     *
      * @param properties configuration properties
      */
     void setProperties(Properties properties);
 
     /**
-     * Creates a new object with default constructor.
+     * Creates a new object with default constructor.(默认构造函数)
+     *
      * @param type Object type
      * @return
      */
@@ -40,9 +42,12 @@ public interface ObjectFactory {
 
     /**
      * Creates a new object with the specified constructor and params.
-     * @param type Object type
+     * <p>
+     * 根据参数列表，从指定类型中选择合适的构造器创建对象
+     *
+     * @param type                Object type
      * @param constructorArgTypes Constructor argument types
-     * @param constructorArgs Constructor argument values
+     * @param constructorArgs     Constructor argument values
      * @return
      */
     <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);

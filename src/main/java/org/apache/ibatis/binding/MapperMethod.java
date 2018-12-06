@@ -131,6 +131,8 @@ public class MapperMethod {
         Object param = method.convertArgsToSqlCommandParam(args);
         if (method.hasRowBounds()) {
             RowBounds rowBounds = method.extractRowBounds(args);
+            // 获取Row Bounds 对象，根据MethodSignature.rowBoundsindex 字段指定位置，从args 数组中
+            //  查找。获取ResultHandler 对象的原理相同
             sqlSession.select(command.getName(), param, rowBounds, method.extractResultHandler(args));
         } else {
             sqlSession.select(command.getName(), param, method.extractResultHandler(args));
@@ -170,8 +172,10 @@ public class MapperMethod {
     }
 
     private <E> Object convertToDeclaredCollection(Configuration config, List<E> list) {
+        // 通过反射的方式创建集合对象
         Object collection = config.getObjectFactory().create(method.getReturnType());
         MetaObject metaObject = config.newMetaObject(collection);
+        // 实际是调用 Collection.addAll()
         metaObject.addAll(list);
         return collection;
     }
@@ -181,11 +185,13 @@ public class MapperMethod {
         Class<?> arrayComponentType = method.getReturnType().getComponentType();
         Object array = Array.newInstance(arrayComponentType, list.size());
         if (arrayComponentType.isPrimitive()) {
+            // 原始数据类型
             for (int i = 0; i < list.size(); i++) {
                 Array.set(array, i, list.get(i));
             }
             return array;
         } else {
+            // Object类型
             return list.toArray((E[]) array);
         }
     }

@@ -44,6 +44,14 @@ public class MapperRegistry {
         this.config = config;
     }
 
+    /**
+     * 使用JDK动态代理创建
+     *
+     * @param type
+     * @param sqlSession
+     * @param <T>
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
         final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);

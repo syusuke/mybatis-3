@@ -24,6 +24,8 @@ import java.util.*;
 
 /**
  * @author Clinton Begin
+ * <p>
+ * 可以在 mybatis-config.xml 自定义 ObjectFactory 为增强扩展功能点
  */
 public class DefaultObjectFactory implements ObjectFactory, Serializable {
 

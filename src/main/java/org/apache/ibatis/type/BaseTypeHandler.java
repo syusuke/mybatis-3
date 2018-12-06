@@ -54,6 +54,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     @Override
     public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException {
         if (parameter == null) {
+            // 参数为null
             if (jdbcType == null) {
                 throw new TypeException("JDBC requires that the JdbcType must be specified for all nullable parameters.");
             }
@@ -65,6 +66,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
                         "Cause: " + e, e);
             }
         } else {
+            // 参数不为空时,实现不同
             try {
                 setNonNullParameter(ps, i, parameter, jdbcType);
             } catch (Exception e) {
@@ -102,12 +104,45 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
         }
     }
 
+    /**
+     * 设置参数/子类实现
+     *
+     * @param ps
+     * @param i
+     * @param parameter
+     * @param jdbcType
+     * @throws SQLException
+     */
     public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
+    /**
+     * 获取结果
+     *
+     * @param rs
+     * @param columnName
+     * @return
+     * @throws SQLException
+     */
     public abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
 
+    /**
+     * 获取结果
+     *
+     * @param rs
+     * @param columnIndex
+     * @return
+     * @throws SQLException
+     */
     public abstract T getNullableResult(ResultSet rs, int columnIndex) throws SQLException;
 
+    /**
+     * 获取结果
+     *
+     * @param cs
+     * @param columnIndex
+     * @return
+     * @throws SQLException
+     */
     public abstract T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException;
 
 }

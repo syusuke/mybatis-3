@@ -105,11 +105,14 @@ public class Reflector {
                 addMethodConflict(conflictingGetters, name, method);
             }
         }
+
         resolveGetterConflicts(conflictingGetters);
     }
 
     /**
      * 处理get方法冲突的办法,最后一个属性，只保留一个对应的方法。代码如下
+     * <p>
+     * 子类覆盖父类且返回值发生变化了,处理冲突方法
      *
      * @param conflictingGetters
      */
@@ -117,25 +120,31 @@ public class Reflector {
         for (Entry<String, List<Method>> entry : conflictingGetters.entrySet()) {
             Method winner = null;
             String propName = entry.getKey();
+            // list 方法去重
             for (Method candidate : entry.getValue()) {
                 if (winner == null) {
+                    // 取第一个
                     winner = candidate;
                     continue;
                 }
+                // 第一个
                 Class<?> winnerType = winner.getReturnType();
+                // 下一个(exclude first)
                 Class<?> candidateType = candidate.getReturnType();
                 if (candidateType.equals(winnerType)) {
+                    // 同个类型,但是返回值不能是 boolean ,应该是因为数据库不能有Boolean类型的
                     if (!boolean.class.equals(candidateType)) {
                         throw new ReflectionException(
                                 "Illegal overloaded getter method with ambiguous type for property "
                                         + propName + " in class " + winner.getDeclaringClass()
                                         + ". This breaks the JavaBeans specification and can cause unpredictable results.");
                     } else if (candidate.getName().startsWith("is")) {
+                        // 优先 isXXX 开始的
                         winner = candidate;
                     }
                 } else if (candidateType.isAssignableFrom(winnerType)) {
                     // OK getter type is descendant
-                    // 不符合选择子类
+                    // 当前返回值是最适合的,所以什么也不做
                 } else if (winnerType.isAssignableFrom(candidateType)) {
                     // 符合选择子类。因为子类可以修改放大返回值。例如，父类的一个方法的返回值为 List ，子类对该方法的返回值可以覆写为 ArrayList 。
                     winner = candidate;
