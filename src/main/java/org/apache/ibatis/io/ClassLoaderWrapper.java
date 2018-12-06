@@ -25,7 +25,13 @@ import java.net.URL;
  */
 public class ClassLoaderWrapper {
 
+    /**
+     * 应用指定的默认ClassLoader
+     */
     ClassLoader defaultClassLoader;
+    /**
+     * 系统ClassLoader
+     */
     ClassLoader systemClassLoader;
 
     ClassLoaderWrapper() {
@@ -168,6 +174,8 @@ public class ClassLoaderWrapper {
     }
 
     /**
+     * 加载资源时,保证一个资源只加载一次.
+     * <p>
      * Attempt to load a class from a group of classloaders
      *
      * @param name        - the class to load
@@ -178,34 +186,32 @@ public class ClassLoaderWrapper {
     Class<?> classForName(String name, ClassLoader[] classLoader) throws ClassNotFoundException {
 
         for (ClassLoader cl : classLoader) {
-
             if (null != cl) {
-
                 try {
-
                     Class<?> c = Class.forName(name, true, cl);
-
                     if (null != c) {
+                        // 从ClassLoader中找,找到就返回...
                         return c;
                     }
 
                 } catch (ClassNotFoundException e) {
                     // we'll ignore this until all classloaders fail to locate the class
                 }
-
             }
-
         }
-
         throw new ClassNotFoundException("Cannot find class: " + name);
-
     }
 
     ClassLoader[] getClassLoaders(ClassLoader classLoader) {
+        // 顺序很重要
         return new ClassLoader[]{
+                // 参数指令ClassLoader
                 classLoader,
+                // 应用指定ClassLoader
                 defaultClassLoader,
+                // 当前线程ClassLoader
                 Thread.currentThread().getContextClassLoader(),
+                // 当前类ClassLoader
                 getClass().getClassLoader(),
                 systemClassLoader};
     }

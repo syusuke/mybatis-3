@@ -21,6 +21,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * @author Clinton Begin
+ * <p>
+ * 同步Cache
  */
 public class SynchronizedCache implements Cache {
 

@@ -138,6 +138,7 @@ public class ParamNameResolver {
             final Map<String, Object> param = new ParamMap<>();
             int i = 0;
             for (Map.Entry<Integer, String> entry : names.entrySet()) {
+                // 参数名=>参数变量 对应
                 param.put(entry.getValue(), args[entry.getKey()]);
                 // add generic param names (param1, param2, ...)
                 final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);

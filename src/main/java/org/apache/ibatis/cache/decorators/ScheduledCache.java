@@ -25,7 +25,13 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class ScheduledCache implements Cache {
 
     private final Cache delegate;
+    /**
+     * 清理间隔,默认1小时
+     */
     protected long clearInterval;
+    /**
+     * 上一次清理的时间
+     */
     protected long lastClear;
 
     public ScheduledCache(Cache delegate) {
@@ -95,6 +101,8 @@ public class ScheduledCache implements Cache {
 
     /**
      * 取的时候才去删除
+     * <p>
+     * 惰性删除
      *
      * @return
      */

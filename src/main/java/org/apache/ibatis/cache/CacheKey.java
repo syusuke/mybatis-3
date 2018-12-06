@@ -23,6 +23,8 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ * <p>
+ * MyBatis 中使用动态SQL,所在KEY不能用简单的String来代替
  */
 public class CacheKey implements Cloneable, Serializable {
 
@@ -33,8 +35,15 @@ public class CacheKey implements Cloneable, Serializable {
     private static final int DEFAULT_MULTIPLYER = 37;
     private static final int DEFAULT_HASHCODE = 17;
 
+    /**
+     * 参与计算HashCode,默认 {@link CacheKey#DEFAULT_MULTIPLYER}
+     */
     private final int multiplier;
+    /**
+     * 默认HashCode,默认 {@link CacheKey#DEFAULT_HASHCODE}
+     */
     private int hashcode;
+
     private long checksum;
     private int count;
     // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.

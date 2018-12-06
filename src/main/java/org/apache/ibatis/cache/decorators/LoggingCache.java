@@ -23,6 +23,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * @author Clinton Begin
+ * <p>
+ * <p>
+ * 统计Cache的命中概率
  */
 public class LoggingCache implements Cache {
 
