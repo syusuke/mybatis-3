@@ -53,7 +53,13 @@ import java.util.*;
  */
 public class MapperAnnotationBuilder {
 
+    /**
+     * CURD 注解
+     */
     private static final Set<Class<? extends Annotation>> SQL_ANNOTATION_TYPES = new HashSet<>();
+    /**
+     * Provider
+     */
     private static final Set<Class<? extends Annotation>> SQL_PROVIDER_ANNOTATION_TYPES = new HashSet<>();
 
     private final Configuration configuration;
@@ -73,6 +79,7 @@ public class MapperAnnotationBuilder {
     }
 
     public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
+        // class 的猜测来源....
         String resource = type.getName().replace('.', '/') + ".java (best guess)";
         this.assistant = new MapperBuilderAssistant(configuration, resource);
         this.configuration = configuration;

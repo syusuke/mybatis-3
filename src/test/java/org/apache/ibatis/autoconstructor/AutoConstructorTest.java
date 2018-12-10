@@ -86,6 +86,31 @@ public class AutoConstructorTest {
         }
     }
 
+    @Test
+    public void findById() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+            final List<AnnotatedSubject> allSubject = mapper.findById(1);
+
+            for (AnnotatedSubject subject : allSubject) {
+                System.out.println(subject);
+            }
+        }
+    }
+
+    @Test
+    public void findMoreParam() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+            final List<AnnotatedSubject> allSubject = mapper.findMoreParam2(1, "a");
+
+            for (AnnotatedSubject subject : allSubject) {
+                System.out.println(subject);
+            }
+        }
+    }
+
+
     private void verifySubjects(final List<?> subjects) {
         assertNotNull(subjects);
         Assertions.assertThat(subjects.size()).isEqualTo(3);
