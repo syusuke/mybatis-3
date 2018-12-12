@@ -37,6 +37,9 @@ public interface AutoConstructorMapper {
     @Select("SELECT * FROM extensive_subject")
     List<ExtensiveSubject> getExtensiveSubject();
 
+    List<AnnotatedSubject> getAnnotatedSubjectsInXml();
+
+
     /**
      * SQL provider 测试
      *

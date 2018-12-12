@@ -63,6 +63,17 @@ public class AutoConstructorTest {
     }
 
     @Test
+    public void getAnnotatedSubjectsInXml(){
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+            final List<AnnotatedSubject> annotatedSubjectsInXml = mapper.getAnnotatedSubjectsInXml();
+            for (AnnotatedSubject subject : annotatedSubjectsInXml) {
+                System.out.println(subject);
+            }
+        }
+    }
+
+    @Test
     public void annotatedSubject() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
