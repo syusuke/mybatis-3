@@ -91,7 +91,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
 
     /**
-     * 解析XML,生成 Configuration
+     * 解析XML,生成 Configuration,mybatis-config.xml
      *
      * @return
      */

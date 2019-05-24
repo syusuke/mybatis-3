@@ -113,6 +113,9 @@ public class Reflector {
      * 处理get方法冲突的办法,最后一个属性，只保留一个对应的方法。代码如下
      * <p>
      * 子类覆盖父类且返回值发生变化了,处理冲突方法
+     * <p>
+     * key: 为属性名
+     * value: 同一个属性名对应可能有多个方法
      *
      * @param conflictingGetters
      */
@@ -127,7 +130,6 @@ public class Reflector {
                     winner = candidate;
                     continue;
                 }
-                // 第一个
                 Class<?> winnerType = winner.getReturnType();
                 // 下一个(exclude first)
                 Class<?> candidateType = candidate.getReturnType();
@@ -155,6 +157,7 @@ public class Reflector {
                                     + ". This breaks the JavaBeans specification and can cause unpredictable results.");
                 }
             }
+            // winner 为最优的get 方法,如果有多个
             addGetMethod(propName, winner);
         }
     }
@@ -171,15 +174,18 @@ public class Reflector {
         Map<String, List<Method>> conflictingSetters = new HashMap<>();
         Method[] methods = getClassMethods(cls);
         for (Method method : methods) {
+            // 方法名
             String name = method.getName();
             if (name.startsWith("set") && name.length() > 3) {
+                // 方法参数,必须 = 1
                 if (method.getParameterTypes().length == 1) {
+                    // setXXX => XXX
                     name = PropertyNamer.methodToProperty(name);
                     addMethodConflict(conflictingSetters, name, method);
                 }
             }
         }
-        // 解决 getting 冲突方法
+        // 解决 set 方法
         resolveSetterConflicts(conflictingSetters);
     }
 
@@ -188,21 +194,39 @@ public class Reflector {
         list.add(method);
     }
 
+    /**
+     * 再次解决重复的方法,如下这种情况
+     * 父类:
+     * <pre>
+     *       List<Object> setA(List<String> a);
+     * </pre>
+     * 子类:
+     * <pre>
+     *        public ArrayList<Object> setA(List<String> a) {}
+     * </pre>
+     *
+     * @param conflictingSetters
+     */
     private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
         for (String propName : conflictingSetters.keySet()) {
             List<Method> setters = conflictingSetters.get(propName);
+            // 从get 中取得数据类型
             Class<?> getterType = getTypes.get(propName);
             Method match = null;
             ReflectionException exception = null;
+
             for (Method setter : setters) {
+                // 已经确定setXXX 方法参数数量必须为 1
                 Class<?> paramType = setter.getParameterTypes()[0];
                 if (paramType.equals(getterType)) {
+                    // get 返回类型 = set 参数类型, 最好的结果
                     // should be the best match
                     match = setter;
                     break;
                 }
                 if (exception == null) {
                     try {
+                        // 选一个最好的
                         match = pickBetterSetter(match, setter, propName);
                     } catch (ReflectionException e) {
                         // there could still be the 'best match'
@@ -248,7 +272,7 @@ public class Reflector {
         if (src instanceof Class) {
             result = (Class<?>) src;
         } else if (src instanceof ParameterizedType) {
-            // 一种参数化的类型，比如Collection
+            // 一种参数化的类型，比如Collection, List<String> => List.class
             result = (Class<?>) ((ParameterizedType) src).getRawType();
         } else if (src instanceof GenericArrayType) {
             // 一种元素类型是参数化类型或者类型变量的数组类型
@@ -283,6 +307,7 @@ public class Reflector {
             }
         }
         if (clazz.getSuperclass() != null) {
+            // call all, 递归调用
             addFields(clazz.getSuperclass());
         }
     }
@@ -342,6 +367,22 @@ public class Reflector {
         return methods.toArray(new Method[methods.size()]);
     }
 
+    /**
+     * 处理类中唯一的方法名,但不包括子类重写父类方法时,参数类型写成实现子类的重复情况,不包括如下情况:
+     * 父类:
+     * <pre>
+     *  List<Object> f(List<String> a);
+     * </pre>
+     * 子类:
+     * <pre>
+     *  public ArrayList<Object> f(List<String> a) {}
+     * </pre>
+     * <p>
+     * 解决这种方法重复请看: {@link org.apache.ibatis.reflection.Reflector#resolveSetterConflicts(java.util.Map)}
+     *
+     * @param uniqueMethods
+     * @param methods
+     */
     private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
         for (Method currentMethod : methods) {
             if (!currentMethod.isBridge()) {

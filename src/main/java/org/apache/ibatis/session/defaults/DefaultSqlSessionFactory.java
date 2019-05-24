@@ -33,7 +33,7 @@ import java.sql.SQLException;
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
     /**
-     * 全局配置文件
+     * 全局配置文件,mybatis-config.xml 配置文件
      */
     private final Configuration configuration;
 
