@@ -15,11 +15,13 @@
  */
 package org.apache.ibatis.submitted.language;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -28,23 +30,21 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * Just a test case. Not a real Velocity implementation.
- */
+/** Just a test case. Not a real Velocity implementation. */
 class LanguageTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/language/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/language/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/language/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/language/CreateDB.sql");
   }
 
   @Test
@@ -105,7 +105,7 @@ class LanguageTest {
   void testDynamicSelectWithIteration() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
-      int[] ids = { 2, 4, 5 };
+      int[] ids = {2, 4, 5};
       Map<String, Object> param = new HashMap<>();
       param.put("ids", ids);
       List<Name> answer = sqlSession.selectList("selectNamesWithIteration", param);
@@ -215,5 +215,4 @@ class LanguageTest {
       }
     }
   }
-
 }

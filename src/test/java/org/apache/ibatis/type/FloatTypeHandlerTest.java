@@ -86,5 +86,4 @@ class FloatTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
-
 }

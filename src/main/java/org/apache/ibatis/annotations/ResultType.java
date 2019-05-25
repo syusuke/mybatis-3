@@ -22,10 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used when a @Select method is using a
- * ResultHandler.  Those methods must have void return type, so
- * this annotation can be used to tell MyBatis what kind of object
- * it should build for each row.
+ * This annotation can be used when a @Select method is using a ResultHandler. Those methods must
+ * have void return type, so this annotation can be used to tell MyBatis what kind of object it
+ * should build for each row.
  *
  * @since 3.2.0
  * @author Jeff Butler
@@ -34,5 +33,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ResultType {
+  /**
+   * 返回结果类型,直接映射Class
+   *
+   * @return
+   */
   Class<?> value();
 }

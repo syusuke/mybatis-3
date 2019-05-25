@@ -69,5 +69,4 @@ public final class ProviderContext {
   public String getDatabaseId() {
     return databaseId;
   }
-
 }

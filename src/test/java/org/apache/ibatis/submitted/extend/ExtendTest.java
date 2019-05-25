@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.extend;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -33,12 +32,14 @@ class ExtendTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/extend/ExtendConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/extend/ExtendConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/extend/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/extend/CreateDB.sql");
   }
 
   @Test
@@ -49,5 +50,4 @@ class ExtendTest {
       assertEquals(answer.getMyProperty(), "last");
     }
   }
-
 }

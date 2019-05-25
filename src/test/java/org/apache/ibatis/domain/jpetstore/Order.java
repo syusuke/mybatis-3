@@ -307,7 +307,6 @@ public class Order implements Serializable {
       CartItem cartItem = (CartItem) i.next();
       addLineItem(cartItem);
     }
-
   }
 
   public void addLineItem(CartItem cartItem) {
@@ -318,5 +317,4 @@ public class Order implements Serializable {
   public void addLineItem(LineItem lineItem) {
     lineItems.add(lineItem);
   }
-
 }

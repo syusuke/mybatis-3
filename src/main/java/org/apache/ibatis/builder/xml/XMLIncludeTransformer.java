@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -30,15 +29,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * @author Frank D. Martinez [mnesarco]
- */
+/** @author Frank D. Martinez [mnesarco] */
 public class XMLIncludeTransformer {
 
   private final Configuration configuration;
   private final MapperBuilderAssistant builderAssistant;
 
-  public XMLIncludeTransformer(Configuration configuration, MapperBuilderAssistant builderAssistant) {
+  public XMLIncludeTransformer(
+      Configuration configuration, MapperBuilderAssistant builderAssistant) {
     this.configuration = configuration;
     this.builderAssistant = builderAssistant;
   }
@@ -52,6 +50,7 @@ public class XMLIncludeTransformer {
 
   /**
    * Recursively apply includes through all SQL fragments.
+   *
    * @param source Include node in DOM tree
    * @param variablesContext Current context for static variables with values
    */
@@ -81,8 +80,7 @@ public class XMLIncludeTransformer {
       for (int i = 0; i < children.getLength(); i++) {
         applyIncludes(children.item(i), variablesContext, included);
       }
-    } else if (included && source.getNodeType() == Node.TEXT_NODE
-        && !variablesContext.isEmpty()) {
+    } else if (included && source.getNodeType() == Node.TEXT_NODE && !variablesContext.isEmpty()) {
       // replace variables in text node
       source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
     }
@@ -95,7 +93,8 @@ public class XMLIncludeTransformer {
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
       return nodeToInclude.getNode().cloneNode(true);
     } catch (IllegalArgumentException e) {
-      throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);
+      throw new IncompleteElementException(
+          "Could not find SQL statement to include with refid '" + refid + "'", e);
     }
   }
 
@@ -105,8 +104,10 @@ public class XMLIncludeTransformer {
 
   /**
    * Read placeholders and their values from include node definition.
+   *
    * @param node Include node instance
-   * @param inheritedVariablesContext Current context used for replace variables in new variables values
+   * @param inheritedVariablesContext Current context used for replace variables in new variables
+   *     values
    * @return variables context from include instance (no inherited values)
    */
   private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
@@ -117,12 +118,14 @@ public class XMLIncludeTransformer {
       if (n.getNodeType() == Node.ELEMENT_NODE) {
         String name = getStringAttribute(n, "name");
         // Replace variables inside
-        String value = PropertyParser.parse(getStringAttribute(n, "value"), inheritedVariablesContext);
+        String value =
+            PropertyParser.parse(getStringAttribute(n, "value"), inheritedVariablesContext);
         if (declaredProperties == null) {
           declaredProperties = new HashMap<>();
         }
         if (declaredProperties.put(name, value) != null) {
-          throw new BuilderException("Variable " + name + " defined twice in the same include definition");
+          throw new BuilderException(
+              "Variable " + name + " defined twice in the same include definition");
         }
       }
     }

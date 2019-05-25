@@ -17,14 +17,11 @@ package org.apache.ibatis.executor.result;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class DefaultResultHandler implements ResultHandler<Object> {
 
   private final List<Object> list;
@@ -46,5 +43,4 @@ public class DefaultResultHandler implements ResultHandler<Object> {
   public List<Object> getResultList() {
     return list;
   }
-
 }

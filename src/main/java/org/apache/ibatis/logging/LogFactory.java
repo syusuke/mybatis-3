@@ -23,9 +23,7 @@ import java.lang.reflect.Constructor;
  */
 public final class LogFactory {
 
-  /**
-   * Marker to be used by logging implementations that support markers.
-   */
+  /** Marker to be used by logging implementations that support markers */
   public static final String MARKER = "MYBATIS";
 
   private static Constructor<? extends Log> logConstructor;
@@ -109,5 +107,4 @@ public final class LogFactory {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);
     }
   }
-
 }

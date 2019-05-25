@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -37,13 +36,16 @@ class CollectionParametersTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/collectionparameters/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/collectionparameters/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/collectionparameters/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/collectionparameters/CreateDB.sql");
   }
 
   @Test
@@ -81,5 +83,4 @@ class CollectionParametersTest {
       Assertions.assertEquals(2, users.size());
     }
   }
-
 }

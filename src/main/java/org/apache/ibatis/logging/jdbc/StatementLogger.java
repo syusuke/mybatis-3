@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
@@ -29,7 +28,6 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
- *
  */
 public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -76,7 +74,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
     InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);
     ClassLoader cl = Statement.class.getClassLoader();
-    return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
+    return (Statement) Proxy.newProxyInstance(cl, new Class[] {Statement.class}, handler);
   }
 
   /**
@@ -87,5 +85,4 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   public Statement getStatement() {
     return statement;
   }
-
 }

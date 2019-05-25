@@ -16,12 +16,9 @@
 package org.apache.ibatis.mapping;
 
 import javax.sql.DataSource;
-
 import org.apache.ibatis.transaction.TransactionFactory;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public final class Environment {
   private final String id;
   private final TransactionFactory transactionFactory;
@@ -68,7 +65,6 @@ public final class Environment {
     public Environment build() {
       return new Environment(this.id, this.transactionFactory, this.dataSource);
     }
-
   }
 
   public String getId() {
@@ -82,5 +78,4 @@ public final class Environment {
   public DataSource getDataSource() {
     return this.dataSource;
   }
-
 }

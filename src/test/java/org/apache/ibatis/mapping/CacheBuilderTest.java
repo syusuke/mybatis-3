@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.mapping;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.lang.reflect.Field;
 import org.apache.ibatis.builder.InitializingObject;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
@@ -22,16 +27,12 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
-
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
-
 class CacheBuilderTest {
 
   @Test
   void testInitializing() {
-    InitializingCache cache = unwrap(new CacheBuilder("test").implementation(InitializingCache.class).build());
+    InitializingCache cache =
+        unwrap(new CacheBuilder("test").implementation(InitializingCache.class).build());
 
     Assertions.assertThat(cache.initialized).isTrue();
   }
@@ -39,8 +40,10 @@ class CacheBuilderTest {
   @Test
   void testInitializingFailure() {
     when(new CacheBuilder("test").implementation(InitializingFailureCache.class)).build();
-    then(caughtException()).isInstanceOf(CacheException.class)
-      .hasMessage("Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
+    then(caughtException())
+        .isInstanceOf(CacheException.class)
+        .hasMessage(
+            "Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
   }
 
   @SuppressWarnings("unchecked")
@@ -73,10 +76,10 @@ class CacheBuilderTest {
     public void initialize() {
       this.initialized = true;
     }
-
   }
 
-  private static class InitializingFailureCache extends PerpetualCache implements InitializingObject {
+  private static class InitializingFailureCache extends PerpetualCache
+      implements InitializingObject {
 
     public InitializingFailureCache(String id) {
       super(id);
@@ -86,7 +89,5 @@ class CacheBuilderTest {
     public void initialize() {
       throw new IllegalStateException("error");
     }
-
   }
-
 }

@@ -21,7 +21,6 @@ import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
@@ -30,7 +29,6 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
- *
  */
 public final class PreparedStatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -90,10 +88,13 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
    * @param queryStack - the query stack
    * @return - the proxy
    */
-  public static PreparedStatement newInstance(PreparedStatement stmt, Log statementLog, int queryStack) {
+  public static PreparedStatement newInstance(
+      PreparedStatement stmt, Log statementLog, int queryStack) {
     InvocationHandler handler = new PreparedStatementLogger(stmt, statementLog, queryStack);
     ClassLoader cl = PreparedStatement.class.getClassLoader();
-    return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);
+    return (PreparedStatement)
+        Proxy.newProxyInstance(
+            cl, new Class[] {PreparedStatement.class, CallableStatement.class}, handler);
   }
 
   /**
@@ -104,5 +105,4 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   public PreparedStatement getPreparedStatement() {
     return statement;
   }
-
 }

@@ -31,14 +31,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface Property {
-
-  /**
-   * A target property name.
-   */
+  /** A target property name */
   String name();
-
-  /**
-   * A property value or placeholder.
-   */
+  /** A property value or placeholder */
   String value();
 }

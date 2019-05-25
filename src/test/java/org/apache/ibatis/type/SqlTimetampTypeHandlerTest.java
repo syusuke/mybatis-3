@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.Date;
-
 import org.junit.jupiter.api.Test;
 
 class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
@@ -75,5 +74,4 @@ class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     // Unnecessary
   }
-
 }

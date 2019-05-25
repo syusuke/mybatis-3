@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 
 public class CustomBeanWrapper extends BeanWrapper {
+
   public CustomBeanWrapper(MetaObject metaObject, Object object) {
     super(metaObject, object);
   }

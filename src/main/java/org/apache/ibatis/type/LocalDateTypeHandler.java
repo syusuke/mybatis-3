@@ -28,8 +28,8 @@ import java.time.LocalDate;
 public class LocalDateTypeHandler extends BaseTypeHandler<LocalDate> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, LocalDate parameter, JdbcType jdbcType)
-          throws SQLException {
+  public void setNonNullParameter(
+      PreparedStatement ps, int i, LocalDate parameter, JdbcType jdbcType) throws SQLException {
     ps.setObject(i, parameter);
   }
 

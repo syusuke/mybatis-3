@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ package org.apache.ibatis.logging.slf4j;
 import org.apache.ibatis.logging.Log;
 import org.slf4j.Logger;
 
-/**
- * @author Eduardo Macarron
- */
+/** @author Eduardo Macarron */
 class Slf4jLoggerImpl implements Log {
 
   private final Logger log;
@@ -63,5 +61,4 @@ class Slf4jLoggerImpl implements Log {
   public void warn(String s) {
     log.warn(s);
   }
-
 }

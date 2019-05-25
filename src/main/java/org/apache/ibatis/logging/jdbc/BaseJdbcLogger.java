@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
 
@@ -64,7 +63,8 @@ public abstract class BaseJdbcLogger {
   }
 
   static {
-    SET_METHODS = Arrays.stream(PreparedStatement.class.getDeclaredMethods())
+    SET_METHODS =
+        Arrays.stream(PreparedStatement.class.getDeclaredMethods())
             .filter(method -> method.getName().startsWith("set"))
             .filter(method -> method.getParameterCount() > 1)
             .map(Method::getName)
@@ -161,5 +161,4 @@ public abstract class BaseJdbcLogger {
     }
     return new String(buffer);
   }
-
 }

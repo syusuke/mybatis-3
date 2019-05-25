@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.overwritingproperties;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -34,18 +33,21 @@ import org.junit.jupiter.api.Test;
  */
 class FooMapperTest {
 
-  private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/overwritingproperties/sqlmap.xml";
+  private static final String SQL_MAP_CONFIG =
+      "org/apache/ibatis/submitted/overwritingproperties/sqlmap.xml";
   private static SqlSession session;
   private static Connection conn;
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {
-    final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
+    final SqlSessionFactory factory =
+        new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
     session = factory.openSession();
     conn = session.getConnection();
 
-    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
+    BaseDataTest.runScript(
+        factory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
   }
 
   @BeforeEach
@@ -70,7 +72,7 @@ class FooMapperTest {
 
     // field4 is not mapped in the result map
     // <result property="field4" column="field3" jdbcType="INTEGER"/>
-    Assertions.assertEquals(inserted.getField3(), selected.getField4() );
+    Assertions.assertEquals(inserted.getField3(), selected.getField4());
 
     // field4 is explicitly remapped to field3 in the resultmap
     // <result property="field3" column="field4" jdbcType="INTEGER"/>
@@ -93,5 +95,4 @@ class FooMapperTest {
     }
     session.close();
   }
-
 }

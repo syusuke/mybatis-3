@@ -21,8 +21,7 @@ import org.junit.jupiter.api.Test;
 class BatchExecutorTest extends BaseExecutorTest {
 
   @Test
-  void dummy() {
-  }
+  void dummy() {}
 
   @Override
   protected Executor createExecutor(Transaction transaction) {

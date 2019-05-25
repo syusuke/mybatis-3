@@ -17,7 +17,6 @@ package org.apache.ibatis.jdbc;
 
 /**
  * @deprecated Use the {@link SQL} Class
- *
  * @author Clinton Begin
  */
 @Deprecated
@@ -108,5 +107,4 @@ public class SelectBuilder {
   private static SQL sql() {
     return localSQL.get();
   }
-
 }

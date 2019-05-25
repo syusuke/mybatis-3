@@ -15,10 +15,9 @@
  */
 package org.apache.ibatis.cache;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,14 +25,16 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class CacheKeyTest {
 
   @Test
   void shouldTestCacheKeysEqual() {
     Date date = new Date();
-    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date(date.getTime()) });
-    CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date(date.getTime()) });
+    CacheKey key1 = new CacheKey(new Object[] {1, "hello", null, new Date(date.getTime())});
+    CacheKey key2 = new CacheKey(new Object[] {1, "hello", null, new Date(date.getTime())});
     assertTrue(key1.equals(key2));
     assertTrue(key2.equals(key1));
     assertTrue(key1.hashCode() == key2.hashCode());
@@ -42,9 +43,9 @@ class CacheKeyTest {
 
   @Test
   void shouldTestCacheKeysNotEqualDueToDateDifference() throws Exception {
-    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
+    CacheKey key1 = new CacheKey(new Object[] {1, "hello", null, new Date()});
     Thread.sleep(1000);
-    CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
+    CacheKey key2 = new CacheKey(new Object[] {1, "hello", null, new Date()});
     assertFalse(key1.equals(key2));
     assertFalse(key2.equals(key1));
     assertFalse(key1.hashCode() == key2.hashCode());
@@ -53,9 +54,9 @@ class CacheKeyTest {
 
   @Test
   void shouldTestCacheKeysNotEqualDueToOrder() throws Exception {
-    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null });
+    CacheKey key1 = new CacheKey(new Object[] {1, "hello", null});
     Thread.sleep(1000);
-    CacheKey key2 = new CacheKey(new Object[] { 1, null, "hello" });
+    CacheKey key2 = new CacheKey(new Object[] {1, null, "hello"});
     assertFalse(key1.equals(key2));
     assertFalse(key2.equals(key1));
     assertFalse(key1.hashCode() == key2.hashCode());
@@ -80,10 +81,10 @@ class CacheKeyTest {
 
   @Test
   void shouldTestCacheKeysWithBinaryArrays() {
-    byte[] array1 = new byte[] { 1 };
-    byte[] array2 = new byte[] { 1 };
-    CacheKey key1 = new CacheKey(new Object[] { array1 });
-    CacheKey key2 = new CacheKey(new Object[] { array2 });
+    byte[] array1 = new byte[] {1};
+    byte[] array2 = new byte[] {1};
+    CacheKey key1 = new CacheKey(new Object[] {array1});
+    CacheKey key2 = new CacheKey(new Object[] {array2});
     assertTrue(key1.equals(key2));
   }
 
@@ -91,9 +92,11 @@ class CacheKeyTest {
   void serializationExceptionTest() {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(new Object());
-    Assertions.assertThrows(NotSerializableException.class, () -> {
-      serialize(cacheKey);
-    });
+    Assertions.assertThrows(
+        NotSerializableException.class,
+        () -> {
+          serialize(cacheKey);
+        });
   }
 
   @Test
@@ -104,11 +107,10 @@ class CacheKeyTest {
   }
 
   private static <T> T serialize(T object) throws Exception {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      new ObjectOutputStream(baos).writeObject(object);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    new ObjectOutputStream(baos).writeObject(object);
 
-      ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      return (T) new ObjectInputStream(bais).readObject();
+    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    return (T) new ObjectInputStream(bais).readObject();
   }
-
 }

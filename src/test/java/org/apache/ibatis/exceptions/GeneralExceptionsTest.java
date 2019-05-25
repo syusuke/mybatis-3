@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.CacheException;
@@ -43,40 +42,47 @@ class GeneralExceptionsTest {
   @Test
   void should() {
     RuntimeException thrown = ExceptionFactory.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
-    assertTrue(thrown instanceof PersistenceException, "Exception should be wrapped in RuntimeSqlException.");
+    assertTrue(
+        thrown instanceof PersistenceException,
+        "Exception should be wrapped in RuntimeSqlException.");
     testThrowException(thrown);
   }
 
   @Test
   void shouldInstantiateAndThrowAllCustomExceptions() throws Exception {
     Class<?>[] exceptionTypes = {
-        BindingException.class,
-        CacheException.class,
-        DataSourceException.class,
-        ExecutorException.class,
-        LogException.class,
-        ParsingException.class,
-        BuilderException.class,
-        PluginException.class,
-        ReflectionException.class,
-        PersistenceException.class,
-        SqlSessionException.class,
-        TransactionException.class,
-        TypeException.class,
-        ScriptingException.class
+      BindingException.class,
+      CacheException.class,
+      DataSourceException.class,
+      ExecutorException.class,
+      LogException.class,
+      ParsingException.class,
+      BuilderException.class,
+      PluginException.class,
+      ReflectionException.class,
+      PersistenceException.class,
+      SqlSessionException.class,
+      TransactionException.class,
+      TypeException.class,
+      ScriptingException.class
     };
     for (Class<?> exceptionType : exceptionTypes) {
       testExceptionConstructors(exceptionType);
     }
-
   }
 
-  private void testExceptionConstructors(Class<?> exceptionType) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+  private void testExceptionConstructors(Class<?> exceptionType)
+      throws InstantiationException, IllegalAccessException, InvocationTargetException,
+          NoSuchMethodException {
     Exception e = (Exception) exceptionType.newInstance();
     testThrowException(e);
     e = (Exception) exceptionType.getConstructor(String.class).newInstance(EXPECTED_MESSAGE);
     testThrowException(e);
-    e = (Exception) exceptionType.getConstructor(String.class, Throwable.class).newInstance(EXPECTED_MESSAGE, EXPECTED_CAUSE);
+    e =
+        (Exception)
+            exceptionType
+                .getConstructor(String.class, Throwable.class)
+                .newInstance(EXPECTED_MESSAGE, EXPECTED_CAUSE);
     testThrowException(e);
     e = (Exception) exceptionType.getConstructor(Throwable.class).newInstance(EXPECTED_CAUSE);
     testThrowException(e);
@@ -90,5 +96,4 @@ class GeneralExceptionsTest {
       assertEquals(thrown.getCause(), caught.getCause());
     }
   }
-
 }

@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -26,7 +27,6 @@ import java.lang.reflect.WildcardType;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.reflection.typeparam.Calculator;
 import org.apache.ibatis.reflection.typeparam.Calculator.SubCalculator;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper;
@@ -171,7 +171,8 @@ class TypeParameterResolverTest {
     ParameterizedType paramTypeOuter = (ParameterizedType) result;
     assertEquals(List.class, paramTypeOuter.getRawType());
     assertEquals(1, paramTypeOuter.getActualTypeArguments().length);
-    ParameterizedType paramTypeInner = (ParameterizedType) paramTypeOuter.getActualTypeArguments()[0];
+    ParameterizedType paramTypeInner =
+        (ParameterizedType) paramTypeOuter.getActualTypeArguments()[0];
     assertEquals(Calculator.class, paramTypeInner.getRawType());
     assertEquals(Date.class, paramTypeInner.getActualTypeArguments()[0]);
   }
@@ -378,8 +379,7 @@ class TypeParameterResolverTest {
 
   @Test
   void testReturnParam_WildcardWithUpperBounds() throws Exception {
-    class Key {
-    }
+    class Key {}
     @SuppressWarnings("unused")
     class KeyBean<S extends Key & Cloneable, T extends Key> {
       private S key1;
@@ -417,8 +417,14 @@ class TypeParameterResolverTest {
     @SuppressWarnings("unused")
     abstract class A<S> {
       protected S id;
-      public S getId() { return this.id;}
-      public void setId(S id) {this.id = id;}
+
+      public S getId() {
+        return this.id;
+      }
+
+      public void setId(S id) {
+        this.id = id;
+      }
     }
     abstract class B<T> extends A<T> {}
     abstract class C<U> extends B<U> {}

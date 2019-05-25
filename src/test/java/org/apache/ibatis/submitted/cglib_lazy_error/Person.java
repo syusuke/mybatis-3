@@ -49,7 +49,7 @@ public class Person {
 
   @Override
   public String toString() {
-    return id + ": " + firstName + " " + lastName + " ("+parent+")";
+    return id + ": " + firstName + " " + lastName + " (" + parent + ")";
   }
 
   public String getFirstName() {

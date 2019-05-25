@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ package org.apache.ibatis.logging.commons;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class JakartaCommonsLoggingImpl implements org.apache.ibatis.logging.Log {
 
   private final Log log;
@@ -63,5 +61,4 @@ public class JakartaCommonsLoggingImpl implements org.apache.ibatis.logging.Log 
   public void warn(String s) {
     log.warn(s);
   }
-
 }

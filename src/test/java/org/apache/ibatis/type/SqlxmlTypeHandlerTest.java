@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +24,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLXML;
 import java.util.Collections;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -38,7 +38,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mock;
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
@@ -50,28 +49,37 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Mock
-  private SQLXML sqlxml;
+  @Mock private SQLXML sqlxml;
 
-  @Mock
-  private Connection connection;
+  @Mock private Connection connection;
 
   @BeforeAll
   static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(
-        EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost",
-        SocketUtil.findFreePort(), "postgres_sqlxml", "postgres", "root", Collections.emptyList());
+    String url =
+        postgres.start(
+            EmbeddedPostgres.cachedRuntimeConfig(
+                Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")),
+            "localhost",
+            SocketUtil.findFreePort(),
+            "postgres_sqlxml",
+            "postgres",
+            "root",
+            Collections.emptyList());
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment =
+        new Environment(
+            "development",
+            new JdbcTransactionFactory(),
+            new UnpooledDataSource("org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/type/SqlxmlTypeHandlerTest.sql");
   }
 
   @AfterAll
@@ -147,8 +155,7 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       XmlBean bean = mapper.select(1);
-      assertEquals("<title>XML data</title>",
-          bean.getContent());
+      assertEquals("<title>XML data</title>", bean.getContent());
     }
   }
 
@@ -164,7 +171,8 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   void shouldInsertXmlString() {
     final Integer id = 100;
-    final String content = "<books><book><title>Save XML</title></book><book><title>Get XML</title></book></books>";
+    final String content =
+        "<books><book><title>Save XML</title></book><book><title>Get XML</title></book></books>";
     // Insert
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
@@ -186,7 +194,8 @@ class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
     @Select("select id, content from mbtest.test_sqlxml where id = #{id}")
     XmlBean select(Integer id);
 
-    @Insert("insert into mbtest.test_sqlxml (id, content) values (#{id}, #{content,jdbcType=SQLXML})")
+    @Insert(
+        "insert into mbtest.test_sqlxml (id, content) values (#{id}, #{content,jdbcType=SQLXML})")
     void insert(XmlBean bean);
   }
 

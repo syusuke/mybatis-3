@@ -15,12 +15,13 @@
  */
 package org.apache.ibatis.submitted.sqlprovider;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
@@ -37,23 +38,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-/**
- * Test for https://github.com/mybatis/mybatis-3/issues/1279
- */
+/** Test for https://github.com/mybatis/mybatis-3/issues/1279 */
 class ProviderMethodResolutionTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(ProvideMethodResolverMapper.class);
     }
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
   }
 
@@ -67,8 +66,14 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenDefaultResolverMethodNameMatchedMethodIsNone() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.class));
+    BuilderException e =
+        Assertions.assertThrows(
+            BuilderException.class,
+            () ->
+                sqlSessionFactory
+                    .getConfiguration()
+                    .addMapper(
+                        DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMethodNameMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
         e.getCause().getMessage());
@@ -76,8 +81,14 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenDefaultResolverReturnTypeMatchedMethodIsNone() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.class));
+    BuilderException e =
+        Assertions.assertThrows(
+            BuilderException.class,
+            () ->
+                sqlSessionFactory
+                    .getConfiguration()
+                    .addMapper(
+                        DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'insert' does not return the CharSequence or its subclass in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper$MethodResolverBasedSqlProvider'.",
         e.getCause().getMessage());
@@ -85,8 +96,13 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenDefaultResolverMatchedMethodIsMultiple() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.class));
+    BuilderException e =
+        Assertions.assertThrows(
+            BuilderException.class,
+            () ->
+                sqlSessionFactory
+                    .getConfiguration()
+                    .addMapper(DefaultProvideMethodResolverMatchedMethodIsMultipleMapper.class));
     assertEquals(
         "Cannot resolve the provider method because 'update' is found multiple in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$DefaultProvideMethodResolverMatchedMethodIsMultipleMapper$MethodResolverBasedSqlProvider'.",
         e.getCause().getMessage());
@@ -126,8 +142,13 @@ class ProviderMethodResolutionTest {
 
   @Test
   void shouldErrorWhenCannotDetectsReservedNameMethod() {
-    BuilderException e = Assertions.assertThrows(BuilderException.class,
-        () -> sqlSessionFactory.getConfiguration().addMapper(ReservedNameMethodIsNoneMapper.class));
+    BuilderException e =
+        Assertions.assertThrows(
+            BuilderException.class,
+            () ->
+                sqlSessionFactory
+                    .getConfiguration()
+                    .addMapper(ReservedNameMethodIsNoneMapper.class));
     assertEquals(
         "Error creating SqlSource for SqlProvider. Method 'provideSql' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.ProviderMethodResolutionTest$ReservedNameMethodIsNoneMapper$SqlProvider'.",
         e.getCause().getMessage());
@@ -156,7 +177,8 @@ class ProviderMethodResolutionTest {
       }
 
       public static String select2() {
-        throw new IllegalStateException("This method should not called when specify `method` attribute on @SelectProvider.");
+        throw new IllegalStateException(
+            "This method should not called when specify `method` attribute on @SelectProvider.");
       }
 
       public static String provideSelect2Sql() {
@@ -179,16 +201,16 @@ class ProviderMethodResolutionTest {
         return "SELECT 99 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }
     }
-
   }
 
   interface CustomProviderMethodResolver extends ProviderMethodResolver {
     @Override
     default Method resolveMethod(ProviderContext context) {
-      List<Method> targetMethods = Arrays.stream(getClass().getMethods())
-          .filter(m -> m.getName().equals(context.getMapperMethod().getName() + "Sql"))
-          .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType()))
-          .collect(Collectors.toList());
+      List<Method> targetMethods =
+          Arrays.stream(getClass().getMethods())
+              .filter(m -> m.getName().equals(context.getMapperMethod().getName() + "Sql"))
+              .filter(m -> CharSequence.class.isAssignableFrom(m.getReturnType()))
+              .collect(Collectors.toList());
       if (targetMethods.size() == 1) {
         return targetMethods.get(0);
       }
@@ -206,7 +228,6 @@ class ProviderMethodResolutionTest {
         return "INSERT INTO foo (name) VALUES(#{name})";
       }
     }
-
   }
 
   interface DefaultProvideMethodResolverReturnTypeMatchedMethodIsNoneMapper {
@@ -219,7 +240,6 @@ class ProviderMethodResolutionTest {
         return 1;
       }
     }
-
   }
 
   interface DefaultProvideMethodResolverMatchedMethodIsMultipleMapper {
@@ -236,7 +256,6 @@ class ProviderMethodResolutionTest {
         return new StringBuilder("UPDATE foo SET name = #{name} WHERE id = #{id}");
       }
     }
-
   }
 
   interface ReservedNameMethodIsNoneMapper {
@@ -249,7 +268,5 @@ class ProviderMethodResolutionTest {
         return "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }
     }
-
   }
-
 }

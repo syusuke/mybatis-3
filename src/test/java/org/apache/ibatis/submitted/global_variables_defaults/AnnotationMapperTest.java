@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.submitted.global_variables_defaults;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Properties;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Select;
@@ -27,10 +30,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Properties;
-
 public class AnnotationMapperTest {
 
   @Test
@@ -39,11 +38,14 @@ public class AnnotationMapperTest {
     Properties props = new Properties();
     props.setProperty(PropertyParser.KEY_ENABLE_DEFAULT_VALUE, "true");
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
+    Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
     Configuration configuration = factory.getConfiguration();
     configuration.addMapper(AnnotationMapper.class);
-    SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(AnnotationMapper.class.getName()));
+    SupportClasses.CustomCache cache =
+        SupportClasses.Utils.unwrap(configuration.getCache(AnnotationMapper.class.getName()));
 
     Assertions.assertThat(cache.getName()).isEqualTo("default");
 
@@ -52,7 +54,6 @@ public class AnnotationMapperTest {
 
       Assertions.assertThat(mapper.ping()).isEqualTo("Hello");
     }
-
   }
 
   @Test
@@ -63,11 +64,14 @@ public class AnnotationMapperTest {
     props.setProperty("ping.sql", "SELECT 'Hi' FROM INFORMATION_SCHEMA.SYSTEM_USERS");
     props.setProperty("cache.name", "custom");
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
+    Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/global_variables_defaults/mybatis-config.xml");
     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
     Configuration configuration = factory.getConfiguration();
     configuration.addMapper(AnnotationMapper.class);
-    SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(AnnotationMapper.class.getName()));
+    SupportClasses.CustomCache cache =
+        SupportClasses.Utils.unwrap(configuration.getCache(AnnotationMapper.class.getName()));
 
     Assertions.assertThat(cache.getName()).isEqualTo("custom");
 
@@ -76,17 +80,14 @@ public class AnnotationMapperTest {
 
       Assertions.assertThat(mapper.ping()).isEqualTo("Hi");
     }
-
   }
 
-  @CacheNamespace(implementation = SupportClasses.CustomCache.class, properties = {
-      @Property(name = "name", value = "${cache.name:default}")
-  })
+  @CacheNamespace(
+      implementation = SupportClasses.CustomCache.class,
+      properties = {@Property(name = "name", value = "${cache.name:default}")})
   public interface AnnotationMapper {
 
     @Select("${ping.sql:SELECT 'Hello' FROM INFORMATION_SCHEMA.SYSTEM_USERS}")
     String ping();
-
   }
-
 }

@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.serializecircular;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -24,12 +23,12 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
-//@Disabled("see issue #614")
+// @Disabled("see issue #614")
 class SerializeCircularTest {
 
   @Test
   void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute()
-  throws Exception {
+      throws Exception {
     try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
       testSerializeWithoutPreloadingAttribute(sqlSession);
     }
@@ -37,25 +36,25 @@ class SerializeCircularTest {
 
   @Test
   void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute()
-  throws Exception {
+      throws Exception {
     try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
       testSerializeWithPreloadingAttribute(sqlSession);
     }
   }
 
-//  @Disabled("See http://code.google.com/p/mybatis/issues/detail?id=614")
+  //  @Disabled("See http://code.google.com/p/mybatis/issues/detail?id=614")
   @Test
   void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute()
-  throws Exception {
+      throws Exception {
     try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
-        //expected problem with deserializing
+      // expected problem with deserializing
       testSerializeWithoutPreloadingAttribute(sqlSession);
     }
   }
 
   @Test
   void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute()
-  throws Exception {
+      throws Exception {
     try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
       testSerializeWithPreloadingAttribute(sqlSession);
     }
@@ -70,10 +69,11 @@ class SerializeCircularTest {
   }
 
   private SqlSession createSession(boolean anAggressiveLazyLoading) throws Exception {
-    String xmlConfig = anAggressiveLazyLoading ?
-        "org/apache/ibatis/submitted/serializecircular/MapperConfigWithAggressiveLazyLoading.xml":
-        "org/apache/ibatis/submitted/serializecircular/MapperConfigWithoutAggressiveLazyLoading.xml";
-      SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
+    String xmlConfig =
+        anAggressiveLazyLoading
+            ? "org/apache/ibatis/submitted/serializecircular/MapperConfigWithAggressiveLazyLoading.xml"
+            : "org/apache/ibatis/submitted/serializecircular/MapperConfigWithoutAggressiveLazyLoading.xml";
+    SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     return sqlSessionFactory.openSession();
   }
 
@@ -107,11 +107,11 @@ class SerializeCircularTest {
     try (Reader configReader = Resources.getResourceAsReader(resource)) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
 
-      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/serializecircular/CreateDB.sql");
+      BaseDataTest.runScript(
+          sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+          "org/apache/ibatis/submitted/serializecircular/CreateDB.sql");
 
       return sqlSessionFactory;
     }
   }
-
 }

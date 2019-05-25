@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder.xsd;
 
+import java.io.InputStream;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -25,8 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-
 @Disabled("We'll try a different approach. See #1393")
 class XmlMapperBuilderTest {
 
@@ -36,7 +35,9 @@ class XmlMapperBuilderTest {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/xsd/AuthorMapper.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
-      XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+      XMLMapperBuilder builder =
+          new XMLMapperBuilder(
+              inputStream, configuration, resource, configuration.getSqlFragments());
       builder.parse();
 
       MappedStatement mappedStatement = configuration.getMappedStatement("selectWithOptions");
@@ -50,5 +51,4 @@ class XmlMapperBuilderTest {
       // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
   }
-
 }

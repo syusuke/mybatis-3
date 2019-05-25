@@ -16,12 +16,9 @@
 package org.apache.ibatis.cache.decorators;
 
 import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class SynchronizedCache implements Cache {
 
   private final Cache delegate;
@@ -74,5 +71,4 @@ public class SynchronizedCache implements Cache {
   public ReadWriteLock getReadWriteLock() {
     return null;
   }
-
 }

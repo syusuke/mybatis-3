@@ -15,7 +15,10 @@
  */
 package org.apache.ibatis.scripting;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -26,12 +29,7 @@ import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
-
-/**
- * @author Kazuki Shimizu
- */
+/** @author Kazuki Shimizu */
 class LanguageDriverRegistryTest {
 
   private LanguageDriverRegistry registry = new LanguageDriverRegistry();
@@ -57,15 +55,18 @@ class LanguageDriverRegistryTest {
   @Test
   void registerByTypeNull() {
     when(registry).register((Class<? extends LanguageDriver>) null);
-    then(caughtException()).isInstanceOf(IllegalArgumentException.class)
-      .hasMessage("null is not a valid Language Driver");
+    then(caughtException())
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("null is not a valid Language Driver");
   }
 
   @Test
   void registerByTypeDoesNotCreateNewInstance() {
     when(registry).register(PrivateLanguageDriver.class);
-    then(caughtException()).isInstanceOf(ScriptingException.class)
-      .hasMessage("Failed to load language driver for org.apache.ibatis.scripting.LanguageDriverRegistryTest$PrivateLanguageDriver");
+    then(caughtException())
+        .isInstanceOf(ScriptingException.class)
+        .hasMessage(
+            "Failed to load language driver for org.apache.ibatis.scripting.LanguageDriverRegistryTest$PrivateLanguageDriver");
   }
 
   @Test
@@ -89,8 +90,9 @@ class LanguageDriverRegistryTest {
   @Test
   void registerByInstanceNull() {
     when(registry).register((LanguageDriver) null);
-    then(caughtException()).isInstanceOf(IllegalArgumentException.class)
-      .hasMessage("null is not a valid Language Driver");
+    then(caughtException())
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("null is not a valid Language Driver");
   }
 
   @Test
@@ -100,22 +102,24 @@ class LanguageDriverRegistryTest {
     assertThat(registry.getDefaultDriver()).isInstanceOf(RawLanguageDriver.class);
   }
 
-  static private class PrivateLanguageDriver implements LanguageDriver {
+  private static class PrivateLanguageDriver implements LanguageDriver {
 
     @Override
-    public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+    public ParameterHandler createParameterHandler(
+        MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
       return null;
     }
 
     @Override
-    public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+    public SqlSource createSqlSource(
+        Configuration configuration, XNode script, Class<?> parameterType) {
       return null;
     }
 
     @Override
-    public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+    public SqlSource createSqlSource(
+        Configuration configuration, String script, Class<?> parameterType) {
       return null;
     }
   }
-
 }

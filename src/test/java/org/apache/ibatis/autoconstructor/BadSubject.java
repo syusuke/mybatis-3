@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ public class BadSubject {
   private final Height height;
   private final Double weight;
 
-  public BadSubject(final int id, final String name, final int age, final Height height, final Double weight) {
+  public BadSubject(
+      final int id, final String name, final int age, final Height height, final Double weight) {
     this.id = id;
     this.name = name;
     this.age = age;
@@ -30,7 +31,5 @@ public class BadSubject {
     this.weight = weight == null ? 0 : weight;
   }
 
-  private class Height {
-
-  }
+  private class Height {}
 }

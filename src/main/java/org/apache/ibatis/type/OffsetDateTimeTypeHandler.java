@@ -28,8 +28,9 @@ import java.time.OffsetDateTime;
 public class OffsetDateTimeTypeHandler extends BaseTypeHandler<OffsetDateTime> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, OffsetDateTime parameter, JdbcType jdbcType)
-          throws SQLException {
+  public void setNonNullParameter(
+      PreparedStatement ps, int i, OffsetDateTime parameter, JdbcType jdbcType)
+      throws SQLException {
     ps.setObject(i, parameter);
   }
 
@@ -44,8 +45,8 @@ public class OffsetDateTimeTypeHandler extends BaseTypeHandler<OffsetDateTime> {
   }
 
   @Override
-  public OffsetDateTime getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+  public OffsetDateTime getNullableResult(CallableStatement cs, int columnIndex)
+      throws SQLException {
     return cs.getObject(columnIndex, OffsetDateTime.class);
   }
-
 }

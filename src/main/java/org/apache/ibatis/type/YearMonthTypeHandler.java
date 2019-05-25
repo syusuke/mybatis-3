@@ -23,10 +23,9 @@ import java.time.YearMonth;
 
 /**
  * Type Handler for {@link java.time.YearMonth}.
- * <p>
- * YearMonthTypeHandler relies upon
- * {@link java.time.YearMonth#parse YearMonth.parse}. Therefore column values
- * are expected as strings. The format must be uuuu-MM. Example: "2016-08"
+ *
+ * <p>YearMonthTypeHandler relies upon {@link java.time.YearMonth#parse YearMonth.parse}. Therefore
+ * column values are expected as strings. The format must be uuuu-MM. Example: "2016-08"
  *
  * @since 3.4.5
  * @author Björn Raupach
@@ -34,7 +33,8 @@ import java.time.YearMonth;
 public class YearMonthTypeHandler extends BaseTypeHandler<YearMonth> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, YearMonth yearMonth, JdbcType jt) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, YearMonth yearMonth, JdbcType jt)
+      throws SQLException {
     ps.setString(i, yearMonth.toString());
   }
 
@@ -55,5 +55,4 @@ public class YearMonthTypeHandler extends BaseTypeHandler<YearMonth> {
     String value = cs.getString(columnIndex);
     return value == null ? null : YearMonth.parse(value);
   }
-
 }

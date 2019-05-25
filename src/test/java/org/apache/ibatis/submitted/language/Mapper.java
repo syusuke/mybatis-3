@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.language;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
@@ -29,14 +28,15 @@ public interface Mapper {
   List<Name> selectRawWithMapper(Parameter p);
 
   @Lang(XMLLanguageDriver.class)
-  @Select("<script>SELECT firstName <if test=\"includeLastName != null\">, lastName</if> FROM names WHERE lastName LIKE #{name}</script>")
+  @Select(
+      "<script>SELECT firstName <if test=\"includeLastName != null\">, lastName</if> FROM names WHERE lastName LIKE #{name}</script>")
   List<Name> selectXmlWithMapper(Parameter p);
 
-  @Select("SELECT firstName #if($_parameter.includeLastName), lastName#end FROM names WHERE lastName LIKE @{name}")
+  @Select(
+      "SELECT firstName #if($_parameter.includeLastName), lastName#end FROM names WHERE lastName LIKE @{name}")
   List<Name> selectVelocityWithMapper(Parameter p);
 
   @Lang(XMLLanguageDriver.class)
   @Select("SELECT firstName, lastName FROM names WHERE lastName LIKE #{name} and 0 < 1")
   List<Name> selectXmlWithMapperAndSqlSymbols(Parameter p);
-
 }

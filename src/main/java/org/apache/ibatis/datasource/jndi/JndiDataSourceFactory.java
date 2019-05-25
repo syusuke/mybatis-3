@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,18 +17,14 @@ package org.apache.ibatis.datasource.jndi;
 
 import java.util.Map.Entry;
 import java.util.Properties;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class JndiDataSourceFactory implements DataSourceFactory {
 
   public static final String INITIAL_CONTEXT = "initial_context";
@@ -48,8 +44,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
         initCtx = new InitialContext(env);
       }
 
-      if (properties.containsKey(INITIAL_CONTEXT)
-          && properties.containsKey(DATA_SOURCE)) {
+      if (properties.containsKey(INITIAL_CONTEXT) && properties.containsKey(DATA_SOURCE)) {
         Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));
         dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));
       } else if (properties.containsKey(DATA_SOURCE)) {
@@ -57,7 +52,8 @@ public class JndiDataSourceFactory implements DataSourceFactory {
       }
 
     } catch (NamingException e) {
-      throw new DataSourceException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
+      throw new DataSourceException(
+          "There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
     }
   }
 
@@ -81,5 +77,4 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     }
     return contextProperties;
   }
-
 }

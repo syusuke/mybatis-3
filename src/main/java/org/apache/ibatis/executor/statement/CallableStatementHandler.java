@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -35,12 +34,16 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class CallableStatementHandler extends BaseStatementHandler {
 
-  public CallableStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+  public CallableStatementHandler(
+      Executor executor,
+      MappedStatement mappedStatement,
+      Object parameter,
+      RowBounds rowBounds,
+      ResultHandler resultHandler,
+      BoundSql boundSql) {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
@@ -86,7 +89,8 @@ public class CallableStatementHandler extends BaseStatementHandler {
     if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {
       return connection.prepareCall(sql);
     } else {
-      return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
+      return connection.prepareCall(
+          sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
     }
   }
 
@@ -100,22 +104,32 @@ public class CallableStatementHandler extends BaseStatementHandler {
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     for (int i = 0, n = parameterMappings.size(); i < n; i++) {
       ParameterMapping parameterMapping = parameterMappings.get(i);
-      if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {
+      if (parameterMapping.getMode() == ParameterMode.OUT
+          || parameterMapping.getMode() == ParameterMode.INOUT) {
         if (null == parameterMapping.getJdbcType()) {
-          throw new ExecutorException("The JDBC Type must be specified for output parameter.  Parameter: " + parameterMapping.getProperty());
+          throw new ExecutorException(
+              "The JDBC Type must be specified for output parameter.  Parameter: "
+                  + parameterMapping.getProperty());
         } else {
-          if (parameterMapping.getNumericScale() != null && (parameterMapping.getJdbcType() == JdbcType.NUMERIC || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {
-            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getNumericScale());
+          if (parameterMapping.getNumericScale() != null
+              && (parameterMapping.getJdbcType() == JdbcType.NUMERIC
+                  || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {
+            cs.registerOutParameter(
+                i + 1,
+                parameterMapping.getJdbcType().TYPE_CODE,
+                parameterMapping.getNumericScale());
           } else {
             if (parameterMapping.getJdbcTypeName() == null) {
               cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE);
             } else {
-              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getJdbcTypeName());
+              cs.registerOutParameter(
+                  i + 1,
+                  parameterMapping.getJdbcType().TYPE_CODE,
+                  parameterMapping.getJdbcTypeName());
             }
           }
         }
       }
     }
   }
-
 }

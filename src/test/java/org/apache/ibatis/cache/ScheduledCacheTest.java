@@ -15,10 +15,13 @@
  */
 package org.apache.ibatis.cache;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.ibatis.cache.decorators.LoggingCache;
 import org.apache.ibatis.cache.decorators.ScheduledCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class ScheduledCacheTest {
@@ -64,5 +67,4 @@ class ScheduledCacheTest {
     assertNull(cache.getObject(0));
     assertNull(cache.getObject(4));
   }
-
 }

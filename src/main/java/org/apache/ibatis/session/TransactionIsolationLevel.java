@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,14 +17,17 @@ package org.apache.ibatis.session;
 
 import java.sql.Connection;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public enum TransactionIsolationLevel {
+  /** 无 */
   NONE(Connection.TRANSACTION_NONE),
+  /** 已提交读 */
   READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED),
+  /** 未提交读 */
   READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED),
+  /** 可重复读 */
   REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
+  /** 串行化 */
   SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
 
   private final int level;

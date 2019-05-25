@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.submitted.nested_query_cache;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.io.Reader;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.io.Resources;
@@ -24,11 +28,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.Reader;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
 class NestedQueryCacheTest extends BaseDataTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -36,7 +35,9 @@ class NestedQueryCacheTest extends BaseDataTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nested_query_cache/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/nested_query_cache/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -85,6 +86,5 @@ class NestedQueryCacheTest extends BaseDataTest {
       // ensure that nested author within blog is cached
       assertThat(cachedAuthor).isSameAs(author);
     }
-
   }
 }

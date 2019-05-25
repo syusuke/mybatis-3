@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,24 +26,27 @@ public class PropertyParser {
   private static final String KEY_PREFIX = "org.apache.ibatis.parsing.PropertyParser.";
   /**
    * The special property key that indicate whether enable a default value on placeholder.
-   * <p>
-   *   The default value is {@code false} (indicate disable a default value on placeholder)
-   *   If you specify the {@code true}, you can specify key and default value on placeholder (e.g. {@code ${db.username:postgres}}).
-   * </p>
+   *
+   * <p>The default value is {@code false} (indicate disable a default value on placeholder) If you
+   * specify the {@code true}, you can specify key and default value on placeholder (e.g. {@code
+   * ${db.username:postgres}}).
+   *
    * @since 3.4.2
    */
   public static final String KEY_ENABLE_DEFAULT_VALUE = KEY_PREFIX + "enable-default-value";
 
   /**
    * The special property key that specify a separator for key and default value on placeholder.
-   * <p>
-   *   The default separator is {@code ":"}.
-   * </p>
+   *
+   * <p>The default separator is {@code ":"}.
+   *
    * @since 3.4.2
    */
   public static final String KEY_DEFAULT_VALUE_SEPARATOR = KEY_PREFIX + "default-value-separator";
 
+  /** 默认不开启 */
   private static final String ENABLE_DEFAULT_VALUE = "false";
+  /** 默认分隔符,${username:kerry},找不到时,默认kerry */
   private static final String DEFAULT_VALUE_SEPARATOR = ":";
 
   private PropertyParser() {
@@ -51,20 +54,38 @@ public class PropertyParser {
   }
 
   public static String parse(String string, Properties variables) {
+    // 1. VariableTokenHandler
     VariableTokenHandler handler = new VariableTokenHandler(variables);
+    // 2. GenericTokenParser
     GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
+    // 3. 执行解析
     return parser.parse(string);
   }
 
   private static class VariableTokenHandler implements TokenHandler {
+    /**
+     *
+     *
+     * <pre>
+     *     <properties>
+     *         ....
+     *     </properties>
+     * </pre>
+     *
+     * 下的一些Key,Value
+     */
     private final Properties variables;
+    /** 占位符中支持默认值功能 */
     private final boolean enableDefaultValue;
+    /** 占位符与默认分割符之间的分割符 */
     private final String defaultValueSeparator;
 
     private VariableTokenHandler(Properties variables) {
       this.variables = variables;
-      this.enableDefaultValue = Boolean.parseBoolean(getPropertyValue(KEY_ENABLE_DEFAULT_VALUE, ENABLE_DEFAULT_VALUE));
-      this.defaultValueSeparator = getPropertyValue(KEY_DEFAULT_VALUE_SEPARATOR, DEFAULT_VALUE_SEPARATOR);
+      this.enableDefaultValue =
+          Boolean.parseBoolean(getPropertyValue(KEY_ENABLE_DEFAULT_VALUE, ENABLE_DEFAULT_VALUE));
+      this.defaultValueSeparator =
+          getPropertyValue(KEY_DEFAULT_VALUE_SEPARATOR, DEFAULT_VALUE_SEPARATOR);
     }
 
     private String getPropertyValue(String key, String defaultValue) {
@@ -76,10 +97,17 @@ public class PropertyParser {
       if (variables != null) {
         String key = content;
         if (enableDefaultValue) {
+
+          // ${username:kerry},用户名,默认kerry
+
+          // 分隔符的开始
           final int separatorIndex = content.indexOf(defaultValueSeparator);
+          // 有默认值的情况
           String defaultValue = null;
           if (separatorIndex >= 0) {
+            // 找到 username
             key = content.substring(0, separatorIndex);
+            // kerry
             defaultValue = content.substring(separatorIndex + defaultValueSeparator.length());
           }
           if (defaultValue != null) {
@@ -90,8 +118,8 @@ public class PropertyParser {
           return variables.getProperty(key);
         }
       }
+      // variables 集合为空
       return "${" + content + "}";
     }
   }
-
 }

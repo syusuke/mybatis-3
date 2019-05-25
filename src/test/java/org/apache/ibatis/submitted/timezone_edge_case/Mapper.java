@@ -25,5 +25,4 @@ public interface Mapper {
 
   @Insert("insert into records (id, ts, d) values (#{id}, #{ts}, #{d})")
   int insert(Record record);
-
 }

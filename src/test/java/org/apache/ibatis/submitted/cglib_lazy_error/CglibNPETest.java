@@ -31,12 +31,15 @@ class CglibNPETest {
 
   @BeforeAll
   static void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cglib_lazy_error/ibatisConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/cglib_lazy_error/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cglib_lazy_error/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/cglib_lazy_error/CreateDB.sql");
   }
 
   @Test
@@ -70,7 +73,8 @@ class CglibNPETest {
       Person person = personMapper.selectById(3);
       Assertions.assertNotNull(person, "Persons must not be null");
       Assertions.assertEquals(expectedParent, person.getParent(), "Parent must be John Smith");
-      Assertions.assertEquals(expectedGrandParent, person.getParent().getParent(), "Parent must be John Smith sr.");
+      Assertions.assertEquals(
+          expectedGrandParent, person.getParent().getParent(), "Parent must be John Smith sr.");
     }
   }
 
@@ -81,7 +85,8 @@ class CglibNPETest {
       Person expectedAncestor = personMapper.selectById(1);
       Person person = personMapper.selectById(3);
       Assertions.assertNotNull(person, "Persons must not be null");
-      Assertions.assertEquals(expectedAncestor, person.getAncestor(), "Ancestor must be John Smith sr.");
+      Assertions.assertEquals(
+          expectedAncestor, person.getAncestor(), "Ancestor must be John Smith sr.");
     }
   }
 
@@ -95,13 +100,14 @@ class CglibNPETest {
       Assertions.assertNotNull(person, "Persons must not be null");
       Assertions.assertNotNull(person.getParent(), "Parent must not be null");
       Assertions.assertNotNull(person.getParent().getParent(), "Grandparent must not be null");
-      Assertions.assertEquals(expectedAncestor, person.getAncestor(), "Ancestor must be John Smith sr.");
+      Assertions.assertEquals(
+          expectedAncestor, person.getAncestor(), "Ancestor must be John Smith sr.");
     }
   }
 
   @Test
   void testInsertBetweenTwoSelects() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()){
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person selected1 = personMapper.selectById(1);
       Person selected2 = personMapper.selectById(2);
@@ -128,5 +134,4 @@ class CglibNPETest {
       Assertions.assertEquals(1, selected1.getId().longValue());
     }
   }
-
 }

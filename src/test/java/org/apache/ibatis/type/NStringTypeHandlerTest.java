@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.type;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Test;
 
 class NStringTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -71,5 +71,4 @@ class NStringTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     // Unnecessary
   }
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,15 +20,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.ibatis.executor.ExecutorException;
-
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public abstract class AbstractEnhancedDeserializationProxy {
 
   protected static final String FINALIZE_METHOD = "finalize";
@@ -41,8 +38,12 @@ public abstract class AbstractEnhancedDeserializationProxy {
   private final Object reloadingPropertyLock;
   private boolean reloadingProperty;
 
-  protected AbstractEnhancedDeserializationProxy(Class<?> type, Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
-          ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+  protected AbstractEnhancedDeserializationProxy(
+      Class<?> type,
+      Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
+      ObjectFactory objectFactory,
+      List<Class<?>> constructorArgTypes,
+      List<Object> constructorArgs) {
     this.type = type;
     this.unloadedProperties = unloadedProperties;
     this.objectFactory = objectFactory;
@@ -64,10 +65,13 @@ public abstract class AbstractEnhancedDeserializationProxy {
         }
 
         PropertyCopier.copyBeanProperties(type, enhanced, original);
-        return this.newSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+        return this.newSerialStateHolder(
+            original, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
       } else {
         synchronized (this.reloadingPropertyLock) {
-          if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName) && !reloadingProperty) {
+          if (!FINALIZE_METHOD.equals(methodName)
+              && PropertyNamer.isProperty(methodName)
+              && !reloadingProperty) {
             final String property = PropertyNamer.methodToProperty(methodName);
             final String propertyKey = property.toUpperCase(Locale.ENGLISH);
             if (unloadedProperties.containsKey(propertyKey)) {
@@ -82,8 +86,10 @@ public abstract class AbstractEnhancedDeserializationProxy {
               } else {
                 /* I'm not sure if this case can really happen or is just in tests -
                  * we have an unread property but no loadPair to load it. */
-                throw new ExecutorException("An attempt has been made to read a not loaded lazy property '"
-                        + property + "' of a disconnected object");
+                throw new ExecutorException(
+                    "An attempt has been made to read a not loaded lazy property '"
+                        + property
+                        + "' of a disconnected object");
               }
             }
           }
@@ -97,10 +103,9 @@ public abstract class AbstractEnhancedDeserializationProxy {
   }
 
   protected abstract AbstractSerialStateHolder newSerialStateHolder(
-          Object userBean,
-          Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
-          ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes,
-          List<Object> constructorArgs);
-
+      Object userBean,
+      Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
+      ObjectFactory objectFactory,
+      List<Class<?>> constructorArgTypes,
+      List<Object> constructorArgs);
 }

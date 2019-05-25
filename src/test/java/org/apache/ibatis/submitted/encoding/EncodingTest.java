@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -34,7 +33,8 @@ class EncodingTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/encoding/EncodingConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/encoding/EncodingConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -42,8 +42,9 @@ class EncodingTest {
     try {
       // make sure that the SQL file has been saved in UTF-8!
       Resources.setCharset(Charset.forName("utf-8"));
-      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/encoding/CreateDB.sql");
+      BaseDataTest.runScript(
+          sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+          "org/apache/ibatis/submitted/encoding/CreateDB.sql");
     } finally {
       Resources.setCharset(charset);
     }

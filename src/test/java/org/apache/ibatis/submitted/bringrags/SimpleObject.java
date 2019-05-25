@@ -35,5 +35,4 @@ public class SimpleObject {
   public List<SimpleChildObject> getSimpleChildObjects() {
     return simpleChildObjects;
   }
-
 }

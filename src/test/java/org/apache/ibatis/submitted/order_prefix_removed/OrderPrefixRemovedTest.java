@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.order_prefix_removed;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.ExecutorType;
@@ -34,12 +33,15 @@ class OrderPrefixRemovedTest {
 
   @BeforeAll
   static void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/order_prefix_removed/ibatisConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/order_prefix_removed/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/order_prefix_removed/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/order_prefix_removed/CreateDB.sql");
   }
 
   @Test

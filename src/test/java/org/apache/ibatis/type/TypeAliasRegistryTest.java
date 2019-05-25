@@ -19,9 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
+import org.junit.jupiter.api.Test;
 
 class TypeAliasRegistryTest {
 
@@ -31,7 +30,8 @@ class TypeAliasRegistryTest {
 
     typeAliasRegistry.registerAlias("rich", "org.apache.ibatis.domain.misc.RichType");
 
-    assertEquals("org.apache.ibatis.domain.misc.RichType", typeAliasRegistry.resolveAlias("rich").getName());
+    assertEquals(
+        "org.apache.ibatis.domain.misc.RichType", typeAliasRegistry.resolveAlias("rich").getName());
   }
 
   @Test
@@ -50,7 +50,8 @@ class TypeAliasRegistryTest {
   @Test
   void shouldNotBeAbleToRegisterSameAliasWithDifferentType() {
     TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
-    assertThrows(TypeException.class, () -> typeAliasRegistry.registerAlias("string", BigDecimal.class));
+    assertThrows(
+        TypeException.class, () -> typeAliasRegistry.registerAlias("string", BigDecimal.class));
   }
 
   @Test
@@ -66,5 +67,4 @@ class TypeAliasRegistryTest {
     typeAliasRegistry.registerAlias("foo", (Class<?>) null);
     typeAliasRegistry.registerAlias("foo", String.class);
   }
-
 }

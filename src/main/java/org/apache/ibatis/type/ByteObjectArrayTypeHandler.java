@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,13 +20,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ByteObjectArrayTypeHandler extends BaseTypeHandler<Byte[]> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Byte[] parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Byte[] parameter, JdbcType jdbcType)
+      throws SQLException {
     ps.setBytes(i, ByteArrayUtils.convertToPrimitiveArray(parameter));
   }
 
@@ -55,5 +54,4 @@ public class ByteObjectArrayTypeHandler extends BaseTypeHandler<Byte[]> {
     }
     return returnValue;
   }
-
 }

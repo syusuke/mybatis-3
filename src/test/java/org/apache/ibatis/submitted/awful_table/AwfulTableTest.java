@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.awful_table;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -32,12 +31,14 @@ class AwfulTableTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/awful_table/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/awful_table/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/awful_table/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/awful_table/CreateDB.sql");
   }
 
   @Test
@@ -77,5 +78,4 @@ class AwfulTableTest {
       assertEquals(record.getThirdFirstName(), returnedRecord.getThirdFirstName());
     }
   }
-
 }

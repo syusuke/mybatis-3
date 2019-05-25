@@ -27,12 +27,14 @@ public interface ObjectFactory {
 
   /**
    * Sets configuration properties.
+   *
    * @param properties configuration properties
    */
   void setProperties(Properties properties);
 
   /**
    * Creates a new object with default constructor.
+   *
    * @param type Object type
    * @return
    */
@@ -40,6 +42,9 @@ public interface ObjectFactory {
 
   /**
    * Creates a new object with the specified constructor and params.
+   *
+   * <p>根据参数列表，从指定类型中选择合适的构造器创建对象
+   *
    * @param type Object type
    * @param constructorArgTypes Constructor argument types
    * @param constructorArgs Constructor argument values
@@ -48,13 +53,12 @@ public interface ObjectFactory {
   <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 
   /**
-   * Returns true if this object can have a set of other objects.
-   * It's main purpose is to support non-java.util.Collection objects like Scala collections.
+   * Returns true if this object can have a set of other objects. It's main purpose is to support
+   * non-java.util.Collection objects like Scala collections.
    *
    * @param type Object type
    * @return whether it is a collection or not
    * @since 3.1.0
    */
   <T> boolean isCollection(Class<T> type);
-
 }

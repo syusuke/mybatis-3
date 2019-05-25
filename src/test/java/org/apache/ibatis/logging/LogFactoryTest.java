@@ -18,7 +18,6 @@ package org.apache.ibatis.logging;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
 import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
@@ -90,7 +89,8 @@ class LogFactoryTest {
 
   @Test
   void shouldReadLogImplFromSettings() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/logging/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/logging/mybatis-config.xml")) {
       new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -105,5 +105,4 @@ class LogFactoryTest {
     log.error("Error message.");
     log.error("Error with Exception.", new Exception("Test exception."));
   }
-
 }

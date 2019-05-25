@@ -22,16 +22,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class Plugin implements InvocationHandler {
 
   private final Object target;
   private final Interceptor interceptor;
+  /** {@link Signature} 注解中的信息 */
   private final Map<Class<?>, Set<Method>> signatureMap;
 
   private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
@@ -44,12 +42,12 @@ public class Plugin implements InvocationHandler {
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
     Class<?> type = target.getClass();
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
+    // JDK动态代理必须有接口
     if (interfaces.length > 0) {
       return Proxy.newProxyInstance(
-          type.getClassLoader(),
-          interfaces,
-          new Plugin(target, interceptor, signatureMap));
+          type.getClassLoader(), interfaces, new Plugin(target, interceptor, signatureMap));
     }
+    // 否则,直接返回对象
     return target;
   }
 
@@ -58,19 +56,28 @@ public class Plugin implements InvocationHandler {
     try {
       Set<Method> methods = signatureMap.get(method.getDeclaringClass());
       if (methods != null && methods.contains(method)) {
+        // 被拦截时,调用链...
         return interceptor.intercept(new Invocation(target, method, args));
       }
+      // 否则直接执行
       return method.invoke(target, args);
     } catch (Exception e) {
       throw ExceptionUtil.unwrapThrowable(e);
     }
   }
 
+  /**
+   * 获取拦截器注解标明的方法
+   *
+   * @param interceptor
+   * @return
+   */
   private static Map<Class<?>, Set<Method>> getSignatureMap(Interceptor interceptor) {
     Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);
     // issue #251
     if (interceptsAnnotation == null) {
-      throw new PluginException("No @Intercepts annotation was found in interceptor " + interceptor.getClass().getName());
+      throw new PluginException(
+          "No @Intercepts annotation was found in interceptor " + interceptor.getClass().getName());
     }
     Signature[] sigs = interceptsAnnotation.value();
     Map<Class<?>, Set<Method>> signatureMap = new HashMap<>();
@@ -80,13 +87,16 @@ public class Plugin implements InvocationHandler {
         Method method = sig.type().getMethod(sig.method(), sig.args());
         methods.add(method);
       } catch (NoSuchMethodException e) {
-        throw new PluginException("Could not find method on " + sig.type() + " named " + sig.method() + ". Cause: " + e, e);
+        throw new PluginException(
+            "Could not find method on " + sig.type() + " named " + sig.method() + ". Cause: " + e,
+            e);
       }
     }
     return signatureMap;
   }
 
-  private static Class<?>[] getAllInterfaces(Class<?> type, Map<Class<?>, Set<Method>> signatureMap) {
+  private static Class<?>[] getAllInterfaces(
+      Class<?> type, Map<Class<?>, Set<Method>> signatureMap) {
     Set<Class<?>> interfaces = new HashSet<>();
     while (type != null) {
       for (Class<?> c : type.getInterfaces()) {
@@ -98,5 +108,4 @@ public class Plugin implements InvocationHandler {
     }
     return interfaces.toArray(new Class<?>[interfaces.size()]);
   }
-
 }

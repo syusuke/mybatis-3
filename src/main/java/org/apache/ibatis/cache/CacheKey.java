@@ -18,13 +18,9 @@ package org.apache.ibatis.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
-
 import org.apache.ibatis.reflection.ArrayUtil;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class CacheKey implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 1146682552656046210L;
@@ -34,11 +30,15 @@ public class CacheKey implements Cloneable, Serializable {
   private static final int DEFAULT_MULTIPLYER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
+  /** 参与计算HashCode,默认 {@link CacheKey#DEFAULT_MULTIPLYER} */
   private final int multiplier;
+  /** 默认HashCode,默认 {@link CacheKey#DEFAULT_HASHCODE} */
   private int hashcode;
+
   private long checksum;
   private int count;
-  // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.
+  // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is
+  // not serializable, this is not always true and thus should not be marked transient.
   private List<Object> updateList;
 
   public CacheKey() {
@@ -113,10 +113,10 @@ public class CacheKey implements Cloneable, Serializable {
 
   @Override
   public String toString() {
-    StringJoiner returnValue = new StringJoiner(":");
-    returnValue.add(String.valueOf(hashcode));
-    returnValue.add(String.valueOf(checksum));
-    updateList.stream().map(ArrayUtil::toString).forEach(returnValue::add);
+    StringBuilder returnValue = new StringBuilder().append(hashcode).append(':').append(checksum);
+    for (Object object : updateList) {
+      returnValue.append(':').append(ArrayUtil.toString(object));
+    }
     return returnValue.toString();
   }
 
@@ -126,5 +126,4 @@ public class CacheKey implements Cloneable, Serializable {
     clonedCacheKey.updateList = new ArrayList<>(updateList);
     return clonedCacheKey;
   }
-
 }

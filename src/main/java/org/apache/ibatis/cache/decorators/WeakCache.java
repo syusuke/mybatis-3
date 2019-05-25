@@ -20,12 +20,10 @@ import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 
 /**
- * Weak Reference cache decorator.
- * Thanks to Dr. Heinz Kabutz for his guidance here.
+ * Weak Reference cache decorator. Thanks to Dr. Heinz Kabutz for his guidance here.
  *
  * @author Clinton Begin
  */
@@ -115,5 +113,4 @@ public class WeakCache implements Cache {
       this.key = key;
     }
   }
-
 }

@@ -35,9 +35,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
-/**
- * @author Iwao AVE!
- */
+/** @author Iwao AVE! */
 public class ResultSetWrapper {
 
   private final ResultSet resultSet;
@@ -56,7 +54,10 @@ public class ResultSetWrapper {
     final ResultSetMetaData metaData = rs.getMetaData();
     final int columnCount = metaData.getColumnCount();
     for (int i = 1; i <= columnCount; i++) {
-      columnNames.add(configuration.isUseColumnLabel() ? metaData.getColumnLabel(i) : metaData.getColumnName(i));
+      columnNames.add(
+          configuration.isUseColumnLabel()
+              ? metaData.getColumnLabel(i)
+              : metaData.getColumnName(i));
       jdbcTypes.add(JdbcType.forCode(metaData.getColumnType(i)));
       classNames.add(metaData.getColumnClassName(i));
     }
@@ -79,7 +80,7 @@ public class ResultSetWrapper {
   }
 
   public JdbcType getJdbcType(String columnName) {
-    for (int i = 0 ; i < columnNames.size(); i++) {
+    for (int i = 0; i < columnNames.size(); i++) {
       if (columnNames.get(i).equalsIgnoreCase(columnName)) {
         return jdbcTypes.get(i);
       }
@@ -88,9 +89,9 @@ public class ResultSetWrapper {
   }
 
   /**
-   * Gets the type handler to use when reading the result set.
-   * Tries to get from the TypeHandlerRegistry by searching for the property type.
-   * If not found it gets the column JDBC type and tries to get a handler for it.
+   * Gets the type handler to use when reading the result set. Tries to get from the
+   * TypeHandlerRegistry by searching for the property type. If not found it gets the column JDBC
+   * type and tries to get a handler for it.
    *
    * @param propertyType
    * @param columnName
@@ -141,11 +142,14 @@ public class ResultSetWrapper {
     return null;
   }
 
-  private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+  private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix)
+      throws SQLException {
     List<String> mappedColumnNames = new ArrayList<>();
     List<String> unmappedColumnNames = new ArrayList<>();
-    final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);
-    final Set<String> mappedColumns = prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);
+    final String upperColumnPrefix =
+        columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);
+    final Set<String> mappedColumns =
+        prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);
     for (String columnName : columnNames) {
       final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);
       if (mappedColumns.contains(upperColumnName)) {
@@ -158,7 +162,8 @@ public class ResultSetWrapper {
     unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);
   }
 
-  public List<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+  public List<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix)
+      throws SQLException {
     List<String> mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
     if (mappedColumnNames == null) {
       loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);
@@ -167,8 +172,10 @@ public class ResultSetWrapper {
     return mappedColumnNames;
   }
 
-  public List<String> getUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
-    List<String> unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
+  public List<String> getUnmappedColumnNames(ResultMap resultMap, String columnPrefix)
+      throws SQLException {
+    List<String> unMappedColumnNames =
+        unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
     if (unMappedColumnNames == null) {
       loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);
       unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
@@ -190,5 +197,4 @@ public class ResultSetWrapper {
     }
     return prefixed;
   }
-
 }

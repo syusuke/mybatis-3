@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.global_variables;
 
 import java.io.Reader;
 import java.lang.reflect.Field;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
@@ -35,13 +34,16 @@ class BaseTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/global_variables/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/global_variables/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/global_variables/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/global_variables/CreateDB.sql");
   }
 
   @Test
@@ -49,7 +51,8 @@ class BaseTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
-      CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
+      CustomCache customCache =
+          unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
       Assertions.assertEquals("User1", user.getName());
       Assertions.assertEquals("foo", customCache.getStringValue());
       Assertions.assertEquals(10, customCache.getIntegerValue().intValue());
@@ -62,7 +65,8 @@ class BaseTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
       User user = mapper.getUser(1);
-      CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
+      CustomCache customCache =
+          unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
       Assertions.assertEquals("User1", user.getName());
       Assertions.assertEquals("foo", customCache.getStringValue());
       Assertions.assertEquals(10, customCache.getIntegerValue().intValue());
@@ -86,5 +90,4 @@ class BaseTest {
       field.setAccessible(false);
     }
   }
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,15 +20,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class MetaClass {
 
   private final ReflectorFactory reflectorFactory;
@@ -48,6 +45,12 @@ public class MetaClass {
     return MetaClass.forClass(propType, reflectorFactory);
   }
 
+  /**
+   * 根据表达式，获得属性
+   *
+   * @param name
+   * @return
+   */
   public String findProperty(String name) {
     StringBuilder prop = buildProperty(name, new StringBuilder());
     return prop.length() > 0 ? prop.toString() : null;
@@ -55,6 +58,7 @@ public class MetaClass {
 
   public String findProperty(String name, boolean useCamelCaseMapping) {
     if (useCamelCaseMapping) {
+      // 下划线转驼峰
       name = name.replace("_", "");
     }
     return findProperty(name);
@@ -167,17 +171,29 @@ public class MetaClass {
     return reflector.getSetInvoker(name);
   }
 
+  /**
+   * 表达式处理器
+   *
+   * @param name 表达式
+   * @param builder
+   * @return
+   */
   private StringBuilder buildProperty(String name, StringBuilder builder) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
+      // 有子表达式
+      // order[0]
       String propertyName = reflector.findPropertyName(prop.getName());
       if (propertyName != null) {
         builder.append(propertyName);
         builder.append(".");
+        // 创建 MetaClass 对象
         MetaClass metaProp = metaClassForProperty(propertyName);
+        // 递归解析子表达式 children ，并将结果添加到 builder 中
         metaProp.buildProperty(prop.getChildren(), builder);
       }
     } else {
+      // 无子表达式
       String propertyName = reflector.findPropertyName(name);
       if (propertyName != null) {
         builder.append(propertyName);
@@ -189,5 +205,4 @@ public class MetaClass {
   public boolean hasDefaultConstructor() {
     return reflector.hasDefaultConstructor();
   }
-
 }

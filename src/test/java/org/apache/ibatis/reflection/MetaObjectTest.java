@@ -15,20 +15,24 @@
  */
 package org.apache.ibatis.reflection;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.domain.misc.CustomBeanWrapper;
 import org.apache.ibatis.domain.misc.CustomBeanWrapperFactory;
 import org.apache.ibatis.domain.misc.RichType;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MetaObjectTest {
 
@@ -187,7 +191,6 @@ class MetaObjectTest {
     MetaObject object = SystemMetaObject.forObject(new Author());
     object.setValue("email", "test");
     assertEquals("test", object.getValue("email"));
-
   }
 
   @Test
@@ -231,9 +234,9 @@ class MetaObjectTest {
     assertEquals(3, metaMap.getSetterNames().length);
 
     @SuppressWarnings("unchecked")
-    Map<String,String> name = (Map<String,String>) metaMap.getValue("name");
+    Map<String, String> name = (Map<String, String>) metaMap.getValue("name");
     @SuppressWarnings("unchecked")
-    Map<String,String> address = (Map<String,String>) metaMap.getValue("address");
+    Map<String, String> address = (Map<String, String>) metaMap.getValue("address");
 
     assertEquals("Clinton", name.get("first"));
     assertEquals("1 Some Street", address.get("street"));
@@ -270,7 +273,12 @@ class MetaObjectTest {
 
   @Test
   void shouldUseObjectWrapperFactoryWhenSet() {
-    MetaObject meta = MetaObject.forObject(new Author(), SystemMetaObject.DEFAULT_OBJECT_FACTORY, new CustomBeanWrapperFactory(), new DefaultReflectorFactory());
+    MetaObject meta =
+        MetaObject.forObject(
+            new Author(),
+            SystemMetaObject.DEFAULT_OBJECT_FACTORY,
+            new CustomBeanWrapperFactory(),
+            new DefaultReflectorFactory());
     assertEquals(CustomBeanWrapper.class, meta.getObjectWrapper().getClass());
 
     // Make sure the old default factory is in place and still works
@@ -299,5 +307,4 @@ class MetaObjectTest {
     assertTrue(meta.hasGetter("filterParams[1]"));
     assertTrue(meta.hasGetter("filterParams[2]"));
   }
-
 }

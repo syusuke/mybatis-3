@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.domain.misc.RichType;
 import org.apache.ibatis.domain.misc.generics.GenericConcrete;
 import org.junit.jupiter.api.Test;
@@ -44,7 +43,9 @@ class MetaClassTest {
       meta.getGetterType("aString");
       org.junit.jupiter.api.Assertions.fail("should have thrown ReflectionException");
     } catch (ReflectionException expected) {
-      assertEquals("There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'", expected.getMessage());
+      assertEquals(
+          "There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'",
+          expected.getMessage());
     }
   }
 
@@ -140,5 +141,4 @@ class MetaClassTest {
     MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
     assertEquals("richField", meta.findProperty("RICHfield"));
   }
-
 }

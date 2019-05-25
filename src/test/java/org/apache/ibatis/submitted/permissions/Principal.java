@@ -38,5 +38,4 @@ public class Principal {
   public void setPermissions(List<Permission> permissions) {
     this.permissions = permissions;
   }
-
 }

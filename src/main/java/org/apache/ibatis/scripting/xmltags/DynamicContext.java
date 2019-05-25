@@ -18,17 +18,13 @@ package org.apache.ibatis.scripting.xmltags;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
-
 import ognl.OgnlContext;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class DynamicContext {
 
   public static final String PARAMETER_OBJECT_KEY = "_parameter";
@@ -111,7 +107,7 @@ public class DynamicContext {
 
       Object parameterObject = map.get(PARAMETER_OBJECT_KEY);
       if (parameterObject instanceof Map) {
-        return ((Map)parameterObject).get(name);
+        return ((Map) parameterObject).get(name);
       }
 
       return null;

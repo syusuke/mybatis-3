@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.duplicate_statements;
 
 import java.io.Reader;
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.RowBounds;
@@ -35,14 +34,17 @@ class DuplicateStatementsTest {
 
   @BeforeEach
   void setupDb() throws Exception {
-      // create a SqlSessionFactory
-      try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      }
+    // create a SqlSessionFactory
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml")) {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
 
-      // populate in-memory database
-      BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-              "org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
+    // populate in-memory database
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
   }
 
   @Test
@@ -87,7 +89,8 @@ class DuplicateStatementsTest {
 
   @Test
   void shouldFailForDuplicateMethod() {
-    Assertions.assertThrows(IllegalArgumentException.class,
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
         () -> sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapperExtended.class));
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,17 @@
  */
 package org.apache.ibatis.builder;
 
+import java.util.Properties;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 
-import java.util.Properties;
-
-@Intercepts({})
+@Intercepts({
+  // @Signature(type = Executor.class, method = "query", args = {MappedStatement.class,
+  // Object.class, RowBounds.class, ResultHandler.class}),
+  // @Signature(type = Executor.class, method = "close", args = {boolean.class})
+})
 public class ExamplePlugin implements Interceptor {
   private Properties properties;
 
@@ -44,5 +47,4 @@ public class ExamplePlugin implements Interceptor {
   public Properties getProperties() {
     return properties;
   }
-
 }

@@ -30,9 +30,7 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 
-/**
- * Just a test case. Not a real Velocity implementation.
- */
+/** Just a test case. Not a real Velocity implementation. */
 public class VelocitySqlSource implements SqlSource {
 
   public static final String PARAMETER_OBJECT_KEY = "_parameter";
@@ -77,10 +75,10 @@ public class VelocitySqlSource implements SqlSource {
       boundSql.setAdditionalParameter(entry.getKey(), entry.getValue());
     }
     return boundSql;
-
   }
 
-  public static Map<String, Object> createBindings(Object parameterObject, Configuration configuration) {
+  public static Map<String, Object> createBindings(
+      Object parameterObject, Configuration configuration) {
     Map<String, Object> bindings = new HashMap<>();
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());

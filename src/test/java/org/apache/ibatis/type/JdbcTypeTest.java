@@ -18,17 +18,46 @@ package org.apache.ibatis.type;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Types;
-
 import org.junit.jupiter.api.Test;
 
 class JdbcTypeTest {
   private static final String[] requiredStandardTypeNames = {
-    "ARRAY", "BIGINT", "BINARY", "BIT", "BLOB", "BOOLEAN", "CHAR", "CLOB",
-    "DATALINK", "DATE", "DECIMAL", "DISTINCT", "DOUBLE", "FLOAT", "INTEGER",
-    "JAVA_OBJECT", "LONGNVARCHAR", "LONGVARBINARY", "LONGVARCHAR", "NCHAR",
-    "NCLOB", "NULL", "NUMERIC","NVARCHAR", "OTHER", "REAL", "REF", "ROWID",
-    "SMALLINT", "SQLXML", "STRUCT", "TIME", "TIMESTAMP", "TINYINT",
-    "VARBINARY", "VARCHAR"
+    "ARRAY",
+    "BIGINT",
+    "BINARY",
+    "BIT",
+    "BLOB",
+    "BOOLEAN",
+    "CHAR",
+    "CLOB",
+    "DATALINK",
+    "DATE",
+    "DECIMAL",
+    "DISTINCT",
+    "DOUBLE",
+    "FLOAT",
+    "INTEGER",
+    "JAVA_OBJECT",
+    "LONGNVARCHAR",
+    "LONGVARBINARY",
+    "LONGVARCHAR",
+    "NCHAR",
+    "NCLOB",
+    "NULL",
+    "NUMERIC",
+    "NVARCHAR",
+    "OTHER",
+    "REAL",
+    "REF",
+    "ROWID",
+    "SMALLINT",
+    "SQLXML",
+    "STRUCT",
+    "TIME",
+    "TIMESTAMP",
+    "TINYINT",
+    "VARBINARY",
+    "VARCHAR"
   };
 
   @Test

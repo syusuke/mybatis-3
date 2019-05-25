@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ public class UtilityTester {
       ByteArrayOutputStream myByteArrayOutputStream = new ByteArrayOutputStream();
 
       // Serialize to a byte array
-      try (ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myByteArrayOutputStream)) {
+      try (ObjectOutputStream myObjectOutputStream =
+          new ObjectOutputStream(myByteArrayOutputStream)) {
         myObjectOutputStream.writeObject(myObject);
       }
 
@@ -51,12 +52,11 @@ public class UtilityTester {
 
   private static Object deserialzeObject(byte[] aSerializedObject) {
     // Deserialize from a byte array
-    try (ObjectInputStream myObjectInputStream = new ObjectInputStream(new ByteArrayInputStream(aSerializedObject))) {
+    try (ObjectInputStream myObjectInputStream =
+        new ObjectInputStream(new ByteArrayInputStream(aSerializedObject))) {
       return myObjectInputStream.readObject();
-    }
-    catch (Exception anException) {
+    } catch (Exception anException) {
       throw new RuntimeException("Problem deserializing", anException);
     }
   }
-
 }

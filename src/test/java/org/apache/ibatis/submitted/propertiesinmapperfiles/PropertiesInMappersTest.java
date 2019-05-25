@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.propertiesinmapperfiles;
 
 import java.io.Reader;
 import java.util.Properties;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -39,13 +38,16 @@ class PropertiesInMappersTest {
     p.put("property", "id");
 
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/propertiesinmapperfiles/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/propertiesinmapperfiles/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, p);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/propertiesinmapperfiles/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/propertiesinmapperfiles/CreateDB.sql");
   }
 
   @Test
@@ -56,5 +58,4 @@ class PropertiesInMappersTest {
       Assertions.assertEquals("User1", user.getName());
     }
   }
-
 }

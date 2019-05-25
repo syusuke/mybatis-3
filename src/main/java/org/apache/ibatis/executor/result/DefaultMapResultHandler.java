@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.executor.result;
 
 import java.util.Map;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -24,9 +23,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
 
   private final Map<K, V> mappedResults;
@@ -36,7 +33,11 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
   private final ReflectorFactory reflectorFactory;
 
   @SuppressWarnings("unchecked")
-  public DefaultMapResultHandler(String mapKey, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
+  public DefaultMapResultHandler(
+      String mapKey,
+      ObjectFactory objectFactory,
+      ObjectWrapperFactory objectWrapperFactory,
+      ReflectorFactory reflectorFactory) {
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;
@@ -47,7 +48,8 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
   @Override
   public void handleResult(ResultContext<? extends V> context) {
     final V value = context.getResultObject();
-    final MetaObject mo = MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);
+    final MetaObject mo =
+        MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);
     // TODO is that assignment always true?
     final K key = (K) mo.getValue(mapKey);
     mappedResults.put(key, value);

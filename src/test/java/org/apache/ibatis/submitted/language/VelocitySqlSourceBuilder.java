@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.language;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.ParameterExpression;
@@ -31,19 +30,19 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 
-/**
- * Just a test case. Not a real Velocity implementation.
- */
+/** Just a test case. Not a real Velocity implementation. */
 public class VelocitySqlSourceBuilder extends BaseBuilder {
 
-  private static final String parameterProperties = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
+  private static final String parameterProperties =
+      "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
 
   public VelocitySqlSourceBuilder(Configuration configuration) {
     super(configuration);
   }
 
   public SqlSource parse(String originalSql, Class<?> parameterType) {
-    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType);
+    ParameterMappingTokenHandler handler =
+        new ParameterMappingTokenHandler(configuration, parameterType);
     GenericTokenParser parser = new GenericTokenParser("@{", "}", handler);
     String sql = parser.parse(originalSql);
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
@@ -79,7 +78,8 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       } else if (JdbcType.CURSOR.name().equals(jdbcType)) {
         propertyType = java.sql.ResultSet.class;
       } else if (property != null) {
-        MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
+        MetaClass metaClass =
+            MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
           propertyType = metaClass.getGetterType(property);
         } else {
@@ -88,7 +88,8 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       } else {
         propertyType = Object.class;
       }
-      ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
+      ParameterMapping.Builder builder =
+          new ParameterMapping.Builder(configuration, property, propertyType);
       if (jdbcType != null) {
         builder.jdbcType(resolveJdbcType(jdbcType));
       }
@@ -117,7 +118,13 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
         } else if ("expression".equals(name)) {
           builder.expression(value);
         } else {
-          throw new BuilderException("An invalid property '" + name + "' was found in mapping @{" + content + "}.  Valid properties are " + parameterProperties);
+          throw new BuilderException(
+              "An invalid property '"
+                  + name
+                  + "' was found in mapping @{"
+                  + content
+                  + "}.  Valid properties are "
+                  + parameterProperties);
         }
       }
       if (typeHandlerAlias != null) {
@@ -132,9 +139,12 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       } catch (BuilderException ex) {
         throw ex;
       } catch (Exception ex) {
-        throw new BuilderException("Parsing error was found in mapping @{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
+        throw new BuilderException(
+            "Parsing error was found in mapping @{"
+                + content
+                + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ",
+            ex);
       }
     }
   }
-
 }

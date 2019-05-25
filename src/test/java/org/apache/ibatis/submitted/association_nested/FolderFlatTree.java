@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,7 @@
  */
 package org.apache.ibatis.submitted.association_nested;
 
-/**
- * @author Loïc Guerrin <guerrin@fullsix.com>
- */
+/** @author Loïc Guerrin <guerrin@fullsix.com> */
 public class FolderFlatTree {
 
   public Folder root;
@@ -26,8 +24,6 @@ public class FolderFlatTree {
 
   @Override
   public String toString() {
-    return root
-            + "\n\t" + level1
-            + "\n\t\t" + level2;
+    return root + "\n\t" + level1 + "\n\t\t" + level2;
   }
 }

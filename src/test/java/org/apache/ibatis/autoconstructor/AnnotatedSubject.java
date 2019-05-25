@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ public class AnnotatedSubject {
   private final int height;
   private final int weight;
 
-  public AnnotatedSubject(final int id, final String name, final int age, final int height, final int weight) {
+  public AnnotatedSubject(
+      final int id, final String name, final int age, final int height, final int weight) {
     this.id = id;
     this.name = name;
     this.age = age;
@@ -33,7 +34,8 @@ public class AnnotatedSubject {
   }
 
   @AutomapConstructor
-  public AnnotatedSubject(final int id, final String name, final int age, final Integer height, final Integer weight) {
+  public AnnotatedSubject(
+      final int id, final String name, final int age, final Integer height, final Integer weight) {
     this.id = id;
     this.name = name;
     this.age = age;

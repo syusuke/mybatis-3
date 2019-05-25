@@ -20,12 +20,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.builder.BuilderException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ExpressionEvaluator {
 
   public boolean evaluateBoolean(String expression, Object parameterObject) {
@@ -62,7 +59,11 @@ public class ExpressionEvaluator {
     if (value instanceof Map) {
       return ((Map) value).entrySet();
     }
-    throw new BuilderException("Error evaluating expression '" + expression + "'.  Return value (" + value + ") was not iterable.");
+    throw new BuilderException(
+        "Error evaluating expression '"
+            + expression
+            + "'.  Return value ("
+            + value
+            + ") was not iterable.");
   }
-
 }

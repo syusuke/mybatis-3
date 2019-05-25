@@ -15,14 +15,16 @@
  */
 package org.apache.ibatis.submitted.lazy_deserialize;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
@@ -34,7 +36,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- *
  * @since 2011-04-06T10:58:55+0200
  * @author Franta Mejta
  */
@@ -50,13 +51,15 @@ class LazyDeserializeTest {
 
   @BeforeEach
   void setupClass() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml")) {
       factory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
+    BaseDataTest.runScript(
+        factory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
   }
 
   @Test
@@ -87,14 +90,16 @@ class LazyDeserializeTest {
         deserializedFoo.getLazyObjectBar();
         fail();
       } catch (ExecutorException e) {
-        assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
+        assertTrue(
+            e.getMessage()
+                .contains("Cannot get Configuration as configuration factory was not set."));
       }
     }
   }
 
   private byte[] serializeFoo(final LazyObjectFoo foo) throws Exception {
     try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-         ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+        ObjectOutputStream oos = new ObjectOutputStream(bos)) {
       oos.writeObject(foo);
       return bos.toByteArray();
     }
@@ -102,9 +107,8 @@ class LazyDeserializeTest {
 
   private LazyObjectFoo deserializeFoo(final byte[] serializedFoo) throws Exception {
     try (ByteArrayInputStream bis = new ByteArrayInputStream(serializedFoo);
-         ObjectInputStream ios = new ObjectInputStream(bis)) {
+        ObjectInputStream ios = new ObjectInputStream(bis)) {
       return (LazyObjectFoo) ios.readObject();
     }
   }
-
 }

@@ -18,18 +18,18 @@ package org.apache.ibatis.mapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 
 /**
  * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.
- * The SQL may have SQL placeholders "?" and an list (ordered) of an parameter mappings
- * with the additional information for each parameter (at least the property name of the input object to read
+ * The SQL may have SQL placeholders "?" and an list (ordered) of an parameter mappings with the
+ * additional information for each parameter (at least the property name of the input object to read
  * the value from).
- * <p>
- * Can also have additional parameters that are created by the dynamic language (for loops, bind...).
+ *
+ * <p>Can also have additional parameters that are created by the dynamic language (for loops,
+ * bind...).
  *
  * @author Clinton Begin
  */
@@ -41,7 +41,11 @@ public class BoundSql {
   private final Map<String, Object> additionalParameters;
   private final MetaObject metaParameters;
 
-  public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
+  public BoundSql(
+      Configuration configuration,
+      String sql,
+      List<ParameterMapping> parameterMappings,
+      Object parameterObject) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;

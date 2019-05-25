@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,14 +17,11 @@ package org.apache.ibatis.reflection.wrapper;
 
 import java.util.Collection;
 import java.util.List;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class CollectionWrapper implements ObjectWrapper {
 
   private final Collection<Object> object;
@@ -79,7 +76,8 @@ public class CollectionWrapper implements ObjectWrapper {
   }
 
   @Override
-  public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
+  public MetaObject instantiatePropertyValue(
+      String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
     throw new UnsupportedOperationException();
   }
 
@@ -97,5 +95,4 @@ public class CollectionWrapper implements ObjectWrapper {
   public <E> void addAll(List<E> element) {
     object.addAll(element);
   }
-
 }

@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.submitted.refcursor;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
@@ -38,13 +39,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
-/**
- * @author Jeff Butler
- */
+/** @author Jeff Butler */
 @Tag("EmbeddedPostgresqlTests")
 class RefCursorTest {
 
@@ -55,16 +53,29 @@ class RefCursorTest {
   @BeforeAll
   static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "refcursor", "postgres", "root", Collections.emptyList());
+    String url =
+        postgres.start(
+            EmbeddedPostgres.cachedRuntimeConfig(
+                Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")),
+            "localhost",
+            SocketUtil.findFreePort(),
+            "refcursor",
+            "postgres",
+            "root",
+            Collections.emptyList());
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment =
+        new Environment(
+            "development",
+            new JdbcTransactionFactory(),
+            new UnpooledDataSource("org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
     configuration.addMapper(OrdersMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/refcursor/CreateDB.sql");
   }
 
@@ -143,9 +154,11 @@ class RefCursorTest {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<>();
       parameter.put("orderId", 99);
-      mapper.getOrder3(parameter, resultContext -> {
-        // won't be used
-      });
+      mapper.getOrder3(
+          parameter,
+          resultContext -> {
+            // won't be used
+          });
       assertEquals(0, parameter.get("detailCount"));
     }
   }

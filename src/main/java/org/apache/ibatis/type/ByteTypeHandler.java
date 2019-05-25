@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,9 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ByteTypeHandler extends BaseTypeHandler<Byte> {
 
   @Override
@@ -32,22 +30,19 @@ public class ByteTypeHandler extends BaseTypeHandler<Byte> {
   }
 
   @Override
-  public Byte getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Byte getNullableResult(ResultSet rs, String columnName) throws SQLException {
     byte result = rs.getByte(columnName);
     return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
-  public Byte getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Byte getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     byte result = rs.getByte(columnIndex);
     return result == 0 && rs.wasNull() ? null : result;
   }
 
   @Override
-  public Byte getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Byte getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     byte result = cs.getByte(columnIndex);
     return result == 0 && cs.wasNull() ? null : result;
   }

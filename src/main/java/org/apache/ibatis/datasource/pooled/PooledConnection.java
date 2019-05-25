@@ -20,29 +20,37 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 class PooledConnection implements InvocationHandler {
 
+  /** 关闭 Connection 方法名 */
   private static final String CLOSE = "close";
-  private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
+  /** JDK Proxy 的接口 */
+  private static final Class<?>[] IFACES = new Class<?>[] {Connection.class};
 
+  /** 对象的标识，基于 {@link #realConnection} 求 hashCode */
   private final int hashCode;
+  /** 所属的 PooledDataSource 对象 */
   private final PooledDataSource dataSource;
+  /** 真实的 Connection 连接 */
   private final Connection realConnection;
+  /** 代理连接 */
   private final Connection proxyConnection;
+  /** 从连接池中，获取走的时间戳 */
   private long checkoutTimestamp;
+  /** 对象创建时间 */
   private long createdTimestamp;
+  /** 最后更新时间 */
   private long lastUsedTimestamp;
+  /** 连接的标识，即 {@link PooledDataSource#expectedConnectionTypeCode} */
   private int connectionTypeCode;
+  /** 是否有效 */
   private boolean valid;
 
   /**
-   * Constructor for SimplePooledConnection that uses the Connection and PooledDataSource passed in.
+   * Constructor for SimplePooledConnection that uses the Connection and PooledDataSource passed in
    *
    * @param connection - the connection that is to be presented as a pooled connection
    * @param dataSource - the dataSource that the connection is from
@@ -54,18 +62,17 @@ class PooledConnection implements InvocationHandler {
     this.createdTimestamp = System.currentTimeMillis();
     this.lastUsedTimestamp = System.currentTimeMillis();
     this.valid = true;
-    this.proxyConnection = (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), IFACES, this);
+    this.proxyConnection =
+        (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), IFACES, this);
   }
 
-  /**
-   * Invalidates the connection.
-   */
+  /** Invalidates the connection */
   public void invalidate() {
     valid = false;
   }
 
   /**
-   * Method to see if the connection is usable.
+   * Method to see if the connection is usable
    *
    * @return True if the connection is usable
    */
@@ -74,7 +81,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the *real* connection that this wraps.
+   * Getter for the *real* connection that this wraps
    *
    * @return The connection
    */
@@ -83,7 +90,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the proxy for the connection.
+   * Getter for the proxy for the connection
    *
    * @return The proxy
    */
@@ -92,7 +99,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Gets the hashcode of the real connection (or 0 if it is null).
+   * Gets the hashcode of the real connection (or 0 if it is null)
    *
    * @return The hashcode of the real connection (or 0 if it is null)
    */
@@ -101,7 +108,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the connection type (based on url + user + password).
+   * Getter for the connection type (based on url + user + password)
    *
    * @return The connection type
    */
@@ -110,7 +117,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Setter for the connection type.
+   * Setter for the connection type
    *
    * @param connectionTypeCode - the connection type
    */
@@ -119,7 +126,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the time that the connection was created.
+   * Getter for the time that the connection was created
    *
    * @return The creation timestamp
    */
@@ -128,7 +135,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Setter for the time that the connection was created.
+   * Setter for the time that the connection was created
    *
    * @param createdTimestamp - the timestamp
    */
@@ -137,7 +144,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the time that the connection was last used.
+   * Getter for the time that the connection was last used
    *
    * @return - the timestamp
    */
@@ -146,7 +153,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Setter for the time that the connection was last used.
+   * Setter for the time that the connection was last used
    *
    * @param lastUsedTimestamp - the timestamp
    */
@@ -155,7 +162,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the time since this connection was last used.
+   * Getter for the time since this connection was last used
    *
    * @return - the time since the last use
    */
@@ -164,7 +171,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the age of the connection.
+   * Getter for the age of the connection
    *
    * @return the age
    */
@@ -173,7 +180,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the timestamp that this connection was checked out.
+   * Getter for the timestamp that this connection was checked out
    *
    * @return the timestamp
    */
@@ -182,7 +189,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Setter for the timestamp that this connection was checked out.
+   * Setter for the timestamp that this connection was checked out
    *
    * @param timestamp the timestamp
    */
@@ -191,7 +198,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Getter for the time that this connection has been checked out.
+   * Getter for the time that this connection has been checked out
    *
    * @return the time
    */
@@ -205,7 +212,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Allows comparing this connection to another.
+   * Allows comparing this connection to another
    *
    * @param obj - the other connection to test for equality
    * @see Object#equals(Object)
@@ -224,9 +231,9 @@ class PooledConnection implements InvocationHandler {
   /**
    * Required for InvocationHandler implementation.
    *
-   * @param proxy  - not used
+   * @param proxy - not used
    * @param method - the method to be executed
-   * @param args   - the parameters to be passed to the method
+   * @param args - the parameters to be passed to the method
    * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])
    */
   @Override
@@ -235,18 +242,18 @@ class PooledConnection implements InvocationHandler {
     if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
       dataSource.pushConnection(this);
       return null;
-    }
-    try {
-      if (!Object.class.equals(method.getDeclaringClass())) {
-        // issue #579 toString() should never fail
-        // throw an SQLException instead of a Runtime
-        checkConnection();
+    } else {
+      try {
+        if (!Object.class.equals(method.getDeclaringClass())) {
+          // issue #579 toString() should never fail
+          // throw an SQLException instead of a Runtime
+          checkConnection();
+        }
+        return method.invoke(realConnection, args);
+      } catch (Throwable t) {
+        throw ExceptionUtil.unwrapThrowable(t);
       }
-      return method.invoke(realConnection, args);
-    } catch (Throwable t) {
-      throw ExceptionUtil.unwrapThrowable(t);
     }
-
   }
 
   private void checkConnection() throws SQLException {
@@ -254,5 +261,4 @@ class PooledConnection implements InvocationHandler {
       throw new SQLException("Error accessing PooledConnection. Connection is invalid.");
     }
   }
-
 }

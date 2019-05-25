@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.keygen;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -26,15 +25,19 @@ import org.apache.ibatis.annotations.Param;
 public interface CountryMapper {
 
   @Options(useGeneratedKeys = true, keyProperty = "id")
-  @Insert({ "insert into country (countryname,countrycode) values (#{countryname},#{countrycode})" })
+  @Insert({"insert into country (countryname,countrycode) values (#{countryname},#{countrycode})"})
   int insertBean(Country country);
 
   @Options(useGeneratedKeys = true, keyProperty = "id")
-  @Insert({ "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})" })
+  @Insert({
+    "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})"
+  })
   int insertNamedBean(@Param("country") Country country);
 
   @Options(useGeneratedKeys = true, keyProperty = "country.id")
-  @Insert({ "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})" })
+  @Insert({
+    "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})"
+  })
   int insertNamedBean_keyPropertyWithParamName(@Param("country") Country country);
 
   int insertList(List<Country> countries);
@@ -50,45 +53,58 @@ public interface CountryMapper {
   int insertNamedArray(@Param("countries") Country[] countries);
 
   @Options(useGeneratedKeys = true, keyProperty = "country.id")
-  @Insert({ "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})" })
+  @Insert({
+    "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})"
+  })
   int insertMultiParams(@Param("country") Country country, @Param("someId") Integer someId);
 
   @Options(useGeneratedKeys = true, keyProperty = "id")
-  @Insert({ "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})" })
-  int insertMultiParams_keyPropertyWithoutParamName(@Param("country") Country country, @Param("someId") Integer someId);
+  @Insert({
+    "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})"
+  })
+  int insertMultiParams_keyPropertyWithoutParamName(
+      @Param("country") Country country, @Param("someId") Integer someId);
 
   @Options(useGeneratedKeys = true, keyProperty = "bogus.id")
-  @Insert({ "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})" })
-  int insertMultiParams_keyPropertyWithWrongParamName(@Param("country") Country country,
-      @Param("someId") Integer someId);
+  @Insert({
+    "insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode})"
+  })
+  int insertMultiParams_keyPropertyWithWrongParamName(
+      @Param("country") Country country, @Param("someId") Integer someId);
 
   int insertListAndSomeId(@Param("list") List<Country> countries, @Param("someId") Integer someId);
 
-  int insertSetAndSomeId(@Param("collection") Set<Country> countries, @Param("someId") Integer someId);
+  int insertSetAndSomeId(
+      @Param("collection") Set<Country> countries, @Param("someId") Integer someId);
 
   int insertArrayAndSomeId(@Param("array") Country[] countries, @Param("someId") Integer someId);
 
-  int insertList_MultiParams(@Param("countries") List<Country> countries, @Param("someId") Integer someId);
+  int insertList_MultiParams(
+      @Param("countries") List<Country> countries, @Param("someId") Integer someId);
 
-  int insertSet_MultiParams(@Param("countries") Set<Country> countries, @Param("someId") Integer someId);
+  int insertSet_MultiParams(
+      @Param("countries") Set<Country> countries, @Param("someId") Integer someId);
 
-  int insertArray_MultiParams(@Param("countries") Country[] countries, @Param("someId") Integer someId);
+  int insertArray_MultiParams(
+      @Param("countries") Country[] countries, @Param("someId") Integer someId);
 
   int insertUndefineKeyProperty(Country country);
 
   @Options(useGeneratedKeys = true, keyProperty = "id,code")
-  @Insert({ "insert into planet (name) values (#{name})" })
+  @Insert({"insert into planet (name) values (#{name})"})
   int insertPlanet(Planet planet);
 
   int insertPlanets(List<Planet> planets);
 
   @Options(useGeneratedKeys = true, keyProperty = "planet.id,planet.code")
-  @Insert({ "insert into planet (name) values (#{planet.name})" })
+  @Insert({"insert into planet (name) values (#{planet.name})"})
   int insertPlanet_MultiParams(@Param("planet") Planet planet, @Param("someId") Integer someId);
 
-  int insertPlanets_MultiParams(@Param("planets") List<Planet> planets, @Param("someId") Integer someId);
+  int insertPlanets_MultiParams(
+      @Param("planets") List<Planet> planets, @Param("someId") Integer someId);
 
   @Options(useGeneratedKeys = true, keyProperty = "planet.id,map.code")
-  @Insert({ "insert into planet (name) values (#{planet.name})" })
-  int insertAssignKeysToTwoParams(@Param("planet") Planet planet, @Param("map") Map<String, Object> map);
+  @Insert({"insert into planet (name) values (#{planet.name})"})
+  int insertAssignKeysToTwoParams(
+      @Param("planet") Planet planet, @Param("map") Map<String, Object> map);
 }

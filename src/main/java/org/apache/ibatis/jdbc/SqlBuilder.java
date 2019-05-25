@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.apache.ibatis.jdbc;
 
 /**
  * @deprecated Use the {@link SQL} Class
- *
  * @author Jeff Butler
  */
 public class SqlBuilder {
@@ -52,7 +51,7 @@ public class SqlBuilder {
     try {
       return sql().toString();
     } finally {
-        RESET();
+      RESET();
     }
   }
 
@@ -127,5 +126,4 @@ public class SqlBuilder {
   private static SQL sql() {
     return localSQL.get();
   }
-
 }

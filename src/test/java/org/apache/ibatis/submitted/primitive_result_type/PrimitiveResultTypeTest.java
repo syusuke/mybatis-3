@@ -15,22 +15,22 @@
  */
 package org.apache.ibatis.submitted.primitive_result_type;
 
-import org.apache.ibatis.BaseDataTest;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
+import org.apache.ibatis.BaseDataTest;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class PrimitiveResultTypeTest {
 
   @BeforeAll
   static void setup() throws Exception {
-    BaseDataTest.runScript(IbatisConfig.getSqlSessionFactory().getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/primitive_result_type/create.sql");
+    BaseDataTest.runScript(
+        IbatisConfig.getSqlSessionFactory().getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/primitive_result_type/create.sql");
   }
 
   @Test
@@ -48,9 +48,10 @@ class PrimitiveResultTypeTest {
       assertTrue(bcode instanceof BigDecimal);
     }
   }
+
   @Test
-  void noErrorThrowOut(){
-      List<Product> products=ProductDAO.selectAllProducts();
+  void noErrorThrowOut() {
+    List<Product> products = ProductDAO.selectAllProducts();
     assertEquals(4, products.size(), "should return 4 results");
   }
 }

@@ -26,9 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-
 import javax.sql.DataSource;
-
 import org.apache.ibatis.io.Resources;
 
 /**
@@ -37,8 +35,11 @@ import org.apache.ibatis.io.Resources;
  */
 public class UnpooledDataSource implements DataSource {
 
+  /** classLoader */
   private ClassLoader driverClassLoader;
+  /** 连接驱动相关属性 */
   private Properties driverProperties;
+  /** Cache */
   private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
 
   private String driver;
@@ -57,8 +58,7 @@ public class UnpooledDataSource implements DataSource {
     }
   }
 
-  public UnpooledDataSource() {
-  }
+  public UnpooledDataSource() {}
 
   public UnpooledDataSource(String driver, String url, String username, String password) {
     this.driver = driver;
@@ -73,7 +73,8 @@ public class UnpooledDataSource implements DataSource {
     this.driverProperties = driverProperties;
   }
 
-  public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username, String password) {
+  public UnpooledDataSource(
+      ClassLoader driverClassLoader, String driver, String url, String username, String password) {
     this.driverClassLoader = driverClassLoader;
     this.driver = driver;
     this.url = url;
@@ -81,7 +82,8 @@ public class UnpooledDataSource implements DataSource {
     this.password = password;
   }
 
-  public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
+  public UnpooledDataSource(
+      ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
     this.driverClassLoader = driverClassLoader;
     this.driver = driver;
     this.url = url;
@@ -99,22 +101,22 @@ public class UnpooledDataSource implements DataSource {
   }
 
   @Override
-  public void setLoginTimeout(int loginTimeout) {
+  public void setLoginTimeout(int loginTimeout) throws SQLException {
     DriverManager.setLoginTimeout(loginTimeout);
   }
 
   @Override
-  public int getLoginTimeout() {
+  public int getLoginTimeout() throws SQLException {
     return DriverManager.getLoginTimeout();
   }
 
   @Override
-  public void setLogWriter(PrintWriter logWriter) {
+  public void setLogWriter(PrintWriter logWriter) throws SQLException {
     DriverManager.setLogWriter(logWriter);
   }
 
   @Override
-  public PrintWriter getLogWriter() {
+  public PrintWriter getLogWriter() throws SQLException {
     return DriverManager.getLogWriter();
   }
 
@@ -214,7 +216,7 @@ public class UnpooledDataSource implements DataSource {
         }
         // DriverManager requires the driver to be loaded via the system ClassLoader.
         // http://www.kfu.com/~nsayer/Java/dyn-jdbc.html
-        Driver driverInstance = (Driver)driverType.newInstance();
+        Driver driverInstance = (Driver) driverType.newInstance();
         DriverManager.registerDriver(new DriverProxy(driverInstance));
         registeredDrivers.put(driver, driverInstance);
       } catch (Exception e) {
@@ -290,5 +292,4 @@ public class UnpooledDataSource implements DataSource {
     // requires JDK version 1.6
     return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   }
-
 }

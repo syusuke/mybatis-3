@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.multipleiterates;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -32,13 +31,16 @@ class MultipleIteratesTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleiterates/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/multipleiterates/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/multipleiterates/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/multipleiterates/CreateDB.sql");
   }
 
   @Test
@@ -48,10 +50,9 @@ class MultipleIteratesTest {
       User user = new User();
       user.setId(1);
       user.setName("Justin");
-      user.setFirstAttr(new String[] { "asd", "asd" });
-      user.setSecondAttr(new String[] { "fds", "fds" });
+      user.setFirstAttr(new String[] {"asd", "asd"});
+      user.setSecondAttr(new String[] {"fds", "fds"});
       mapper.insertUser(user);
     }
   }
-
 }

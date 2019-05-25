@@ -16,9 +16,7 @@
 package org.apache.ibatis.submitted.nestedresulthandler_multiple_association;
 
 import java.io.Reader;
-
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -35,14 +33,16 @@ class NestedResultHandlerMultipleAssociationTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_multiple_association/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/nestedresulthandler_multiple_association/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/nestedresulthandler_multiple_association/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/nestedresulthandler_multiple_association/CreateDB.sql");
   }
 
   @Test
@@ -80,5 +80,4 @@ class NestedResultHandlerMultipleAssociationTest {
       }
     }
   }
-
 }

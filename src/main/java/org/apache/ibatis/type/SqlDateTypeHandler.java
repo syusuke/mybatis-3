@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class SqlDateTypeHandler extends BaseTypeHandler<Date> {
 
   @Override
@@ -33,20 +31,17 @@ public class SqlDateTypeHandler extends BaseTypeHandler<Date> {
   }
 
   @Override
-  public Date getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Date getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getDate(columnName);
   }
 
   @Override
-  public Date getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Date getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     return rs.getDate(columnIndex);
   }
 
   @Override
-  public Date getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Date getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getDate(columnIndex);
   }
 }

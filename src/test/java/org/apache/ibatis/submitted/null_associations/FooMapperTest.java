@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.null_associations;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -31,18 +30,21 @@ import org.junit.jupiter.api.Test;
 
 class FooMapperTest {
 
-  private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
+  private static final String SQL_MAP_CONFIG =
+      "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
   private static SqlSession session;
   private static Connection conn;
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {
-    final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
+    final SqlSessionFactory factory =
+        new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
     session = factory.openSession();
     conn = session.getConnection();
 
-    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/null_associations/create-schema-mysql.sql");
+    BaseDataTest.runScript(
+        factory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/null_associations/create-schema-mysql.sql");
   }
 
   @BeforeEach
@@ -85,5 +87,4 @@ class FooMapperTest {
     conn.close();
     session.close();
   }
-
 }

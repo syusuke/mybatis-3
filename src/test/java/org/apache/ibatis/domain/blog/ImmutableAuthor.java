@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ public class ImmutableAuthor implements Serializable {
   protected final String bio;
   protected final Section favouriteSection;
 
-  public ImmutableAuthor(int id, String username, String password, String email, String bio, Section section) {
+  public ImmutableAuthor(
+      int id, String username, String password, String email, String bio, Section section) {
     this.id = id;
     this.username = username;
     this.password = password;
@@ -68,10 +69,13 @@ public class ImmutableAuthor implements Serializable {
     if (id != author.id) return false;
     if (bio != null ? !bio.equals(author.bio) : author.bio != null) return false;
     if (email != null ? !email.equals(author.email) : author.email != null) return false;
-    if (password != null ? !password.equals(author.password) : author.password != null) return false;
-    if (username != null ? !username.equals(author.username) : author.username != null) return false;
-    if (favouriteSection != null ? !favouriteSection.equals(author.favouriteSection) : author.favouriteSection != null)
+    if (password != null ? !password.equals(author.password) : author.password != null)
       return false;
+    if (username != null ? !username.equals(author.username) : author.username != null)
+      return false;
+    if (favouriteSection != null
+        ? !favouriteSection.equals(author.favouriteSection)
+        : author.favouriteSection != null) return false;
 
     return true;
   }

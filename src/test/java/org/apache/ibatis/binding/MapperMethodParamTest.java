@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.binding;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.HashMap;
+import javax.sql.DataSource;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -28,11 +32,6 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-import javax.sql.DataSource;
-import java.util.HashMap;
 
 class MapperMethodParamTest {
 
@@ -80,5 +79,4 @@ class MapperMethodParamTest {
     @Select("select size from param_test where id = #{id}")
     long selectSize(@Param("id") String id);
   }
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,37 +19,27 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.session.ResultHandler;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public interface StatementHandler {
 
-  Statement prepare(Connection connection, Integer transactionTimeout)
-      throws SQLException;
+  Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException;
 
-  void parameterize(Statement statement)
-      throws SQLException;
+  void parameterize(Statement statement) throws SQLException;
 
-  void batch(Statement statement)
-      throws SQLException;
+  void batch(Statement statement) throws SQLException;
 
-  int update(Statement statement)
-      throws SQLException;
+  int update(Statement statement) throws SQLException;
 
-  <E> List<E> query(Statement statement, ResultHandler resultHandler)
-      throws SQLException;
+  <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException;
 
-  <E> Cursor<E> queryCursor(Statement statement)
-      throws SQLException;
+  <E> Cursor<E> queryCursor(Statement statement) throws SQLException;
 
   BoundSql getBoundSql();
 
   ParameterHandler getParameterHandler();
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.submitted.hashmaptypehandler;
 
 import java.sql.CallableStatement;
@@ -21,30 +20,33 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
 public class HashMapTypeHandler extends BaseTypeHandler<HashMap<String, String>> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, HashMap<String, String> parameter, JdbcType jdbcType)
+  public void setNonNullParameter(
+      PreparedStatement ps, int i, HashMap<String, String> parameter, JdbcType jdbcType)
       throws SQLException {
     ps.setString(i, parameter.get("name"));
   }
 
   @Override
-  public HashMap<String, String> getNullableResult(ResultSet rs, String columnName) throws SQLException {
+  public HashMap<String, String> getNullableResult(ResultSet rs, String columnName)
+      throws SQLException {
     return null;
   }
 
   @Override
-  public HashMap<String, String> getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+  public HashMap<String, String> getNullableResult(ResultSet rs, int columnIndex)
+      throws SQLException {
     return null;
   }
 
   @Override
-  public HashMap<String, String> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+  public HashMap<String, String> getNullableResult(CallableStatement cs, int columnIndex)
+      throws SQLException {
     return null;
   }
 }

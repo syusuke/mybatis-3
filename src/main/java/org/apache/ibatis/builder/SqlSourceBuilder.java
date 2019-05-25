@@ -18,7 +18,6 @@ package org.apache.ibatis.builder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.GenericTokenParser;
@@ -28,19 +27,20 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class SqlSourceBuilder extends BaseBuilder {
 
-  private static final String PARAMETER_PROPERTIES = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
+  private static final String PARAMETER_PROPERTIES =
+      "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
 
   public SqlSourceBuilder(Configuration configuration) {
     super(configuration);
   }
 
-  public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
-    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
+  public SqlSource parse(
+      String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
+    ParameterMappingTokenHandler handler =
+        new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql = parser.parse(originalSql);
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
@@ -52,7 +52,10 @@ public class SqlSourceBuilder extends BaseBuilder {
     private Class<?> parameterType;
     private MetaObject metaParameters;
 
-    public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType, Map<String, Object> additionalParameters) {
+    public ParameterMappingTokenHandler(
+        Configuration configuration,
+        Class<?> parameterType,
+        Map<String, Object> additionalParameters) {
       super(configuration);
       this.parameterType = parameterType;
       this.metaParameters = configuration.newMetaObject(additionalParameters);
@@ -81,14 +84,16 @@ public class SqlSourceBuilder extends BaseBuilder {
       } else if (property == null || Map.class.isAssignableFrom(parameterType)) {
         propertyType = Object.class;
       } else {
-        MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
+        MetaClass metaClass =
+            MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
           propertyType = metaClass.getGetterType(property);
         } else {
           propertyType = Object.class;
         }
       }
-      ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
+      ParameterMapping.Builder builder =
+          new ParameterMapping.Builder(configuration, property, propertyType);
       Class<?> javaType = propertyType;
       String typeHandlerAlias = null;
       for (Map.Entry<String, String> entry : propertiesMap.entrySet()) {
@@ -114,7 +119,13 @@ public class SqlSourceBuilder extends BaseBuilder {
         } else if ("expression".equals(name)) {
           throw new BuilderException("Expression based parameters are not supported yet");
         } else {
-          throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content + "}.  Valid properties are " + PARAMETER_PROPERTIES);
+          throw new BuilderException(
+              "An invalid property '"
+                  + name
+                  + "' was found in mapping #{"
+                  + content
+                  + "}.  Valid properties are "
+                  + PARAMETER_PROPERTIES);
         }
       }
       if (typeHandlerAlias != null) {
@@ -129,9 +140,12 @@ public class SqlSourceBuilder extends BaseBuilder {
       } catch (BuilderException ex) {
         throw ex;
       } catch (Exception ex) {
-        throw new BuilderException("Parsing error was found in mapping #{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
+        throw new BuilderException(
+            "Parsing error was found in mapping #{"
+                + content
+                + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ",
+            ex);
       }
     }
   }
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.hashmaptypehandler;
 
 import java.util.HashMap;
-
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -31,5 +30,4 @@ public interface Mapper {
   User getUserWithTypeHandler(HashMap<String, String> map);
 
   User getUserWithTypeHandlerXml(HashMap<String, String> map);
-
 }

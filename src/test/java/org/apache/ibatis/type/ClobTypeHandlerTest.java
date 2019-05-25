@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.Reader;
 import java.sql.Clob;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -31,8 +30,7 @@ class ClobTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<String> TYPE_HANDLER = new ClobTypeHandler();
 
-  @Mock
-  protected Clob clob;
+  @Mock protected Clob clob;
 
   @Override
   @Test
@@ -88,5 +86,4 @@ class ClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getClob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
-
 }

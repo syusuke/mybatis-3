@@ -28,8 +28,8 @@ import java.time.ZonedDateTime;
 public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, ZonedDateTime parameter, JdbcType jdbcType)
-          throws SQLException {
+  public void setNonNullParameter(
+      PreparedStatement ps, int i, ZonedDateTime parameter, JdbcType jdbcType) throws SQLException {
     ps.setObject(i, parameter);
   }
 
@@ -44,7 +44,8 @@ public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
   }
 
   @Override
-  public ZonedDateTime getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+  public ZonedDateTime getNullableResult(CallableStatement cs, int columnIndex)
+      throws SQLException {
     return cs.getObject(columnIndex, ZonedDateTime.class);
   }
 }

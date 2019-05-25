@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.sql.Blob;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -31,13 +30,12 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<byte[]> TYPE_HANDLER = new BlobTypeHandler();
 
-  @Mock
-  protected Blob blob;
+  @Mock protected Blob blob;
 
   @Override
   @Test
   public void shouldSetParameter() throws Exception {
-    TYPE_HANDLER.setParameter(ps, 1, new byte[] { 1, 2, 3 }, null);
+    TYPE_HANDLER.setParameter(ps, 1, new byte[] {1, 2, 3}, null);
     verify(ps).setBinaryStream(Mockito.eq(1), Mockito.any(InputStream.class), Mockito.eq(3));
   }
 
@@ -46,8 +44,8 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getBlob("column")).thenReturn(blob);
     when(blob.length()).thenReturn(3l);
-    when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
-    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
+    when(blob.getBytes(1, 3)).thenReturn(new byte[] {1, 2, 3});
+    assertArrayEquals(new byte[] {1, 2, 3}, TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
@@ -62,8 +60,8 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getBlob(1)).thenReturn(blob);
     when(blob.length()).thenReturn(3l);
-    when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
-    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, 1));
+    when(blob.getBytes(1, 3)).thenReturn(new byte[] {1, 2, 3});
+    assertArrayEquals(new byte[] {1, 2, 3}, TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
@@ -78,8 +76,8 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(blob);
     when(blob.length()).thenReturn(3l);
-    when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
-    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(cs, 1));
+    when(blob.getBytes(1, 3)).thenReturn(new byte[] {1, 2, 3});
+    assertArrayEquals(new byte[] {1, 2, 3}, TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
@@ -88,5 +86,4 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getBlob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
-
 }

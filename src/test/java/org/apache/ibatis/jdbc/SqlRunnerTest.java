@@ -21,9 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
-
 import javax.sql.DataSource;
-
 import org.apache.ibatis.BaseDataTest;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +34,8 @@ class SqlRunnerTest extends BaseDataTest {
     runScript(ds, JPETSTORE_DATA);
     try (Connection connection = ds.getConnection()) {
       SqlRunner exec = new SqlRunner(connection);
-      Map<String, Object> row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
+      Map<String, Object> row =
+          exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
       assertEquals("FI-SW-01", row.get("PRODUCTID"));
     }
   }
@@ -60,8 +59,15 @@ class SqlRunnerTest extends BaseDataTest {
     try (Connection connection = ds.getConnection()) {
       SqlRunner exec = new SqlRunner(connection);
       exec.setUseGeneratedKeySupport(true);
-      int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
-      Map<String, Object> row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
+      int id =
+          exec.insert(
+              "INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)",
+              "someone",
+              "******",
+              "someone@apache.org",
+              Null.LONGVARCHAR);
+      Map<String, Object> row =
+          exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
       connection.rollback();
       assertTrue(SqlRunner.NO_GENERATED_KEY != id);
       assertEquals("someone", row.get("USERNAME"));
@@ -75,8 +81,10 @@ class SqlRunnerTest extends BaseDataTest {
     runScript(ds, JPETSTORE_DATA);
     try (Connection connection = ds.getConnection()) {
       SqlRunner exec = new SqlRunner(connection);
-      int count = exec.update("update product set category = ? where productid = ?", "DOGS", "FI-SW-01");
-      Map<String, Object> row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
+      int count =
+          exec.update("update product set category = ? where productid = ?", "DOGS", "FI-SW-01");
+      Map<String, Object> row =
+          exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
       assertEquals("DOGS", row.get("CATEGORY"));
       assertEquals(1, count);
     }

@@ -15,24 +15,22 @@
  */
 package org.apache.ibatis.type;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
-import java.io.Reader;
-import java.sql.Clob;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.Reader;
+import java.sql.Clob;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
 class NClobTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<String> TYPE_HANDLER = new NClobTypeHandler();
 
-  @Mock
-  protected Clob clob;
+  @Mock protected Clob clob;
 
   @Override
   @Test
@@ -88,5 +86,4 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getClob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
-
 }

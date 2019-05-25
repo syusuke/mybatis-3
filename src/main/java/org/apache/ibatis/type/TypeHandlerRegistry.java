@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
@@ -53,10 +52,19 @@ import org.apache.ibatis.io.Resources;
  */
 public final class TypeHandlerRegistry {
 
-  private final Map<JdbcType, TypeHandler<?>>  jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
-  private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
-  private final TypeHandler<Object> unknownTypeHandler = new UnknownTypeHandler(this);
-  private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
+  /** jdbcType => JavaType */
+  private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<>(JdbcType.class);
+  /**
+   * javaType => jdbcType
+   *
+   * <p>在转换成数据库时,可能有多类型,String => char/varchar/nvarchar ,所在存在一对多的关系
+   */
+  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP =
+      new ConcurrentHashMap<>();
+  /** 未知 */
+  private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
+  /** 记录了全部TypeHandler 的类型以及该类型相应的TypeHandler 对象 */
+  private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
 
@@ -96,14 +104,14 @@ public final class TypeHandlerRegistry {
     register(String.class, JdbcType.CHAR, new StringTypeHandler());
     register(String.class, JdbcType.CLOB, new ClobTypeHandler());
     register(String.class, JdbcType.VARCHAR, new StringTypeHandler());
-    register(String.class, JdbcType.LONGVARCHAR, new StringTypeHandler());
+    register(String.class, JdbcType.LONGVARCHAR, new ClobTypeHandler());
     register(String.class, JdbcType.NVARCHAR, new NStringTypeHandler());
     register(String.class, JdbcType.NCHAR, new NStringTypeHandler());
     register(String.class, JdbcType.NCLOB, new NClobTypeHandler());
     register(JdbcType.CHAR, new StringTypeHandler());
     register(JdbcType.VARCHAR, new StringTypeHandler());
     register(JdbcType.CLOB, new ClobTypeHandler());
-    register(JdbcType.LONGVARCHAR, new StringTypeHandler());
+    register(JdbcType.LONGVARCHAR, new ClobTypeHandler());
     register(JdbcType.NVARCHAR, new NStringTypeHandler());
     register(JdbcType.NCHAR, new NStringTypeHandler());
     register(JdbcType.NCLOB, new NClobTypeHandler());
@@ -129,9 +137,9 @@ public final class TypeHandlerRegistry {
     register(JdbcType.LONGVARBINARY, new BlobTypeHandler());
     register(JdbcType.BLOB, new BlobTypeHandler());
 
-    register(Object.class, unknownTypeHandler);
-    register(Object.class, JdbcType.OTHER, unknownTypeHandler);
-    register(JdbcType.OTHER, unknownTypeHandler);
+    register(Object.class, UNKNOWN_TYPE_HANDLER);
+    register(Object.class, JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
+    register(JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
 
     register(Date.class, new DateTypeHandler());
     register(Date.class, JdbcType.DATE, new DateOnlyTypeHandler());
@@ -164,8 +172,9 @@ public final class TypeHandlerRegistry {
   }
 
   /**
-   * Set a default {@link TypeHandler} class for {@link Enum}.
-   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   * Set a default {@link TypeHandler} class for {@link Enum}. A default {@link TypeHandler} is
+   * {@link org.apache.ibatis.type.EnumTypeHandler}.
+   *
    * @param typeHandler a type handler class for {@link Enum}
    * @since 3.4.5
    */
@@ -190,7 +199,7 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
-    return allTypeHandlersMap.get(handlerType);
+    return ALL_TYPE_HANDLERS_MAP.get(handlerType);
   }
 
   public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
@@ -202,7 +211,7 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<?> getTypeHandler(JdbcType jdbcType) {
-    return jdbcTypeHandlerMap.get(jdbcType);
+    return JDBC_TYPE_HANDLER_MAP.get(jdbcType);
   }
 
   public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
@@ -227,6 +236,7 @@ public final class TypeHandlerRegistry {
       }
       if (handler == null) {
         // #591
+        // 如采 jdbcHandlerMap 只注册了一个TypeHandler ，则使用此TypeHandler 对象
         handler = pickSoleHandler(jdbcHandlerMap);
       }
     }
@@ -235,31 +245,35 @@ public final class TypeHandlerRegistry {
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
-    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(type);
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
     if (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
       return null;
     }
     if (jdbcHandlerMap == null && type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
-      if (Enum.class.isAssignableFrom(clazz)) {
-        Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
-        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(enumClass, enumClass);
+      if (clazz.isEnum()) {
+        // 枚举类型的处理
+        // 查找父类的TypeHandler,并做为初始集合
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
         if (jdbcHandlerMap == null) {
-          register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));
-          return typeHandlerMap.get(enumClass);
+          register(clazz, getInstance(clazz, defaultEnumTypeHandler));
+          return TYPE_HANDLER_MAP.get(clazz);
         }
       } else {
+        // 父类的处理
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       }
     }
-    typeHandlerMap.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
+    TYPE_HANDLER_MAP.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
     return jdbcHandlerMap;
   }
 
-  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz, Class<?> enumClazz) {
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(
+      Class<?> clazz, Class<?> enumClazz) {
     for (Class<?> iface : clazz.getInterfaces()) {
-      Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(iface);
+      Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(iface);
       if (jdbcHandlerMap == null) {
+        // 递归父类接口
         jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface, enumClazz);
       }
       if (jdbcHandlerMap != null) {
@@ -276,14 +290,16 @@ public final class TypeHandlerRegistry {
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForSuperclass(Class<?> clazz) {
-    Class<?> superclass =  clazz.getSuperclass();
+    Class<?> superclass = clazz.getSuperclass();
     if (superclass == null || Object.class.equals(superclass)) {
+      // 没有父类,Object为父类的,,
       return null;
     }
-    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(superclass);
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(superclass);
     if (jdbcHandlerMap != null) {
       return jdbcHandlerMap;
     } else {
+      // 递归获取处理器
       return getJdbcHandlerMapForSuperclass(superclass);
     }
   }
@@ -302,11 +318,11 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<Object> getUnknownTypeHandler() {
-    return unknownTypeHandler;
+    return UNKNOWN_TYPE_HANDLER;
   }
 
   public void register(JdbcType jdbcType, TypeHandler<?> handler) {
-    jdbcTypeHandlerMap.put(jdbcType, handler);
+    JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
   }
 
   //
@@ -332,7 +348,8 @@ public final class TypeHandlerRegistry {
         register(typeReference.getRawType(), typeHandler);
         mappedTypeFound = true;
       } catch (Throwable t) {
-        // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
+        // maybe users define the TypeReference with a different type and are not assignable, so
+        // just ignore it
       }
     }
     if (!mappedTypeFound) {
@@ -372,14 +389,14 @@ public final class TypeHandlerRegistry {
 
   private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
     if (javaType != null) {
-      Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
+      Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
         map = new HashMap<>();
-        typeHandlerMap.put(javaType, map);
+        TYPE_HANDLER_MAP.put(javaType, map);
       }
       map.put(jdbcType, handler);
     }
-    allTypeHandlersMap.put(handler.getClass(), handler);
+    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
   }
 
   //
@@ -404,8 +421,10 @@ public final class TypeHandlerRegistry {
 
   // java type + handler type
 
-  public void register(String javaTypeClassName, String typeHandlerClassName) throws ClassNotFoundException {
-    register(Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
+  public void register(String javaTypeClassName, String typeHandlerClassName)
+      throws ClassNotFoundException {
+    register(
+        Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
   }
 
   public void register(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
@@ -447,8 +466,10 @@ public final class TypeHandlerRegistry {
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
     Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
     for (Class<?> type : handlerSet) {
-      //Ignore inner classes and interfaces (including package-info.java) and abstract classes
-      if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
+      // Ignore inner classes and interfaces (including package-info.java) and abstract classes
+      if (!type.isAnonymousClass()
+          && !type.isInterface()
+          && !Modifier.isAbstract(type.getModifiers())) {
         register(type);
       }
     }
@@ -456,11 +477,8 @@ public final class TypeHandlerRegistry {
 
   // get information
 
-  /**
-   * @since 3.2.2
-   */
+  /** @since 3.2.2 */
   public Collection<TypeHandler<?>> getTypeHandlers() {
-    return Collections.unmodifiableCollection(allTypeHandlersMap.values());
+    return Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());
   }
-
 }

@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.blocking_cache;
 import java.io.Reader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -36,13 +35,16 @@ class BlockingCacheTest {
   @BeforeEach
   void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/blocking_cache/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/blocking_cache/CreateDB.sql");
   }
 
   @Test
@@ -57,8 +59,7 @@ class BlockingCacheTest {
 
     defaultThreadPool.shutdown();
 
-    while (!defaultThreadPool.isTerminated()) {
-    }
+    while (!defaultThreadPool.isTerminated()) {}
 
     long totalTime = System.currentTimeMillis() - init;
     Assertions.assertTrue(totalTime > 1000);
@@ -75,5 +76,4 @@ class BlockingCacheTest {
       }
     }
   }
-
 }

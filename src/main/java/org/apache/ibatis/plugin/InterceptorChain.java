@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class InterceptorChain {
 
   private final List<Interceptor> interceptors = new ArrayList<>();
@@ -40,5 +38,4 @@ public class InterceptorChain {
   public List<Interceptor> getInterceptors() {
     return Collections.unmodifiableList(interceptors);
   }
-
 }

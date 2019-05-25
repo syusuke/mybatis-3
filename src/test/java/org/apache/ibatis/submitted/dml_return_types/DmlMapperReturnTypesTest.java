@@ -15,25 +15,25 @@
  */
 package org.apache.ibatis.submitted.dml_return_types;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.Reader;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.Reader;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DmlMapperReturnTypesTest {
 
   private static final String SQL = "org/apache/ibatis/submitted/dml_return_types/CreateDB.sql";
-  private static final String XML = "org/apache/ibatis/submitted/dml_return_types/mybatis-config.xml";
+  private static final String XML =
+      "org/apache/ibatis/submitted/dml_return_types/mybatis-config.xml";
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -48,8 +48,8 @@ class DmlMapperReturnTypesTest {
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(), SQL);
-
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(), SQL);
   }
 
   @BeforeEach
@@ -70,7 +70,8 @@ class DmlMapperReturnTypesTest {
 
   @Test
   void shouldReturnPrimitiveInteger() {
-    final int rows = mapper.updateReturnsPrimitiveInteger(new User(1, "shouldReturnPrimitiveInteger"));
+    final int rows =
+        mapper.updateReturnsPrimitiveInteger(new User(1, "shouldReturnPrimitiveInteger"));
     assertEquals(1, rows);
   }
 
@@ -94,7 +95,8 @@ class DmlMapperReturnTypesTest {
 
   @Test
   void shouldReturnPrimitiveBoolean() {
-    final boolean rows = mapper.updateReturnsPrimitiveBoolean(new User(1, "shouldReturnPrimitiveBoolean"));
+    final boolean rows =
+        mapper.updateReturnsPrimitiveBoolean(new User(1, "shouldReturnPrimitiveBoolean"));
     assertTrue(rows);
   }
 
@@ -103,5 +105,4 @@ class DmlMapperReturnTypesTest {
     final Boolean rows = mapper.updateReturnsBoolean(new User(1, "shouldReturnBoolean"));
     assertTrue(rows);
   }
-
 }

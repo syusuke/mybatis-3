@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,8 +41,11 @@ public abstract class TypeReference<T> {
         return getSuperclassTypeParameter(clazz.getSuperclass());
       }
 
-      throw new TypeException("'" + getClass() + "' extends TypeReference but misses the type parameter. "
-        + "Remove the extension or add a type parameter to it.");
+      throw new TypeException(
+          "'"
+              + getClass()
+              + "' extends TypeReference but misses the type parameter. "
+              + "Remove the extension or add a type parameter to it.");
     }
 
     Type rawType = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
@@ -62,5 +65,4 @@ public abstract class TypeReference<T> {
   public String toString() {
     return rawType.toString();
   }
-
 }

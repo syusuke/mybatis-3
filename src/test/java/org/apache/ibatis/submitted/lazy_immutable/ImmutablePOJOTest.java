@@ -15,44 +15,46 @@
  */
 package org.apache.ibatis.submitted.lazy_immutable;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.io.Resources;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
-
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 final class ImmutablePOJOTest {
 
-    private static final Integer POJO_ID = 1;
-    private static SqlSessionFactory factory;
+  private static final Integer POJO_ID = 1;
+  private static SqlSessionFactory factory;
 
-    @BeforeAll
-    static void setupClass() throws Exception {
-        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml")) {
-            factory = new SqlSessionFactoryBuilder().build(reader);
-        }
-
-        BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-                "org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
+  @BeforeAll
+  static void setupClass() throws Exception {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml")) {
+      factory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    @Test
-    void testLoadLazyImmutablePOJO() {
-        try (SqlSession session = factory.openSession()) {
-            final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
-            final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
+    BaseDataTest.runScript(
+        factory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
+  }
 
-            assertEquals(POJO_ID, pojo.getId());
-            assertNotNull(pojo.getDescription(), "Description should not be null.");
-            assertFalse(pojo.getDescription().length() == 0, "Description should not be empty.");
-        }
+  @Test
+  void testLoadLazyImmutablePOJO() {
+    try (SqlSession session = factory.openSession()) {
+      final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
+      final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
+
+      assertEquals(POJO_ID, pojo.getId());
+      assertNotNull(pojo.getDescription(), "Description should not be null.");
+      assertFalse(pojo.getDescription().length() == 0, "Description should not be empty.");
     }
-
+  }
 }

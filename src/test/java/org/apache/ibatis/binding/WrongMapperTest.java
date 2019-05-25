@@ -24,9 +24,10 @@ class WrongMapperTest {
   @Test
   void shouldFailForBothOneAndMany() {
     Configuration configuration = new Configuration();
-    Assertions.assertThrows(RuntimeException.class, () -> {
-      configuration.addMapper(MapperWithOneAndMany.class);
-    });
+    Assertions.assertThrows(
+        RuntimeException.class,
+        () -> {
+          configuration.addMapper(MapperWithOneAndMany.class);
+        });
   }
-
 }

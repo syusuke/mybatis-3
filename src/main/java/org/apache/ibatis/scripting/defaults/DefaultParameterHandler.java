@@ -18,7 +18,6 @@ package org.apache.ibatis.scripting.defaults;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -45,7 +44,8 @@ public class DefaultParameterHandler implements ParameterHandler {
   private final BoundSql boundSql;
   private final Configuration configuration;
 
-  public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+  public DefaultParameterHandler(
+      MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
     this.configuration = mappedStatement.getConfiguration();
     this.typeHandlerRegistry = mappedStatement.getConfiguration().getTypeHandlerRegistry();
@@ -60,7 +60,9 @@ public class DefaultParameterHandler implements ParameterHandler {
 
   @Override
   public void setParameters(PreparedStatement ps) {
-    ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
+    ErrorContext.instance()
+        .activity("setting parameters")
+        .object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
       for (int i = 0; i < parameterMappings.size(); i++) {
@@ -68,7 +70,8 @@ public class DefaultParameterHandler implements ParameterHandler {
         if (parameterMapping.getMode() != ParameterMode.OUT) {
           Object value;
           String propertyName = parameterMapping.getProperty();
-          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
+          if (boundSql.hasAdditionalParameter(
+              propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
           } else if (parameterObject == null) {
             value = null;
@@ -86,11 +89,11 @@ public class DefaultParameterHandler implements ParameterHandler {
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
           } catch (TypeException | SQLException e) {
-            throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
+            throw new TypeException(
+                "Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
           }
         }
       }
     }
   }
-
 }

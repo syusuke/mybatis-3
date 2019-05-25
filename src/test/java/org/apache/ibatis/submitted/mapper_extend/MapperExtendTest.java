@@ -15,8 +15,11 @@
  */
 package org.apache.ibatis.submitted.mapper_extend;
 
-import java.io.Reader;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.BDDAssertions.then;
 
+import java.io.Reader;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.io.Resources;
@@ -27,9 +30,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
-
 class MapperExtendTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -37,13 +37,16 @@ class MapperExtendTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/mapper_extend/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/mapper_extend/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/mapper_extend/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/mapper_extend/CreateDB.sql");
   }
 
   @Test
@@ -96,9 +99,12 @@ class MapperExtendTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       when(mapper).noMappedStatement();
-      then(caughtException()).isInstanceOf(BindingException.class)
-        .hasMessage("Invalid bound statement (not found): "
-          + Mapper.class.getName() + ".noMappedStatement");
+      then(caughtException())
+          .isInstanceOf(BindingException.class)
+          .hasMessage(
+              "Invalid bound statement (not found): "
+                  + Mapper.class.getName()
+                  + ".noMappedStatement");
     }
   }
 }

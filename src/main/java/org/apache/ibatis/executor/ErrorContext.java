@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,12 +15,10 @@
  */
 package org.apache.ibatis.executor;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ErrorContext {
 
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator","\n");
+  private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
   private static final ThreadLocal<ErrorContext> LOCAL = new ThreadLocal<>();
 
   private ErrorContext stored;
@@ -31,8 +29,7 @@ public class ErrorContext {
   private String sql;
   private Throwable cause;
 
-  private ErrorContext() {
-  }
+  private ErrorContext() {}
 
   public static ErrorContext instance() {
     ErrorContext context = LOCAL.get();
@@ -147,5 +144,4 @@ public class ErrorContext {
 
     return description.toString();
   }
-
 }

@@ -15,9 +15,11 @@
  */
 package org.apache.ibatis.submitted.keygen;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -27,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
@@ -38,9 +39,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author liuzh
- */
+/** @author liuzh */
 class Jdbc3KeyGeneratorTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -48,13 +47,15 @@ class Jdbc3KeyGeneratorTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/keygen/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/keygen/CreateDB.sql");
   }
 
   @Test
@@ -287,10 +288,12 @@ class Jdbc3KeyGeneratorTest {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
         Country country = new Country("China", "CN");
         when(mapper).insertMultiParams_keyPropertyWithoutParamName(country, 1);
-        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-            "Could not determine which parameter to assign generated keys to. "
-                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
-                + "Specified key properties are [id] and available parameters are [");
+        then(caughtException())
+            .isInstanceOf(PersistenceException.class)
+            .hasMessageContaining(
+                "Could not determine which parameter to assign generated keys to. "
+                    + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+                    + "Specified key properties are [id] and available parameters are [");
       } finally {
         sqlSession.rollback();
       }
@@ -304,10 +307,12 @@ class Jdbc3KeyGeneratorTest {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
         Country country = new Country("China", "CN");
         when(mapper).insertMultiParams_keyPropertyWithWrongParamName(country, 1);
-        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-            "Could not find parameter 'bogus'. "
-                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
-                + "Specified key properties are [bogus.id] and available parameters are [");
+        then(caughtException())
+            .isInstanceOf(PersistenceException.class)
+            .hasMessageContaining(
+                "Could not find parameter 'bogus'. "
+                    + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
+                    + "Specified key properties are [bogus.id] and available parameters are [");
       } finally {
         sqlSession.rollback();
       }
@@ -416,6 +421,7 @@ class Jdbc3KeyGeneratorTest {
       }
     }
   }
+
   @Test
   void shouldAssignMultipleGeneratedKeysToABean_MultiParams_batch() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
@@ -505,7 +511,9 @@ class Jdbc3KeyGeneratorTest {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
 
         when(mapper).insertUndefineKeyProperty(new Country("China", "CN"));
-        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+        then(caughtException())
+            .isInstanceOf(PersistenceException.class)
+            .hasMessageContaining(
                 "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in 'org.apache.ibatis.submitted.keygen.Country'.");
       } finally {
         sqlSession.rollback();

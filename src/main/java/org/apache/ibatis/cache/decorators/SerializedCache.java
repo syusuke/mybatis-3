@@ -24,13 +24,13 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
+ *     <p>支持序列化值的 Cache 实现类
  */
 public class SerializedCache implements Cache {
 
@@ -55,7 +55,8 @@ public class SerializedCache implements Cache {
     if (object == null || object instanceof Serializable) {
       delegate.putObject(key, serialize((Serializable) object));
     } else {
-      throw new CacheException("SharedCache failed to make a copy of a non-serializable object: " + object);
+      throw new CacheException(
+          "SharedCache failed to make a copy of a non-serializable object: " + object);
     }
   }
 
@@ -92,7 +93,7 @@ public class SerializedCache implements Cache {
 
   private byte[] serialize(Serializable value) {
     try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-         ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+        ObjectOutputStream oos = new ObjectOutputStream(bos)) {
       oos.writeObject(value);
       oos.flush();
       return bos.toByteArray();
@@ -104,7 +105,7 @@ public class SerializedCache implements Cache {
   private Serializable deserialize(byte[] value) {
     Serializable result;
     try (ByteArrayInputStream bis = new ByteArrayInputStream(value);
-         ObjectInputStream ois = new CustomObjectInputStream(bis)) {
+        ObjectInputStream ois = new CustomObjectInputStream(bis)) {
       result = (Serializable) ois.readObject();
     } catch (Exception e) {
       throw new CacheException("Error deserializing object.  Cause: " + e, e);
@@ -119,10 +120,9 @@ public class SerializedCache implements Cache {
     }
 
     @Override
-    protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
+    protected Class<?> resolveClass(ObjectStreamClass desc)
+        throws IOException, ClassNotFoundException {
       return Resources.classForName(desc.getName());
     }
-
   }
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,23 +19,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class XNode {
 
+  /** XPath节点 */
   private final Node node;
+  /** node name */
   private final String name;
+  /** 内容 */
   private final String body;
+  /** 节点属性集合 */
   private final Properties attributes;
+  /** <properiteis></properiteis> */
   private final Properties variables;
+
   private final XPathParser xpathParser;
 
   public XNode(XPathParser xpathParser, Node node, Properties variables) {
@@ -80,14 +83,14 @@ public class XNode {
       if (current != this) {
         builder.insert(0, "_");
       }
-      String value = current.getStringAttribute("id",
-          current.getStringAttribute("value",
-              current.getStringAttribute("property", null)));
+      String value =
+          current.getStringAttribute(
+              "id",
+              current.getStringAttribute("value", current.getStringAttribute("property", null)));
       if (value != null) {
         value = value.replace('.', '_');
         builder.insert(0, "]");
-        builder.insert(0,
-            value);
+        builder.insert(0, value);
         builder.insert(0, "[");
       }
       builder.insert(0, current.getName());
@@ -347,12 +350,19 @@ public class XNode {
     return builder.toString();
   }
 
+  /**
+   * 遍历所有属性
+   *
+   * @param n
+   * @return
+   */
   private Properties parseAttributes(Node n) {
     Properties attributes = new Properties();
     NamedNodeMap attributeNodes = n.getAttributes();
     if (attributeNodes != null) {
       for (int i = 0; i < attributeNodes.getLength(); i++) {
         Node attribute = attributeNodes.item(i);
+        // 属性中,也可以定义变量
         String value = PropertyParser.parse(attribute.getNodeValue(), variables);
         attributes.put(attribute.getNodeName(), value);
       }
@@ -363,8 +373,10 @@ public class XNode {
   private String parseBody(Node node) {
     String data = getBodyData(node);
     if (data == null) {
+      // 当前节点不是文本节点
       NodeList children = node.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
+        // 处理子节点
         Node child = children.item(i);
         data = getBodyData(child);
         if (data != null) {
@@ -376,13 +388,11 @@ public class XNode {
   }
 
   private String getBodyData(Node child) {
-    if (child.getNodeType() == Node.CDATA_SECTION_NODE
-        || child.getNodeType() == Node.TEXT_NODE) {
+    if (child.getNodeType() == Node.CDATA_SECTION_NODE || child.getNodeType() == Node.TEXT_NODE) {
       String data = ((CharacterData) child).getData();
       data = PropertyParser.parse(data, variables);
       return data;
     }
     return null;
   }
-
 }

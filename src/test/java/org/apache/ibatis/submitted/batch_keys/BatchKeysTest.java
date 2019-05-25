@@ -24,15 +24,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
-import org.junit.jupiter.api.Assertions;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,17 +40,22 @@ class BatchKeysTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_keys/Config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/batch_keys/Config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/batch_keys/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/batch_keys/CreateDB.sql");
   }
 
   public void testJdbc3Support() throws Exception {
-    try (Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-         PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS)) {
+    try (Connection conn =
+            sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
+        PreparedStatement stmt =
+            conn.prepareStatement(
+                "insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS)) {
       stmt.addBatch();
       stmt.executeBatch();
       try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -86,7 +89,7 @@ class BatchKeysTest {
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<User> users = sqlSession.selectList("select");
-      Assertions.assertEquals( 2, users.size());
+      Assertions.assertEquals(2, users.size());
     }
   }
 
@@ -164,5 +167,4 @@ class BatchKeysTest {
       Assertions.assertEquals(1, users.size());
     }
   }
-
 }

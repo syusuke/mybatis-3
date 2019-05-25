@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Properties;
-
 import org.apache.ibatis.BaseDataTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -79,7 +78,7 @@ class ResourcesTest extends BaseDataTest {
 
   @Test
   void shouldGetResourceAsReader() throws Exception {
-    try(Reader in = Resources.getResourceAsReader(CLASS_LOADER, JPETSTORE_PROPERTIES)) {
+    try (Reader in = Resources.getResourceAsReader(CLASS_LOADER, JPETSTORE_PROPERTIES)) {
       assertNotNull(in);
     }
   }
@@ -87,13 +86,19 @@ class ResourcesTest extends BaseDataTest {
   @Test
   void shouldGetResourceAsFile() throws Exception {
     File file = Resources.getResourceAsFile(JPETSTORE_PROPERTIES);
-    assertTrue(file.getAbsolutePath().replace('\\', '/').endsWith("jpetstore/jpetstore-hsqldb.properties"));
+    assertTrue(
+        file.getAbsolutePath()
+            .replace('\\', '/')
+            .endsWith("jpetstore/jpetstore-hsqldb.properties"));
   }
 
   @Test
   void shouldGetResourceAsFileWithClassloader() throws Exception {
     File file = Resources.getResourceAsFile(CLASS_LOADER, JPETSTORE_PROPERTIES);
-    assertTrue(file.getAbsolutePath().replace('\\', '/').endsWith("jpetstore/jpetstore-hsqldb.properties"));
+    assertTrue(
+        file.getAbsolutePath()
+            .replace('\\', '/')
+            .endsWith("jpetstore/jpetstore-hsqldb.properties"));
   }
 
   @Test
@@ -128,7 +133,8 @@ class ResourcesTest extends BaseDataTest {
 
   @Test
   void shouldNotFindThisClass() {
-    Assertions.assertThrows(ClassNotFoundException.class,
+    Assertions.assertThrows(
+        ClassNotFoundException.class,
         () -> Resources.classForName("some.random.class.that.does.not.Exist"));
   }
 
@@ -148,7 +154,6 @@ class ResourcesTest extends BaseDataTest {
 
     // clean up
     Resources.setCharset(charset);
-
   }
 
   @Test
@@ -167,7 +172,6 @@ class ResourcesTest extends BaseDataTest {
 
     // clean up
     Resources.setCharset(charset);
-
   }
 
   @Test

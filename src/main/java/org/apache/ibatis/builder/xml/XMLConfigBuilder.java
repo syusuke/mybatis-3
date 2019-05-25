@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
 import javax.sql.DataSource;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
@@ -45,6 +44,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
 
 /**
  * @author Clinton Begin
@@ -52,7 +52,9 @@ import org.apache.ibatis.type.JdbcType;
  */
 public class XMLConfigBuilder extends BaseBuilder {
 
+  /** 是否解析过 mybatis-config.xml 配置文件 */
   private boolean parsed;
+
   private final XPathParser parser;
   private String environment;
   private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
@@ -78,7 +80,10 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
-    this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
+    this(
+        new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()),
+        environment,
+        props);
   }
 
   private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
@@ -90,6 +95,11 @@ public class XMLConfigBuilder extends BaseBuilder {
     this.parser = parser;
   }
 
+  /**
+   * 解析XML,生成 Configuration,mybatis-config.xml
+   *
+   * @return
+   */
   public Configuration parse() {
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
@@ -101,11 +111,10 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void parseConfiguration(XNode root) {
     try {
-      //issue #117 read properties first
+      // issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
-      loadCustomLogImpl(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
@@ -131,7 +140,10 @@ public class XMLConfigBuilder extends BaseBuilder {
     MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
     for (Object key : props.keySet()) {
       if (!metaConfig.hasSetter(String.valueOf(key))) {
-        throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive).");
+        throw new BuilderException(
+            "The setting "
+                + key
+                + " is not known.  Make sure you spelled it correctly (case sensitive).");
       }
     }
     return props;
@@ -144,16 +156,11 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (String clazz : clazzes) {
         if (!clazz.isEmpty()) {
           @SuppressWarnings("unchecked")
-          Class<? extends VFS> vfsImpl = (Class<? extends VFS>)Resources.classForName(clazz);
+          Class<? extends VFS> vfsImpl = (Class<? extends VFS>) Resources.classForName(clazz);
           configuration.setVfsImpl(vfsImpl);
         }
       }
     }
-  }
-
-  private void loadCustomLogImpl(Properties props) {
-    Class<? extends Log> logImpl = resolveClass(props.getProperty("logImpl"));
-    configuration.setLogImpl(logImpl);
   }
 
   private void typeAliasesElement(XNode parent) {
@@ -173,7 +180,8 @@ public class XMLConfigBuilder extends BaseBuilder {
               typeAliasRegistry.registerAlias(alias, clazz);
             }
           } catch (ClassNotFoundException e) {
-            throw new BuilderException("Error registering typeAlias for '" + alias + "'. Cause: " + e, e);
+            throw new BuilderException(
+                "Error registering typeAlias for '" + alias + "'. Cause: " + e, e);
           }
         }
       }
@@ -224,7 +232,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
       if (resource != null && url != null) {
-        throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
+        throw new BuilderException(
+            "The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
       }
       if (resource != null) {
         defaults.putAll(Resources.getResourceAsProperties(resource));
@@ -240,31 +249,57 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
-  private void settingsElement(Properties props) {
-    configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
-    configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.valueOf(props.getProperty("autoMappingUnknownColumnBehavior", "NONE")));
+  private void settingsElement(Properties props) throws Exception {
+    configuration.setAutoMappingBehavior(
+        AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
+    configuration.setAutoMappingUnknownColumnBehavior(
+        AutoMappingUnknownColumnBehavior.valueOf(
+            props.getProperty("autoMappingUnknownColumnBehavior", "NONE")));
     configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
     configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory")));
-    configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
-    configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), false));
-    configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
+    configuration.setLazyLoadingEnabled(
+        booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
+    configuration.setAggressiveLazyLoading(
+        booleanValueOf(props.getProperty("aggressiveLazyLoading"), false));
+    configuration.setMultipleResultSetsEnabled(
+        booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
     configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
     configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
-    configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
-    configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
+    configuration.setDefaultExecutorType(
+        ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
+    configuration.setDefaultStatementTimeout(
+        integerValueOf(props.getProperty("defaultStatementTimeout"), null));
     configuration.setDefaultFetchSize(integerValueOf(props.getProperty("defaultFetchSize"), null));
-    configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
-    configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
-    configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope", "SESSION")));
-    configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty("jdbcTypeForNull", "OTHER")));
-    configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
-    configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
-    configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
-    configuration.setDefaultEnumTypeHandler(resolveClass(props.getProperty("defaultEnumTypeHandler")));
-    configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
-    configuration.setUseActualParamName(booleanValueOf(props.getProperty("useActualParamName"), true));
-    configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty("returnInstanceForEmptyRow"), false));
+    configuration.setMapUnderscoreToCamelCase(
+        booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
+    configuration.setSafeRowBoundsEnabled(
+        booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
+    configuration.setLocalCacheScope(
+        LocalCacheScope.valueOf(props.getProperty("localCacheScope", "SESSION")));
+    configuration.setJdbcTypeForNull(
+        JdbcType.valueOf(props.getProperty("jdbcTypeForNull", "OTHER")));
+    configuration.setLazyLoadTriggerMethods(
+        stringSetValueOf(
+            props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
+    configuration.setSafeResultHandlerEnabled(
+        booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
+    configuration.setDefaultScriptingLanguage(
+        resolveClass(props.getProperty("defaultScriptingLanguage")));
+    @SuppressWarnings("unchecked")
+    Class<? extends TypeHandler> typeHandler =
+        (Class<? extends TypeHandler>) resolveClass(props.getProperty("defaultEnumTypeHandler"));
+    configuration.setDefaultEnumTypeHandler(typeHandler);
+    configuration.setCallSettersOnNulls(
+        booleanValueOf(props.getProperty("callSettersOnNulls"), false));
+    configuration.setUseActualParamName(
+        booleanValueOf(props.getProperty("useActualParamName"), true));
+    configuration.setReturnInstanceForEmptyRow(
+        booleanValueOf(props.getProperty("returnInstanceForEmptyRow"), false));
     configuration.setLogPrefix(props.getProperty("logPrefix"));
+    @SuppressWarnings("unchecked")
+    Class<? extends Log> logImpl =
+        (Class<? extends Log>) resolveClass(props.getProperty("logImpl"));
+    configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
   }
 
@@ -276,12 +311,12 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
-          TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
+          TransactionFactory txFactory =
+              transactionManagerElement(child.evalNode("transactionManager"));
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           DataSource dataSource = dsFactory.getDataSource();
-          Environment.Builder environmentBuilder = new Environment.Builder(id)
-              .transactionFactory(txFactory)
-              .dataSource(dataSource);
+          Environment.Builder environmentBuilder =
+              new Environment.Builder(id).transactionFactory(txFactory).dataSource(dataSource);
           configuration.setEnvironment(environmentBuilder.build());
         }
       }
@@ -329,7 +364,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     throw new BuilderException("Environment declaration requires a DataSourceFactory.");
   }
 
-  private void typeHandlerElement(XNode parent) {
+  private void typeHandlerElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
@@ -369,18 +404,23 @@ public class XMLConfigBuilder extends BaseBuilder {
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             InputStream inputStream = Resources.getResourceAsStream(resource);
-            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+            XMLMapperBuilder mapperParser =
+                new XMLMapperBuilder(
+                    inputStream, configuration, resource, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
-            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
+            XMLMapperBuilder mapperParser =
+                new XMLMapperBuilder(
+                    inputStream, configuration, url, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url == null && mapperClass != null) {
             Class<?> mapperInterface = Resources.classForName(mapperClass);
             configuration.addMapper(mapperInterface);
           } else {
-            throw new BuilderException("A mapper element may only specify a url, resource or class, but not more than one.");
+            throw new BuilderException(
+                "A mapper element may only specify a url, resource or class, but not more than one.");
           }
         }
       }
@@ -397,5 +437,4 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
     return false;
   }
-
 }

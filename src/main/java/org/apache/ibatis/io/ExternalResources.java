@@ -21,13 +21,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 @Deprecated
 public class ExternalResources {
 
@@ -43,13 +40,13 @@ public class ExternalResources {
     }
 
     try (FileInputStream source = new FileInputStream(sourceFile);
-         FileOutputStream destination = new FileOutputStream(destFile)) {
+        FileOutputStream destination = new FileOutputStream(destFile)) {
       destination.getChannel().transferFrom(source.getChannel(), 0, source.getChannel().size());
     }
-
   }
 
-  public static String getConfiguredTemplate(String templatePath, String templateProperty) throws FileNotFoundException {
+  public static String getConfiguredTemplate(String templatePath, String templateProperty)
+      throws FileNotFoundException {
     String templateName = "";
     Properties migrationProperties = new Properties();
 
@@ -64,5 +61,4 @@ public class ExternalResources {
 
     return templateName;
   }
-
 }

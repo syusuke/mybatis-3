@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.io;
 
-import org.apache.ibatis.BaseDataTest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.apache.ibatis.BaseDataTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,8 @@ class ClassLoaderWrapperTest extends BaseDataTest {
 
   @Test
   void classForNameNotFound() {
-    Assertions.assertThrows(ClassNotFoundException.class, () -> assertNotNull(wrapper.classForName(CLASS_NOT_FOUND)));
+    Assertions.assertThrows(
+        ClassNotFoundException.class, () -> assertNotNull(wrapper.classForName(CLASS_NOT_FOUND)));
   }
 
   @Test
@@ -81,5 +82,4 @@ class ClassLoaderWrapperTest extends BaseDataTest {
   void getResourceAsStreamWithClassLoader() {
     assertNotNull(wrapper.getResourceAsStream(JPETSTORE_PROPERTIES, loader));
   }
-
 }

@@ -17,7 +17,6 @@ package org.apache.ibatis.session.defaults;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
@@ -31,11 +30,10 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
+  /** 全局配置文件,mybatis-config.xml 配置文件 */
   private final Configuration configuration;
 
   public DefaultSqlSessionFactory(Configuration configuration) {
@@ -87,11 +85,13 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     return configuration;
   }
 
-  private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
+  private SqlSession openSessionFromDataSource(
+      ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
     try {
       final Environment environment = configuration.getEnvironment();
-      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+      final TransactionFactory transactionFactory =
+          getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
       final Executor executor = configuration.newExecutor(tx, execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
@@ -114,7 +114,8 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
         autoCommit = true;
       }
       final Environment environment = configuration.getEnvironment();
-      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+      final TransactionFactory transactionFactory =
+          getTransactionFactoryFromEnvironment(environment);
       final Transaction tx = transactionFactory.newTransaction(connection);
       final Executor executor = configuration.newExecutor(tx, execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
@@ -141,5 +142,4 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       }
     }
   }
-
 }

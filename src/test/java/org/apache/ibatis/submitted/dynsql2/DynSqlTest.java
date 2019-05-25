@@ -21,7 +21,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -36,12 +35,14 @@ class DynSqlTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql2/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql2/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
   }
 
   @Test
@@ -62,7 +63,9 @@ class DynSqlTest {
       Parameter parameter = new Parameter();
       parameter.setNames(names);
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
+      List<Map<String, Object>> answer =
+          sqlSession.selectList(
+              "org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
 
       assertEquals(2, answer.size());
     }
@@ -71,7 +74,8 @@ class DynSqlTest {
   @Test
   void testSimpleSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Map<String, Object> answer = sqlSession.selectOne("org.apache.ibatis.submitted.dynsql2.simpleSelect", 1);
+      Map<String, Object> answer =
+          sqlSession.selectOne("org.apache.ibatis.submitted.dynsql2.simpleSelect", 1);
 
       assertEquals(answer.get("ID"), 1);
       assertEquals(answer.get("FIRSTNAME"), "Fred");

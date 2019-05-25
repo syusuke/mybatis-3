@@ -24,14 +24,11 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
- * @author Larry Meadors
- */
+/** @author Larry Meadors */
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private final SqlSessionFactory sqlSessionFactory;
@@ -41,10 +38,12 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
-    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(
-        SqlSessionFactory.class.getClassLoader(),
-        new Class[]{SqlSession.class},
-        new SqlSessionInterceptor());
+    this.sqlSessionProxy =
+        (SqlSession)
+            Proxy.newProxyInstance(
+                SqlSessionFactory.class.getClassLoader(),
+                new Class[] {SqlSession.class},
+                new SqlSessionInterceptor());
   }
 
   public static SqlSessionManager newInstance(Reader reader) {
@@ -64,11 +63,13 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream, String environment) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, environment, null));
+    return new SqlSessionManager(
+        new SqlSessionFactoryBuilder().build(inputStream, environment, null));
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream, Properties properties) {
-    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, properties));
+    return new SqlSessionManager(
+        new SqlSessionFactoryBuilder().build(inputStream, null, properties));
   }
 
   public static SqlSessionManager newInstance(SqlSessionFactory sqlSessionFactory) {
@@ -177,7 +178,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   @Override
-  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+  public <K, V> Map<K, V> selectMap(
+      String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
   }
 
@@ -222,7 +224,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   @Override
-  public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
+  public void select(
+      String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     sqlSessionProxy.select(statement, parameter, rowBounds, handler);
   }
 
@@ -265,7 +268,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   public Connection getConnection() {
     final SqlSession sqlSession = localSqlSession.get();
     if (sqlSession == null) {
-      throw new SqlSessionException("Error:  Cannot get connection.  No managed session is started.");
+      throw new SqlSessionException(
+          "Error:  Cannot get connection.  No managed session is started.");
     }
     return sqlSession.getConnection();
   }
@@ -274,7 +278,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   public void clearCache() {
     final SqlSession sqlSession = localSqlSession.get();
     if (sqlSession == null) {
-      throw new SqlSessionException("Error:  Cannot clear the cache.  No managed session is started.");
+      throw new SqlSessionException(
+          "Error:  Cannot clear the cache.  No managed session is started.");
     }
     sqlSession.clearCache();
   }
@@ -339,7 +344,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private class SqlSessionInterceptor implements InvocationHandler {
     public SqlSessionInterceptor() {
-        // Prevent Synthetic Access
+      // Prevent Synthetic Access
     }
 
     @Override
@@ -365,5 +370,4 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
       }
     }
   }
-
 }

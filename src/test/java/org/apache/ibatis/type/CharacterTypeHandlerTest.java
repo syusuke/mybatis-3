@@ -87,5 +87,4 @@ class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
     assertNull(TYPE_HANDLER.getResult(cs, 1));
     verify(cs, never()).wasNull();
   }
-
 }

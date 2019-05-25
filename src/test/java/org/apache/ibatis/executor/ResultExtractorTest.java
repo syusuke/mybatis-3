@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
@@ -41,10 +40,8 @@ class ResultExtractorTest {
 
   private ResultExtractor resultExtractor;
 
-  @Mock
-  private Configuration configuration;
-  @Mock
-  private ObjectFactory objectFactory;
+  @Mock private Configuration configuration;
+  @Mock private ObjectFactory objectFactory;
 
   @BeforeEach
   void setUp() {
@@ -72,7 +69,7 @@ class ResultExtractorTest {
     final Object result = resultExtractor.extractObjectFromList(list, Integer[].class);
     assertThat(result).isInstanceOf(Integer[].class);
     final Integer[] resultArray = (Integer[]) result;
-    assertThat(resultArray).isEqualTo(new Integer[]{1, 2, 3});
+    assertThat(resultArray).isEqualTo(new Integer[] {1, 2, 3});
   }
 
   @Test
@@ -94,14 +91,18 @@ class ResultExtractorTest {
   @Test
   void shouldExtractSingleObject() {
     final List<Object> list = Collections.singletonList("single object");
-    assertThat((String) resultExtractor.extractObjectFromList(list, String.class)).isEqualTo("single object");
-    assertThat((String) resultExtractor.extractObjectFromList(list, null)).isEqualTo("single object");
-    assertThat((String) resultExtractor.extractObjectFromList(list, Integer.class)).isEqualTo("single object");
+    assertThat((String) resultExtractor.extractObjectFromList(list, String.class))
+        .isEqualTo("single object");
+    assertThat((String) resultExtractor.extractObjectFromList(list, null))
+        .isEqualTo("single object");
+    assertThat((String) resultExtractor.extractObjectFromList(list, Integer.class))
+        .isEqualTo("single object");
   }
 
   @Test
   void shouldFailWhenMutipleItemsInList() {
     final List<Object> list = Arrays.asList("first object", "second object");
-    Assertions.assertThrows(ExecutorException.class, () -> resultExtractor.extractObjectFromList(list, String.class));
+    Assertions.assertThrows(
+        ExecutorException.class, () -> resultExtractor.extractObjectFromList(list, String.class));
   }
 }

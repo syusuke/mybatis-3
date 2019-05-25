@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
 public class UUIDTypeHandler extends BaseTypeHandler<UUID> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, UUID parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, UUID parameter, JdbcType jdbcType)
+      throws SQLException {
     ps.setString(i, parameter.toString());
   }
 
@@ -57,5 +57,4 @@ public class UUIDTypeHandler extends BaseTypeHandler<UUID> {
     }
     return null;
   }
-
 }

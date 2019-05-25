@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.session.Configuration;
@@ -33,13 +32,27 @@ import org.apache.ibatis.session.SqlSession;
  */
 public class MapperRegistry {
 
+  /** Mybatis Configuration 对象 */
   private final Configuration config;
+  /**
+   * Mapper映射
+   *
+   * <p>KEY: 接口
+   */
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
   public MapperRegistry(Configuration config) {
     this.config = config;
   }
 
+  /**
+   * 使用JDK动态代理创建
+   *
+   * @param type
+   * @param sqlSession
+   * @param <T>
+   * @return
+   */
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
     final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
@@ -58,16 +71,18 @@ public class MapperRegistry {
   }
 
   public <T> void addMapper(Class<T> type) {
+    // 必须是接口
     if (type.isInterface()) {
       if (hasMapper(type)) {
         throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
       }
       boolean loadCompleted = false;
       try {
-        knownMappers.put(type, new MapperProxyFactory<>(type));
+        knownMappers.put(type, new MapperProxyFactory<T>(type));
         // It's important that the type is added before the parser is run
         // otherwise the binding may automatically be attempted by the
         // mapper parser. If the type is already known, it won't try.
+        // 解析Mapper的注解配置
         MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
         parser.parse();
         loadCompleted = true;
@@ -79,16 +94,12 @@ public class MapperRegistry {
     }
   }
 
-  /**
-   * @since 3.2.2
-   */
+  /** @since 3.2.2 */
   public Collection<Class<?>> getMappers() {
     return Collections.unmodifiableCollection(knownMappers.keySet());
   }
 
-  /**
-   * @since 3.2.2
-   */
+  /** @since 3.2.2 */
   public void addMappers(String packageName, Class<?> superType) {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
@@ -98,11 +109,8 @@ public class MapperRegistry {
     }
   }
 
-  /**
-   * @since 3.2.2
-   */
+  /** @since 3.2.2 */
   public void addMappers(String packageName) {
     addMappers(packageName, Object.class);
   }
-
 }

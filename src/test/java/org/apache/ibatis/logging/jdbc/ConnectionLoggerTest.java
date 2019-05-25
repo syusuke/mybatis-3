@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import org.apache.ibatis.logging.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,14 +34,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ConnectionLoggerTest {
 
-  @Mock
-  Connection connection;
+  @Mock Connection connection;
 
-  @Mock
-  PreparedStatement preparedStatement;
+  @Mock PreparedStatement preparedStatement;
 
-  @Mock
-  Log log;
+  @Mock Log log;
 
   private Connection conn;
 

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,16 +29,14 @@ public interface Mapper {
 
   @Select("select * from users where id = #{value}")
   @Results({
-    @Result(column="id", property="id"),
-    @Result(column="name", property="name"),
-    @Result(column="city", property="city", jdbcType=JdbcType.CHAR),
-    @Result(column="state", property="state", jdbcType=JdbcType.VARCHAR)
+    @Result(column = "id", property = "id"),
+    @Result(column = "name", property = "name"),
+    @Result(column = "city", property = "city", jdbcType = JdbcType.CHAR),
+    @Result(column = "state", property = "state", jdbcType = JdbcType.VARCHAR)
   })
   User getUser(Integer id);
 
-  @Insert({
-    "insert into product (name) values (#{name})"
-  })
+  @Insert({"insert into product (name) values (#{name})"})
   @Options(useGeneratedKeys = true, keyProperty = "id")
   int insertProduct(Product product);
 
@@ -49,8 +47,8 @@ public interface Mapper {
 
   @Select("select id, name from product where name = #{value}")
   @ConstructorArgs({
-    @Arg(id = true, column="id", javaType = ProductId.class, jdbcType=JdbcType.INTEGER),
-    @Arg(column="name")
+    @Arg(id = true, column = "id", javaType = ProductId.class, jdbcType = JdbcType.INTEGER),
+    @Arg(column = "name")
   })
   Product getProductByNameUsingConstructor(String name);
 

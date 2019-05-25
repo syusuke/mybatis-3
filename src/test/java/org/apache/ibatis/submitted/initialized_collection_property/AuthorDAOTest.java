@@ -15,19 +15,18 @@
  */
 package org.apache.ibatis.submitted.initialized_collection_property;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.Reader;
+import java.util.List;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.io.Reader;
-import java.util.List;
 
 class AuthorDAOTest {
 
@@ -35,13 +34,15 @@ class AuthorDAOTest {
 
   @BeforeAll
   static void testGetMessageForEmptyDatabase() throws Exception {
-    final String resource = "org/apache/ibatis/submitted/initialized_collection_property/mybatis-config.xml";
+    final String resource =
+        "org/apache/ibatis/submitted/initialized_collection_property/mybatis-config.xml";
     try (Reader reader = Resources.getResourceAsReader(resource)) {
       factory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(factory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/initialized_collection_property/create.sql");
+    BaseDataTest.runScript(
+        factory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/initialized_collection_property/create.sql");
   }
 
   @Test
@@ -62,5 +63,4 @@ class AuthorDAOTest {
       assertEquals(4, authors.get(0).getPosts().size());
     }
   }
-
 }

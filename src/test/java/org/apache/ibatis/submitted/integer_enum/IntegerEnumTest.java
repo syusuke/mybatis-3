@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.integer_enum;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -31,5 +30,4 @@ class IntegerEnumTest extends BaseDataTest {
     SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
     builder.build(reader);
   }
-
 }

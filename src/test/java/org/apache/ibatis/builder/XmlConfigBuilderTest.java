@@ -15,6 +15,15 @@
  */
 package org.apache.ibatis.builder;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.RoundingMode;
@@ -25,7 +34,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
-
 import org.apache.ibatis.builder.mapper.CustomMapper;
 import org.apache.ibatis.builder.typehandler.CustomIntegerTypeHandler;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
@@ -57,14 +65,6 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.junit.jupiter.api.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-
 class XmlConfigBuilderTest {
 
   @Test
@@ -75,7 +75,8 @@ class XmlConfigBuilderTest {
       Configuration config = builder.parse();
       assertNotNull(config);
       assertThat(config.getAutoMappingBehavior()).isEqualTo(AutoMappingBehavior.PARTIAL);
-      assertThat(config.getAutoMappingUnknownColumnBehavior()).isEqualTo(AutoMappingUnknownColumnBehavior.NONE);
+      assertThat(config.getAutoMappingUnknownColumnBehavior())
+          .isEqualTo(AutoMappingUnknownColumnBehavior.NONE);
       assertThat(config.isCacheEnabled()).isTrue();
       assertThat(config.getProxyFactory()).isInstanceOf(JavassistProxyFactory.class);
       assertThat(config.isLazyLoadingEnabled()).isFalse();
@@ -90,19 +91,22 @@ class XmlConfigBuilderTest {
       assertThat(config.isSafeRowBoundsEnabled()).isFalse();
       assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.SESSION);
       assertThat(config.getJdbcTypeForNull()).isEqualTo(JdbcType.OTHER);
-      assertThat(config.getLazyLoadTriggerMethods()).isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
+      assertThat(config.getLazyLoadTriggerMethods())
+          .isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
       assertThat(config.isSafeResultHandlerEnabled()).isTrue();
       assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(XMLLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isFalse();
       assertNull(config.getLogPrefix());
       assertNull(config.getLogImpl());
       assertNull(config.getConfigurationFactory());
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class))
+          .isInstanceOf(EnumTypeHandler.class);
     }
   }
 
   enum MyEnum {
-    ONE, TWO
+    ONE,
+    TWO
   }
 
   public static class EnumOrderTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
@@ -114,7 +118,8 @@ class XmlConfigBuilderTest {
     }
 
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
+    public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
+        throws SQLException {
       ps.setInt(i, parameter.ordinal() + 1); // 0 means NULL so add +1
     }
 
@@ -139,14 +144,15 @@ class XmlConfigBuilderTest {
 
   @Test
   void registerJavaTypeInitializingTypeHandler() {
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-        + "<configuration>\n"
-        + "  <typeHandlers>\n"
-        + "    <typeHandler javaType=\"org.apache.ibatis.builder.XmlConfigBuilderTest$MyEnum\"\n"
-        + "      handler=\"org.apache.ibatis.builder.XmlConfigBuilderTest$EnumOrderTypeHandler\"/>\n"
-        + "  </typeHandlers>\n"
-        + "</configuration>\n";
+    final String MAPPER_CONFIG =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+            + "<configuration>\n"
+            + "  <typeHandlers>\n"
+            + "    <typeHandler javaType=\"org.apache.ibatis.builder.XmlConfigBuilderTest$MyEnum\"\n"
+            + "      handler=\"org.apache.ibatis.builder.XmlConfigBuilderTest$EnumOrderTypeHandler\"/>\n"
+            + "  </typeHandlers>\n"
+            + "</configuration>\n";
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     builder.parse();
@@ -168,7 +174,8 @@ class XmlConfigBuilderTest {
       Configuration config = builder.parse();
 
       assertThat(config.getAutoMappingBehavior()).isEqualTo(AutoMappingBehavior.NONE);
-      assertThat(config.getAutoMappingUnknownColumnBehavior()).isEqualTo(AutoMappingUnknownColumnBehavior.WARNING);
+      assertThat(config.getAutoMappingUnknownColumnBehavior())
+          .isEqualTo(AutoMappingUnknownColumnBehavior.WARNING);
       assertThat(config.isCacheEnabled()).isFalse();
       assertThat(config.getProxyFactory()).isInstanceOf(CglibProxyFactory.class);
       assertThat(config.isLazyLoadingEnabled()).isTrue();
@@ -183,7 +190,9 @@ class XmlConfigBuilderTest {
       assertThat(config.isSafeRowBoundsEnabled()).isTrue();
       assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.STATEMENT);
       assertThat(config.getJdbcTypeForNull()).isEqualTo(JdbcType.NULL);
-      assertThat(config.getLazyLoadTriggerMethods()).isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")));
+      assertThat(config.getLazyLoadTriggerMethods())
+          .isEqualTo(
+              new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx")));
       assertThat(config.isSafeResultHandlerEnabled()).isFalse();
       assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(RawLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isTrue();
@@ -192,19 +201,26 @@ class XmlConfigBuilderTest {
       assertThat(config.getVfsImpl().getName()).isEqualTo(JBoss6VFS.class.getName());
       assertThat(config.getConfigurationFactory().getName()).isEqualTo(String.class.getName());
 
-      assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);
+      assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor"))
+          .isEqualTo(Author.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("cart")).isEqualTo(Cart.class);
 
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class)).isInstanceOf(CustomIntegerTypeHandler.class);
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class)).isInstanceOf(CustomLongTypeHandler.class);
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class)).isInstanceOf(CustomStringTypeHandler.class);
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR)).isInstanceOf(CustomStringTypeHandler.class);
-      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class)).isInstanceOf(EnumOrdinalTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class))
+          .isInstanceOf(CustomIntegerTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class))
+          .isInstanceOf(CustomLongTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class))
+          .isInstanceOf(CustomStringTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR))
+          .isInstanceOf(CustomStringTypeHandler.class);
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class))
+          .isInstanceOf(EnumOrdinalTypeHandler.class);
 
       ExampleObjectFactory objectFactory = (ExampleObjectFactory) config.getObjectFactory();
       assertThat(objectFactory.getProperties().size()).isEqualTo(1);
-      assertThat(objectFactory.getProperties().getProperty("objectFactoryProperty")).isEqualTo("100");
+      assertThat(objectFactory.getProperties().getProperty("objectFactoryProperty"))
+          .isEqualTo("100");
 
       assertThat(config.getObjectWrapperFactory()).isInstanceOf(CustomObjectWrapperFactory.class);
 
@@ -235,7 +251,8 @@ class XmlConfigBuilderTest {
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
       Configuration config = builder.parse();
-      assertThat(config.getVariables().get("driver").toString()).isEqualTo("org.apache.derby.jdbc.EmbeddedDriver");
+      assertThat(config.getVariables().get("driver").toString())
+          .isEqualTo("org.apache.derby.jdbc.EmbeddedDriver");
       assertThat(config.getVariables().get("prop1").toString()).isEqualTo("bbbb");
     }
   }
@@ -248,14 +265,16 @@ class XmlConfigBuilderTest {
       builder.parse();
 
       when(builder).parse();
-      then(caughtException()).isInstanceOf(BuilderException.class)
-              .hasMessage("Each XMLConfigBuilder can only be used once.");
+      then(caughtException())
+          .isInstanceOf(BuilderException.class)
+          .hasMessage("Each XMLConfigBuilder can only be used once.");
     }
   }
 
   @Test
   void unknownSettings() {
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+    final String MAPPER_CONFIG =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
             + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
             + "<configuration>\n"
             + "  <settings>\n"
@@ -265,13 +284,16 @@ class XmlConfigBuilderTest {
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder).parse();
-    then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining("The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
+    then(caughtException())
+        .isInstanceOf(BuilderException.class)
+        .hasMessageContaining(
+            "The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
   }
 
   @Test
   void unknownJavaTypeOnTypeHandler() {
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+    final String MAPPER_CONFIG =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
             + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
             + "<configuration>\n"
             + "  <typeAliases>\n"
@@ -281,13 +303,15 @@ class XmlConfigBuilderTest {
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder).parse();
-    then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining("Error registering typeAlias for 'null'. Cause: ");
+    then(caughtException())
+        .isInstanceOf(BuilderException.class)
+        .hasMessageContaining("Error registering typeAlias for 'null'. Cause: ");
   }
 
   @Test
   void propertiesSpecifyResourceAndUrlAtSameTime() {
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+    final String MAPPER_CONFIG =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
             + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
             + "<configuration>\n"
             + "  <properties resource=\"a/b/c/foo.properties\" url=\"file:./a/b/c/jdbc.properties\"/>\n"
@@ -295,8 +319,9 @@ class XmlConfigBuilderTest {
 
     XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
     when(builder).parse();
-    then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessageContaining("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
+    then(caughtException())
+        .isInstanceOf(BuilderException.class)
+        .hasMessageContaining(
+            "The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
   }
-
 }

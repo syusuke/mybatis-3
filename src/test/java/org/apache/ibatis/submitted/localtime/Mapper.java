@@ -25,5 +25,4 @@ public interface Mapper {
 
   @Insert("insert into records (id, t) values (#{id}, #{t})")
   int insertLocalTime(Record record);
-
 }

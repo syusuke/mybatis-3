@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,25 +17,25 @@ package org.apache.ibatis.mapping;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.ibatis.session.Configuration;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ParameterMap {
 
   private String id;
   private Class<?> type;
   private List<ParameterMapping> parameterMappings;
 
-  private ParameterMap() {
-  }
+  private ParameterMap() {}
 
   public static class Builder {
     private ParameterMap parameterMap = new ParameterMap();
 
-    public Builder(Configuration configuration, String id, Class<?> type, List<ParameterMapping> parameterMappings) {
+    public Builder(
+        Configuration configuration,
+        String id,
+        Class<?> type,
+        List<ParameterMapping> parameterMappings) {
       parameterMap.id = id;
       parameterMap.type = type;
       parameterMap.parameterMappings = parameterMappings;
@@ -46,7 +46,7 @@ public class ParameterMap {
     }
 
     public ParameterMap build() {
-      //lock down collections
+      // lock down collections
       parameterMap.parameterMappings = Collections.unmodifiableList(parameterMap.parameterMappings);
       return parameterMap;
     }
@@ -63,5 +63,4 @@ public class ParameterMap {
   public List<ParameterMapping> getParameterMappings() {
     return parameterMappings;
   }
-
 }

@@ -15,10 +15,9 @@
  */
 package org.apache.ibatis.submitted.named_constructor_args;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
@@ -35,7 +34,9 @@ class NamedConstructorArgsTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/named_constructor_args/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/named_constructor_args/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
@@ -44,8 +45,9 @@ class NamedConstructorArgsTest {
     configuration.addMapper(Mapper.class);
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/named_constructor_args/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/named_constructor_args/CreateDB.sql");
   }
 
   @Test
@@ -69,5 +71,4 @@ class NamedConstructorArgsTest {
       assertEquals(Long.valueOf(99L), user.getTeam());
     }
   }
-
 }

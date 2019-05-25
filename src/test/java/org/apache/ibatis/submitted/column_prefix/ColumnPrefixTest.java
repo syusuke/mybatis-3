@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.submitted.column_prefix;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.Reader;
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -38,8 +38,9 @@ class ColumnPrefixTest {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/column_prefix/CreateDB.sql");
   }
 
   @Test
@@ -70,7 +71,8 @@ class ColumnPrefixTest {
       assertEquals("0123", person1.getBillingAddress().getPhone1().getPhone());
       assertEquals("4567", person1.getBillingAddress().getPhone2().getPhone());
       assertEquals(AddressWithCaution.class, person1.getShippingAddress().getClass());
-      assertEquals("Has a big dog.", ((AddressWithCaution) person1.getShippingAddress()).getCaution());
+      assertEquals(
+          "Has a big dog.", ((AddressWithCaution) person1.getShippingAddress()).getCaution());
       assertEquals(Integer.valueOf(11), person1.getShippingAddress().getId());
       assertEquals("CA", person1.getShippingAddress().getState());
       assertEquals("San Francisco", person1.getShippingAddress().getCity());
@@ -89,7 +91,8 @@ class ColumnPrefixTest {
       assertEquals(Integer.valueOf(2), person2.getId());
       assertEquals(AddressWithCaution.class, person2.getBillingAddress().getClass());
       assertEquals(Integer.valueOf(12), person2.getBillingAddress().getId());
-      assertEquals("No door bell.", ((AddressWithCaution) person2.getBillingAddress()).getCaution());
+      assertEquals(
+          "No door bell.", ((AddressWithCaution) person2.getBillingAddress()).getCaution());
       assertEquals("Los Angeles", person2.getBillingAddress().getCity());
       assertEquals("California Valley Quail", person2.getBillingAddress().getStateBird());
       assertEquals("Los Angeles", person2.getBillingAddress().getZip().getCity());
@@ -115,12 +118,14 @@ class ColumnPrefixTest {
   }
 
   protected List<Pet> getPetAndRoom(SqlSession sqlSession) {
-    List<Pet> pets = sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPets");
+    List<Pet> pets =
+        sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPets");
     return pets;
   }
 
   protected List<Person> getPersons(SqlSession sqlSession) {
-    List<Person> list = sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPersons");
+    List<Person> list =
+        sqlSession.selectList("org.apache.ibatis.submitted.column_prefix.Mapper.selectPersons");
     return list;
   }
 

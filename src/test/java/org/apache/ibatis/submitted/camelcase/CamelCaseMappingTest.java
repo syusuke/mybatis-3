@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.camelcase;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -34,12 +33,14 @@ class CamelCaseMappingTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/camelcase/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/camelcase/CreateDB.sql");
   }
 
   @Test
@@ -55,10 +56,10 @@ class CamelCaseMappingTest {
   @Test
   void testMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<Map<String, Object>> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelectMap");
+      List<Map<String, Object>> list =
+          sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelectMap");
       Assertions.assertTrue(list.size() > 0);
       Assertions.assertTrue(list.get(0).containsKey("LAST_NAME"));
     }
   }
-
 }

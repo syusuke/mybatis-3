@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.exceptions.ExceptionFactory;
@@ -40,8 +39,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * The default implementation for {@link SqlSession}.
- * Note that this class is not Thread-Safe.
+ * The default implementation for {@link SqlSession}. Note that this class is not Thread-Safe.
  *
  * @author Clinton Begin
  */
@@ -77,7 +75,8 @@ public class DefaultSqlSession implements SqlSession {
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
-      throw new TooManyResultsException("Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
+      throw new TooManyResultsException(
+          "Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
     } else {
       return null;
     }
@@ -94,10 +93,15 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   @Override
-  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+  public <K, V> Map<K, V> selectMap(
+      String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     final List<? extends V> list = selectList(statement, parameter, rowBounds);
-    final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<>(mapKey,
-            configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
+    final DefaultMapResultHandler<K, V> mapResultHandler =
+        new DefaultMapResultHandler<>(
+            mapKey,
+            configuration.getObjectFactory(),
+            configuration.getObjectWrapperFactory(),
+            configuration.getReflectorFactory());
     final DefaultResultContext<V> context = new DefaultResultContext<>();
     for (V o : list) {
       context.nextResultObject(o);
@@ -163,7 +167,8 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   @Override
-  public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
+  public void select(
+      String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       executor.query(ms, wrapCollection(parameter), rowBounds, handler);
@@ -339,11 +344,10 @@ public class DefaultSqlSession implements SqlSession {
     @Override
     public V get(Object key) {
       if (!super.containsKey(key)) {
-        throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + this.keySet());
+        throw new BindingException(
+            "Parameter '" + key + "' not found. Available parameters are " + this.keySet());
       }
       return super.get(key);
     }
-
   }
-
 }

@@ -15,12 +15,11 @@
  */
 package org.apache.ibatis.submitted.map_class_name_conflict;
 
+import java.io.IOException;
+import java.io.Reader;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.io.Reader;
 
 class MapperNameTest {
 

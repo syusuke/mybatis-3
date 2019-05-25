@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,13 +17,23 @@ package org.apache.ibatis.reflection.wrapper;
 
 import org.apache.ibatis.reflection.MetaObject;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public interface ObjectWrapperFactory {
 
+  /**
+   * 是否包装了指定对象
+   *
+   * @param object
+   * @return
+   */
   boolean hasWrapperFor(Object object);
 
+  /**
+   * 获得指定对象的 ObjectWrapper 对象
+   *
+   * @param metaObject
+   * @param object
+   * @return
+   */
   ObjectWrapper getWrapperFor(MetaObject metaObject, Object object);
-
 }

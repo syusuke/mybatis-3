@@ -18,12 +18,11 @@ package org.apache.ibatis.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Frank D. Martinez [mnesarco]
- */
+/** @author Frank D. Martinez [mnesarco] */
 public class LanguageDriverRegistry {
 
-  private final Map<Class<? extends LanguageDriver>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<>();
+  private final Map<Class<? extends LanguageDriver>, LanguageDriver> LANGUAGE_DRIVER_MAP =
+      new HashMap<>();
 
   private Class<? extends LanguageDriver> defaultDriverClass;
 
@@ -31,13 +30,15 @@ public class LanguageDriverRegistry {
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
-    LANGUAGE_DRIVER_MAP.computeIfAbsent(cls, k -> {
-      try {
-        return k.getDeclaredConstructor().newInstance();
-      } catch (Exception ex) {
-        throw new ScriptingException("Failed to load language driver for " + cls.getName(), ex);
-      }
-    });
+    LANGUAGE_DRIVER_MAP.computeIfAbsent(
+        cls,
+        k -> {
+          try {
+            return k.getDeclaredConstructor().newInstance();
+          } catch (Exception ex) {
+            throw new ScriptingException("Failed to load language driver for " + cls.getName(), ex);
+          }
+        });
   }
 
   public void register(LanguageDriver instance) {
@@ -66,5 +67,4 @@ public class LanguageDriverRegistry {
     register(defaultDriverClass);
     this.defaultDriverClass = defaultDriverClass;
   }
-
 }

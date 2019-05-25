@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.plugin;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class PluginTest {
 
@@ -40,7 +40,11 @@ class PluginTest {
   }
 
   @Intercepts({
-      @Signature(type = Map.class, method = "get", args = {Object.class})})
+    @Signature(
+        type = Map.class,
+        method = "get",
+        args = {Object.class})
+  })
   public static class AlwaysMapPlugin implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) {
@@ -53,8 +57,6 @@ class PluginTest {
     }
 
     @Override
-    public void setProperties(Properties properties) {
-    }
+    public void setProperties(Properties properties) {}
   }
-
 }

@@ -15,15 +15,16 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
 
 class ReflectorTest {
 
@@ -54,7 +55,7 @@ class ReflectorTest {
     void setId(T id);
   }
 
-  static abstract class AbstractEntity implements Entity<Long> {
+  abstract static class AbstractEntity implements Entity<Long> {
 
     private Long id;
 
@@ -69,8 +70,7 @@ class ReflectorTest {
     }
   }
 
-  static class Section extends AbstractEntity implements Entity<Long> {
-  }
+  static class Section extends AbstractEntity implements Entity<Long> {}
 
   @Test
   void shouldResolveSetterParam() {
@@ -132,7 +132,7 @@ class ReflectorTest {
     assertEquals(String.class, clazz.getComponentType());
   }
 
-  static abstract class Parent<T extends Serializable> {
+  abstract static class Parent<T extends Serializable> {
     protected T id;
     protected List<T> list;
     protected T[] array;
@@ -168,8 +168,7 @@ class ReflectorTest {
     }
   }
 
-  static class Child extends Parent<String> {
-  }
+  static class Child extends Parent<String> {}
 
   @Test
   void shouldResoleveReadonlySetterWithOverload() {
@@ -193,16 +192,18 @@ class ReflectorTest {
     @SuppressWarnings("unused")
     class BeanClass {
       public void setTheProp(String arg) {}
+
       public void setTheProp(Integer arg) {}
     }
 
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     when(reflectorFactory).findForClass(BeanClass.class);
-    then(caughtException()).isInstanceOf(ReflectionException.class)
-      .hasMessageContaining("theProp")
-      .hasMessageContaining("BeanClass")
-      .hasMessageContaining("java.lang.String")
-      .hasMessageContaining("java.lang.Integer");
+    then(caughtException())
+        .isInstanceOf(ReflectionException.class)
+        .hasMessageContaining("theProp")
+        .hasMessageContaining("BeanClass")
+        .hasMessageContaining("java.lang.String")
+        .hasMessageContaining("java.lang.Integer");
   }
 
   @Test
@@ -210,12 +211,18 @@ class ReflectorTest {
     @SuppressWarnings("unused")
     class Bean {
       // JavaBean Spec allows this (see #906)
-      public boolean isBool() {return true;}
-      public boolean getBool() {return false;}
+      public boolean isBool() {
+        return true;
+      }
+
+      public boolean getBool() {
+        return false;
+      }
+
       public void setBool(boolean bool) {}
     }
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     Reflector reflector = reflectorFactory.findForClass(Bean.class);
-    assertTrue((Boolean)reflector.getGetInvoker("bool").invoke(new Bean(), new Byte[0]));
+    assertTrue((Boolean) reflector.getGetInvoker("bool").invoke(new Bean(), new Byte[0]));
   }
 }

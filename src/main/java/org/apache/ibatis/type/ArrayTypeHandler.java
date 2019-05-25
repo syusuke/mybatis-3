@@ -21,9 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ArrayTypeHandler extends BaseTypeHandler<Object> {
 
   public ArrayTypeHandler() {
@@ -31,7 +29,8 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
   }
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+      throws SQLException {
     ps.setArray(i, (Array) parameter);
   }
 
@@ -58,5 +57,4 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
     array.free();
     return result;
   }
-
 }

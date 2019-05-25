@@ -28,5 +28,4 @@ public interface Mapper {
 
   @Insert("insert into records (id, odt) values (#{id}, #{ot})")
   int insertOffsetTime(Record record);
-
 }

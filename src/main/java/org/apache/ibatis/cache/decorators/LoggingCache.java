@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,19 +16,22 @@
 package org.apache.ibatis.cache.decorators;
 
 import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
 /**
  * @author Clinton Begin
+ *     <p>
+ *     <p>统计Cache的命中概率
  */
 public class LoggingCache implements Cache {
 
   private final Log log;
   private final Cache delegate;
+  /** 请求数 */
   protected int requests = 0;
+  /** 命中数 */
   protected int hits = 0;
 
   public LoggingCache(Cache delegate) {
@@ -89,8 +92,12 @@ public class LoggingCache implements Cache {
     return delegate.equals(obj);
   }
 
+  /**
+   * 统计
+   *
+   * @return
+   */
   private double getHitRatio() {
     return (double) hits / (double) requests;
   }
-
 }

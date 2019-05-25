@@ -15,18 +15,17 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.Month;
-
 import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.jupiter.api.Test;
 
-/**
- *
- * @author Eduardo Macarron
- */
+/** @author Eduardo Macarron */
 class MonthTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Month> TYPE_HANDLER = new MonthTypeHandler();
@@ -50,7 +49,9 @@ class MonthTypeHandlerTest extends BaseTypeHandlerTest {
       TYPE_HANDLER.getResult(rs, "column");
       fail();
     } catch (ResultMapException e) {
-      assertEquals("Error attempting to get column 'column' from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0", e.getMessage());
+      assertEquals(
+          "Error attempting to get column 'column' from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0",
+          e.getMessage());
     }
   }
 
@@ -73,7 +74,9 @@ class MonthTypeHandlerTest extends BaseTypeHandlerTest {
       TYPE_HANDLER.getResult(rs, 1);
       fail();
     } catch (ResultMapException e) {
-      assertEquals("Error attempting to get column #1 from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0", e.getMessage());
+      assertEquals(
+          "Error attempting to get column #1 from result set.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0",
+          e.getMessage());
     }
   }
 
@@ -96,7 +99,9 @@ class MonthTypeHandlerTest extends BaseTypeHandlerTest {
       TYPE_HANDLER.getResult(cs, 1);
       fail();
     } catch (ResultMapException e) {
-      assertEquals("Error attempting to get column #1 from callable statement.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0", e.getMessage());
+      assertEquals(
+          "Error attempting to get column #1 from callable statement.  Cause: java.time.DateTimeException: Invalid value for MonthOfYear: 0",
+          e.getMessage());
     }
   }
 
@@ -107,5 +112,4 @@ class MonthTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
-
 }

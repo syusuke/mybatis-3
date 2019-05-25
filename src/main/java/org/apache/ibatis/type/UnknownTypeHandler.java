@@ -22,12 +22,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.ibatis.io.Resources;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
   private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();
@@ -46,15 +43,13 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   }
 
   @Override
-  public Object getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
     TypeHandler<?> handler = resolveTypeHandler(rs, columnName);
     return handler.getResult(rs, columnName);
   }
 
   @Override
-  public Object getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     TypeHandler<?> handler = resolveTypeHandler(rs.getMetaData(), columnIndex);
     if (handler == null || handler instanceof UnknownTypeHandler) {
       handler = OBJECT_TYPE_HANDLER;
@@ -63,13 +58,12 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   }
 
   @Override
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getObject(columnIndex);
   }
 
-  private TypeHandler<?> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
-    TypeHandler<?> handler;
+  private TypeHandler<? extends Object> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
+    TypeHandler<? extends Object> handler;
     if (parameter == null) {
       handler = OBJECT_TYPE_HANDLER;
     } else {
@@ -84,13 +78,13 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
   private TypeHandler<?> resolveTypeHandler(ResultSet rs, String column) {
     try {
-      Map<String,Integer> columnIndexLookup;
+      Map<String, Integer> columnIndexLookup;
       columnIndexLookup = new HashMap<>();
       ResultSetMetaData rsmd = rs.getMetaData();
       int count = rsmd.getColumnCount();
       for (int i = 1; i <= count; i++) {
         String name = rsmd.getColumnName(i);
-        columnIndexLookup.put(name,i);
+        columnIndexLookup.put(name, i);
       }
       Integer columnIndex = columnIndexLookup.get(column);
       TypeHandler<?> handler = null;
@@ -102,7 +96,8 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
       }
       return handler;
     } catch (SQLException e) {
-      throw new TypeException("Error determining JDBC type for column " + column + ".  Cause: " + e, e);
+      throw new TypeException(
+          "Error determining JDBC type for column " + column + ".  Cause: " + e, e);
     }
   }
 

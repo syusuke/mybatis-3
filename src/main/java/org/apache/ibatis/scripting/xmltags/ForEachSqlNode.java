@@ -16,13 +16,10 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import java.util.Map;
-
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ForEachSqlNode implements SqlNode {
   public static final String ITEM_PREFIX = "__frch_";
 
@@ -36,7 +33,15 @@ public class ForEachSqlNode implements SqlNode {
   private final String index;
   private final Configuration configuration;
 
-  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
+  public ForEachSqlNode(
+      Configuration configuration,
+      SqlNode contents,
+      String collectionExpression,
+      String index,
+      String item,
+      String open,
+      String close,
+      String separator) {
     this.evaluator = new ExpressionEvaluator();
     this.collectionExpression = collectionExpression;
     this.contents = contents;
@@ -125,7 +130,12 @@ public class ForEachSqlNode implements SqlNode {
     private final String itemIndex;
     private final String item;
 
-    public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
+    public FilteredDynamicContext(
+        Configuration configuration,
+        DynamicContext delegate,
+        String itemIndex,
+        String item,
+        int i) {
       super(configuration, null);
       this.delegate = delegate;
       this.index = i;
@@ -150,13 +160,21 @@ public class ForEachSqlNode implements SqlNode {
 
     @Override
     public void appendSql(String sql) {
-      GenericTokenParser parser = new GenericTokenParser("#{", "}", content -> {
-        String newContent = content.replaceFirst("^\\s*" + item + "(?![^.,:\\s])", itemizeItem(item, index));
-        if (itemIndex != null && newContent.equals(content)) {
-          newContent = content.replaceFirst("^\\s*" + itemIndex + "(?![^.,:\\s])", itemizeItem(itemIndex, index));
-        }
-        return "#{" + newContent + "}";
-      });
+      GenericTokenParser parser =
+          new GenericTokenParser(
+              "#{",
+              "}",
+              content -> {
+                String newContent =
+                    content.replaceFirst(
+                        "^\\s*" + item + "(?![^.,:\\s])", itemizeItem(item, index));
+                if (itemIndex != null && newContent.equals(content)) {
+                  newContent =
+                      content.replaceFirst(
+                          "^\\s*" + itemIndex + "(?![^.,:\\s])", itemizeItem(itemIndex, index));
+                }
+                return "#{" + newContent + "}";
+              });
 
       delegate.appendSql(parser.parse(sql));
     }
@@ -165,9 +183,7 @@ public class ForEachSqlNode implements SqlNode {
     public int getUniqueNumber() {
       return delegate.getUniqueNumber();
     }
-
   }
-
 
   private class PrefixedContext extends DynamicContext {
     private final DynamicContext delegate;
@@ -214,5 +230,4 @@ public class ForEachSqlNode implements SqlNode {
       return delegate.getUniqueNumber();
     }
   }
-
 }

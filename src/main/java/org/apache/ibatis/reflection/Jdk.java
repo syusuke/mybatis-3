@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,17 +17,15 @@ package org.apache.ibatis.reflection;
 
 import org.apache.ibatis.io.Resources;
 
-/**
- * To check the existence of version dependent classes.
- */
+/** To check the existence of version dependent classes. */
 public class Jdk {
 
   /**
    * <code>true</code> if <code>java.lang.reflect.Parameter</code> is available.
+   *
    * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
    */
-  @Deprecated
-  public static final boolean parameterExists;
+  @Deprecated public static final boolean parameterExists;
 
   static {
     boolean available = false;
@@ -40,11 +38,8 @@ public class Jdk {
     parameterExists = available;
   }
 
-  /**
-   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
-   */
-  @Deprecated
-  public static final boolean dateAndTimeApiExists;
+  /** @deprecated Since 3.5.0, Will remove this field at feature(next major version up) */
+  @Deprecated public static final boolean dateAndTimeApiExists;
 
   static {
     boolean available = false;
@@ -57,11 +52,8 @@ public class Jdk {
     dateAndTimeApiExists = available;
   }
 
-  /**
-   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
-   */
-  @Deprecated
-  public static final boolean optionalExists;
+  /** @deprecated Since 3.5.0, Will remove this field at feature(next major version up) */
+  @Deprecated public static final boolean optionalExists;
 
   static {
     boolean available = false;

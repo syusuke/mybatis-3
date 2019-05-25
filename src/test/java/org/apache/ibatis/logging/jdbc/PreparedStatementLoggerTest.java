@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Assertions;
@@ -37,14 +36,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class PreparedStatementLoggerTest {
 
-  @Mock
-  Log log;
+  @Mock Log log;
 
-  @Mock
-  PreparedStatement preparedStatement;
+  @Mock PreparedStatement preparedStatement;
 
-  @Mock
-  ResultSet resultSet;
+  @Mock ResultSet resultSet;
 
   private PreparedStatement ps;
 

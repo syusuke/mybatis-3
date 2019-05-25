@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,9 +17,7 @@ package org.apache.ibatis.transaction.jdbc;
 
 import java.sql.Connection;
 import java.util.Properties;
-
 import javax.sql.DataSource;
-
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
@@ -28,14 +26,12 @@ import org.apache.ibatis.transaction.TransactionFactory;
  * Creates {@link JdbcTransaction} instances.
  *
  * @author Clinton Begin
- *
  * @see JdbcTransaction
  */
 public class JdbcTransactionFactory implements TransactionFactory {
 
   @Override
-  public void setProperties(Properties props) {
-  }
+  public void setProperties(Properties props) {}
 
   @Override
   public Transaction newTransaction(Connection conn) {
@@ -43,7 +39,8 @@ public class JdbcTransactionFactory implements TransactionFactory {
   }
 
   @Override
-  public Transaction newTransaction(DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
+  public Transaction newTransaction(
+      DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
     return new JdbcTransaction(ds, level, autoCommit);
   }
 }

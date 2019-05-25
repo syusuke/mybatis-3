@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.type;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Test;
 
 class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
 
@@ -29,16 +29,16 @@ class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldSetParameter() throws Exception {
-    TYPE_HANDLER.setParameter(ps, 1, new Byte[] { 1, 2, 3 }, null);
-    verify(ps).setBytes(1, new byte[] { 1, 2, 3 });
+    TYPE_HANDLER.setParameter(ps, 1, new Byte[] {1, 2, 3}, null);
+    verify(ps).setBytes(1, new byte[] {1, 2, 3});
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    byte[] byteArray = new byte[] { 1, 2 };
+    byte[] byteArray = new byte[] {1, 2};
     when(rs.getBytes("column")).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[]{1, 2});
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[] {1, 2});
     verify(rs, never()).wasNull();
   }
 
@@ -53,9 +53,9 @@ class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    byte[] byteArray = new byte[] { 1, 2 };
+    byte[] byteArray = new byte[] {1, 2};
     when(rs.getBytes(1)).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[]{1, 2});
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[] {1, 2});
     verify(rs, never()).wasNull();
   }
 
@@ -70,9 +70,9 @@ class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    byte[] byteArray = new byte[] { 1, 2 };
+    byte[] byteArray = new byte[] {1, 2};
     when(cs.getBytes(1)).thenReturn(byteArray);
-    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[]{1, 2});
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[] {1, 2});
     verify(cs, never()).wasNull();
   }
 
@@ -83,5 +83,4 @@ class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     assertThat(TYPE_HANDLER.getResult(cs, 1)).isNull();
     verify(cs, never()).wasNull();
   }
-
 }

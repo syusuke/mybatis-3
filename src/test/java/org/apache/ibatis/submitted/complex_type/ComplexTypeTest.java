@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.complex_type;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -34,13 +33,16 @@ class ComplexTypeTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/complex_type/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/complex_type/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/complex_type/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/complex_type/CreateDB.sql");
   }
 
   // see https://issues.apache.org/jira/browse/IBATIS-653
@@ -62,5 +64,4 @@ class ComplexTypeTest {
       sqlSession.update("updateProps", item);
     }
   }
-
 }

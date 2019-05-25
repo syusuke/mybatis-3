@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiFunction;
-
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
@@ -94,9 +93,7 @@ import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class Configuration {
 
   protected Environment environment;
@@ -118,12 +115,14 @@ public class Configuration {
   protected Class<? extends VFS> vfsImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
-  protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
+  protected Set<String> lazyLoadTriggerMethods =
+      new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
   protected Integer defaultStatementTimeout;
   protected Integer defaultFetchSize;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
-  protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
+  protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior =
+      AutoMappingUnknownColumnBehavior.NONE;
 
   protected Properties variables = new Properties();
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
@@ -131,14 +130,16 @@ public class Configuration {
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
   protected boolean lazyLoadingEnabled = false;
-  protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
+  protected ProxyFactory proxyFactory =
+      new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
   /**
-   * Configuration factory class.
-   * Used to create Configuration for loading deserialized unread properties.
+   * Configuration factory class. Used to create Configuration for loading deserialized unread
+   * properties.
    *
-   * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google code)</a>
+   * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google
+   *     code)</a>
    */
   protected Class<?> configurationFactory;
 
@@ -148,16 +149,24 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
-      .conflictMessageProducer((savedValue, targetValue) ->
-          ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
+  protected final Map<String, MappedStatement> mappedStatements =
+      new StrictMap<MappedStatement>("Mapped Statements collection")
+          .conflictMessageProducer(
+              (savedValue, targetValue) ->
+                  ". please check "
+                      + savedValue.getResource()
+                      + " and "
+                      + targetValue.getResource());
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
-  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
-  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
+  protected final Map<String, ParameterMap> parameterMaps =
+      new StrictMap<>("Parameter Maps collection");
+  protected final Map<String, KeyGenerator> keyGenerators =
+      new StrictMap<>("Key Generators collection");
 
   protected final Set<String> loadedResources = new HashSet<>();
-  protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
+  protected final Map<String, XNode> sqlFragments =
+      new StrictMap<>("XML fragments parsed from previous mappers");
 
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
@@ -328,17 +337,14 @@ public class Configuration {
     this.autoMappingBehavior = autoMappingBehavior;
   }
 
-  /**
-   * @since 3.4.0
-   */
+  /** @since 3.4.0 */
   public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
     return autoMappingUnknownColumnBehavior;
   }
 
-  /**
-   * @since 3.4.0
-   */
-  public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
+  /** @since 3.4.0 */
+  public void setAutoMappingUnknownColumnBehavior(
+      AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
     this.autoMappingUnknownColumnBehavior = autoMappingUnknownColumnBehavior;
   }
 
@@ -417,16 +423,12 @@ public class Configuration {
     this.defaultStatementTimeout = defaultStatementTimeout;
   }
 
-  /**
-   * @since 3.3.0
-   */
+  /** @since 3.3.0 */
   public Integer getDefaultFetchSize() {
     return defaultFetchSize;
   }
 
-  /**
-   * @since 3.3.0
-   */
+  /** @since 3.3.0 */
   public void setDefaultFetchSize(Integer defaultFetchSize) {
     this.defaultFetchSize = defaultFetchSize;
   }
@@ -468,8 +470,9 @@ public class Configuration {
   }
 
   /**
-   * Set a default {@link TypeHandler} class for {@link Enum}.
-   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   * Set a default {@link TypeHandler} class for {@link Enum}. A default {@link TypeHandler} is
+   * {@link org.apache.ibatis.type.EnumTypeHandler}.
+   *
    * @param typeHandler a type handler class for {@link Enum}
    * @since 3.4.5
    */
@@ -483,9 +486,7 @@ public class Configuration {
     return typeAliasRegistry;
   }
 
-  /**
-   * @since 3.2.2
-   */
+  /** @since 3.2.2 */
   public MapperRegistry getMapperRegistry() {
     return mapperRegistry;
   }
@@ -514,9 +515,7 @@ public class Configuration {
     this.objectWrapperFactory = objectWrapperFactory;
   }
 
-  /**
-   * @since 3.2.2
-   */
+  /** @since 3.2.2 */
   public List<Interceptor> getInterceptors() {
     return interceptorChain.getInterceptors();
   }
@@ -536,9 +535,7 @@ public class Configuration {
     return languageRegistry.getDefaultDriver();
   }
 
-  /**
-   * @since 3.5.1
-   */
+  /** @since 3.5.1 */
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
     if (langClass == null) {
       return languageRegistry.getDefaultDriver();
@@ -547,9 +544,7 @@ public class Configuration {
     return languageRegistry.getDriver(langClass);
   }
 
-  /**
-   * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
-   */
+  /** @deprecated Use {@link #getDefaultScriptingLanguageInstance()} */
   @Deprecated
   public LanguageDriver getDefaultScriptingLanuageInstance() {
     return getDefaultScriptingLanguageInstance();
@@ -559,21 +554,40 @@ public class Configuration {
     return MetaObject.forObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
-  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
-    ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
+  public ParameterHandler newParameterHandler(
+      MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+    ParameterHandler parameterHandler =
+        mappedStatement
+            .getLang()
+            .createParameterHandler(mappedStatement, parameterObject, boundSql);
     parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
     return parameterHandler;
   }
 
-  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ParameterHandler parameterHandler,
-      ResultHandler resultHandler, BoundSql boundSql) {
-    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
+  public ResultSetHandler newResultSetHandler(
+      Executor executor,
+      MappedStatement mappedStatement,
+      RowBounds rowBounds,
+      ParameterHandler parameterHandler,
+      ResultHandler resultHandler,
+      BoundSql boundSql) {
+    ResultSetHandler resultSetHandler =
+        new DefaultResultSetHandler(
+            executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
     resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
     return resultSetHandler;
   }
 
-  public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
-    StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
+  public StatementHandler newStatementHandler(
+      Executor executor,
+      MappedStatement mappedStatement,
+      Object parameterObject,
+      RowBounds rowBounds,
+      ResultHandler resultHandler,
+      BoundSql boundSql) {
+    StatementHandler statementHandler =
+        new RoutingStatementHandler(
+            executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
     statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
     return statementHandler;
   }
@@ -796,18 +810,20 @@ public class Configuration {
     }
     if (!incompleteStatements.isEmpty()) {
       synchronized (incompleteStatements) {
-        incompleteStatements.removeIf(x -> {
-          x.parseStatementNode();
-          return true;
-        });
+        incompleteStatements.removeIf(
+            x -> {
+              x.parseStatementNode();
+              return true;
+            });
       }
     }
     if (!incompleteMethods.isEmpty()) {
       synchronized (incompleteMethods) {
-        incompleteMethods.removeIf(x -> {
-          x.resolve();
-          return true;
-        });
+        incompleteMethods.removeIf(
+            x -> {
+              x.resolve();
+              return true;
+            });
       }
     }
   }
@@ -858,7 +874,8 @@ public class Configuration {
         if (value instanceof ResultMap) {
           ResultMap entryResultMap = (ResultMap) value;
           if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
-            Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
+            Collection<String> discriminatedResultMapNames =
+                entryResultMap.getDiscriminator().getDiscriminatorMap().values();
             if (discriminatedResultMapNames.contains(rm.getId())) {
               entryResultMap.forceNestedResultMaps();
             }
@@ -871,7 +888,8 @@ public class Configuration {
   // Slow but a one time cost. A better solution is welcome.
   protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
-      for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
+      for (Map.Entry<String, String> entry :
+          rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
         String discriminatedResultMapName = entry.getValue();
         if (hasResultMap(discriminatedResultMapName)) {
           ResultMap discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
@@ -911,9 +929,11 @@ public class Configuration {
     }
 
     /**
-     * Assign a function for producing a conflict error message when contains value with the same key.
-     * <p>
-     * function arguments are 1st is saved value and 2nd is target value.
+     * Assign a function for producing a conflict error message when contains value with the same
+     * key.
+     *
+     * <p>function arguments are 1st is saved value and 2nd is target value.
+     *
      * @param conflictMessageProducer A function for producing a conflict error message
      * @return a conflict error message
      * @since 3.5.0
@@ -926,8 +946,13 @@ public class Configuration {
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
       if (containsKey(key)) {
-        throw new IllegalArgumentException(name + " already contains value for " + key
-            + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
+        throw new IllegalArgumentException(
+            name
+                + " already contains value for "
+                + key
+                + (conflictMessageProducer == null
+                    ? ""
+                    : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
@@ -946,14 +971,17 @@ public class Configuration {
         throw new IllegalArgumentException(name + " does not contain value for " + key);
       }
       if (value instanceof Ambiguity) {
-        throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
-            + " (try using the full name including the namespace, or rename one of the entries)");
+        throw new IllegalArgumentException(
+            ((Ambiguity) value).getSubject()
+                + " is ambiguous in "
+                + name
+                + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
     }
 
     protected static class Ambiguity {
-      final private String subject;
+      private final String subject;
 
       public Ambiguity(String subject) {
         this.subject = subject;
@@ -969,5 +997,4 @@ public class Configuration {
       return keyParts[keyParts.length - 1];
     }
   }
-
 }

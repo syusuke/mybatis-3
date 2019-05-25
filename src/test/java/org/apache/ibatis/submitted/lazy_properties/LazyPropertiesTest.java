@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.submitted.lazy_properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
 import java.util.Collections;
 import java.util.HashSet;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
@@ -40,14 +40,16 @@ class LazyPropertiesTest {
   @BeforeEach
   void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
   }
 
   @Test
@@ -137,8 +139,7 @@ class LazyPropertiesTest {
   void verifyCustomLazyLoadTriggerMethods() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
-    configuration
-        .setLazyLoadTriggerMethods(new HashSet<>(Collections.singleton("trigger")));
+    configuration.setLazyLoadTriggerMethods(new HashSet<>(Collections.singleton("trigger")));
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);

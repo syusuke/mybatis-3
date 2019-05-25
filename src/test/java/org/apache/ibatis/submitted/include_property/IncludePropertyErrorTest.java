@@ -25,8 +25,8 @@ class IncludePropertyErrorTest {
   @Test
   void shouldFailForDuplicatedPropertyNames() {
     Configuration configuration = new Configuration();
-    Assertions.assertThrows(PersistenceException.class,
+    Assertions.assertThrows(
+        PersistenceException.class,
         () -> configuration.addMapper(DuplicatedIncludePropertiesMapper.class));
   }
-
 }

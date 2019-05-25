@@ -66,5 +66,4 @@ public class SqlxmlTypeHandler extends BaseTypeHandler<String> {
       sqlxml.free();
     }
   }
-
 }

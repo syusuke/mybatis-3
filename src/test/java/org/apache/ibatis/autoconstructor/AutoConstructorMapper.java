@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  */
 package org.apache.ibatis.autoconstructor;
 
-import org.apache.ibatis.annotations.Select;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 
 public interface AutoConstructorMapper {
   @Select("SELECT * FROM subject WHERE id = #{id}")
@@ -34,4 +35,24 @@ public interface AutoConstructorMapper {
 
   @Select("SELECT * FROM extensive_subject")
   List<ExtensiveSubject> getExtensiveSubject();
+
+  List<AnnotatedSubject> getAnnotatedSubjectsInXml();
+
+  /**
+   * SQL provider 测试
+   *
+   * @param id
+   * @return
+   */
+  @SelectProvider(type = AutoProviderTest.class, method = "findByIdProvider")
+  List<AnnotatedSubject> findById(Integer id);
+
+  @SelectProvider(type = AutoProviderTest.class, method = "findMoreParamProvider0")
+  List<AnnotatedSubject> findMoreParam0(Integer id, String name);
+
+  @SelectProvider(type = AutoProviderTest.class, method = "findMoreParamProvider1")
+  List<AnnotatedSubject> findMoreParam1(@Param("id") Integer id, @Param("name") String name);
+
+  @SelectProvider(type = AutoProviderTest.class, method = "findMoreParamProvider2")
+  List<AnnotatedSubject> findMoreParam2(Integer id, String name);
 }

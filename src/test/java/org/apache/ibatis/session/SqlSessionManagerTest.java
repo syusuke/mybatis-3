@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.mappers.AuthorMapper;
@@ -60,7 +59,8 @@ class SqlSessionManagerTest extends BaseDataTest {
     try {
       manager.startManagedSession();
       AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
-      Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
+      Author expected =
+          new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
       mapper.insertAuthor(expected);
       manager.commit();
       Author actual = mapper.selectAuthor(500);
@@ -75,7 +75,8 @@ class SqlSessionManagerTest extends BaseDataTest {
     try {
       manager.startManagedSession();
       AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
-      Author expected = new Author(501, "lmeadors", "******", "lmeadors@somewhere.com", "Something...", null);
+      Author expected =
+          new Author(501, "lmeadors", "******", "lmeadors@somewhere.com", "Something...", null);
       mapper.insertAuthor(expected);
       manager.rollback();
       Author actual = mapper.selectAuthor(501);
@@ -89,11 +90,11 @@ class SqlSessionManagerTest extends BaseDataTest {
   void shouldImplicitlyRollbackInsertedAuthor() {
     manager.startManagedSession();
     AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
-    Author expected = new Author(502, "emacarron", "******", "emacarron@somewhere.com", "Something...", null);
+    Author expected =
+        new Author(502, "emacarron", "******", "emacarron@somewhere.com", "Something...", null);
     mapper.insertAuthor(expected);
     manager.close();
     Author actual = mapper.selectAuthor(502);
     assertNull(actual);
   }
-
 }

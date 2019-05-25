@@ -17,7 +17,12 @@ package org.apache.ibatis.domain.jpetstore;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class Cart implements Serializable {
 
@@ -87,5 +92,4 @@ public class Cart implements Serializable {
     }
     return subTotal;
   }
-
 }

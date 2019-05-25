@@ -17,7 +17,6 @@ package org.apache.ibatis.builder.xml;
 
 import java.util.List;
 import java.util.Locale;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -33,20 +32,23 @@ import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class XMLStatementBuilder extends BaseBuilder {
 
   private final MapperBuilderAssistant builderAssistant;
   private final XNode context;
   private final String requiredDatabaseId;
 
-  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
+  public XMLStatementBuilder(
+      Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
     this(configuration, builderAssistant, context, null);
   }
 
-  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context, String databaseId) {
+  public XMLStatementBuilder(
+      Configuration configuration,
+      MapperBuilderAssistant builderAssistant,
+      XNode context,
+      String databaseId) {
     super(configuration);
     this.builderAssistant = builderAssistant;
     this.context = context;
@@ -69,7 +71,8 @@ public class XMLStatementBuilder extends BaseBuilder {
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
 
     // Include Fragments before parsing
-    XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
+    XMLIncludeTransformer includeParser =
+        new XMLIncludeTransformer(configuration, builderAssistant);
     includeParser.applyIncludes(context.getNode());
 
     String parameterType = context.getStringAttribute("parameterType");
@@ -88,13 +91,19 @@ public class XMLStatementBuilder extends BaseBuilder {
     if (configuration.hasKeyGenerator(keyStatementId)) {
       keyGenerator = configuration.getKeyGenerator(keyStatementId);
     } else {
-      keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
-          configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
-          ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
+      keyGenerator =
+          context.getBooleanAttribute(
+                  "useGeneratedKeys",
+                  configuration.isUseGeneratedKeys()
+                      && SqlCommandType.INSERT.equals(sqlCommandType))
+              ? Jdbc3KeyGenerator.INSTANCE
+              : NoKeyGenerator.INSTANCE;
     }
 
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
-    StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
+    StatementType statementType =
+        StatementType.valueOf(
+            context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     Integer fetchSize = context.getIntAttribute("fetchSize");
     Integer timeout = context.getIntAttribute("timeout");
     String parameterMap = context.getStringAttribute("parameterMap");
@@ -107,22 +116,46 @@ public class XMLStatementBuilder extends BaseBuilder {
     String keyColumn = context.getStringAttribute("keyColumn");
     String resultSets = context.getStringAttribute("resultSets");
 
-    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
-        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered,
-        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
+    builderAssistant.addMappedStatement(
+        id,
+        sqlSource,
+        statementType,
+        sqlCommandType,
+        fetchSize,
+        timeout,
+        parameterMap,
+        parameterTypeClass,
+        resultMap,
+        resultTypeClass,
+        resultSetTypeEnum,
+        flushCache,
+        useCache,
+        resultOrdered,
+        keyGenerator,
+        keyProperty,
+        keyColumn,
+        databaseId,
+        langDriver,
+        resultSets);
   }
 
-  private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
+  private void processSelectKeyNodes(
+      String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
     List<XNode> selectKeyNodes = context.evalNodes("selectKey");
     if (configuration.getDatabaseId() != null) {
-      parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());
+      parseSelectKeyNodes(
+          id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());
     }
     parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);
     removeSelectKeyNodes(selectKeyNodes);
   }
 
-  private void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
+  private void parseSelectKeyNodes(
+      String parentId,
+      List<XNode> list,
+      Class<?> parameterTypeClass,
+      LanguageDriver langDriver,
+      String skRequiredDatabaseId) {
     for (XNode nodeToHandle : list) {
       String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
       String databaseId = nodeToHandle.getStringAttribute("databaseId");
@@ -132,15 +165,22 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
   }
 
-  private void parseSelectKeyNode(String id, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
+  private void parseSelectKeyNode(
+      String id,
+      XNode nodeToHandle,
+      Class<?> parameterTypeClass,
+      LanguageDriver langDriver,
+      String databaseId) {
     String resultType = nodeToHandle.getStringAttribute("resultType");
     Class<?> resultTypeClass = resolveClass(resultType);
-    StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
+    StatementType statementType =
+        StatementType.valueOf(
+            nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
     String keyColumn = nodeToHandle.getStringAttribute("keyColumn");
     boolean executeBefore = "BEFORE".equals(nodeToHandle.getStringAttribute("order", "AFTER"));
 
-    //defaults
+    // defaults
     boolean useCache = false;
     boolean resultOrdered = false;
     KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;
@@ -151,13 +191,31 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultMap = null;
     ResultSetType resultSetTypeEnum = null;
 
-    SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);
+    SqlSource sqlSource =
+        langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
-        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered,
-        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, null);
+    builderAssistant.addMappedStatement(
+        id,
+        sqlSource,
+        statementType,
+        sqlCommandType,
+        fetchSize,
+        timeout,
+        parameterMap,
+        parameterTypeClass,
+        resultMap,
+        resultTypeClass,
+        resultSetTypeEnum,
+        flushCache,
+        useCache,
+        resultOrdered,
+        keyGenerator,
+        keyProperty,
+        keyColumn,
+        databaseId,
+        langDriver,
+        null);
 
     id = builderAssistant.applyCurrentNamespace(id, false);
 
@@ -171,7 +229,8 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
   }
 
-  private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
+  private boolean databaseIdMatchesCurrent(
+      String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
       if (!requiredDatabaseId.equals(databaseId)) {
         return false;
@@ -199,5 +258,4 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
     return configuration.getLanguageDriver(langClass);
   }
-
 }

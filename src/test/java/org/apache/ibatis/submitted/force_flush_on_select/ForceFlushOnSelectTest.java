@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.submitted.force_flush_on_select;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.ExecutorType;
@@ -39,12 +39,15 @@ class ForceFlushOnSelectTest {
 
   @BeforeEach
   void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/force_flush_on_select/ibatisConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/force_flush_on_select/ibatisConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/force_flush_on_select/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/force_flush_on_select/CreateDB.sql");
   }
 
   @Test
@@ -116,7 +119,8 @@ class ForceFlushOnSelectTest {
   }
 
   @Test
-  void testSelectShouldFlushLocalCacheIfFlushLocalCacheAtferEachStatementIsTrue() throws SQLException {
+  void testSelectShouldFlushLocalCacheIfFlushLocalCacheAtferEachStatementIsTrue()
+      throws SQLException {
     sqlSessionFactory.getConfiguration().setLocalCacheScope(LocalCacheScope.STATEMENT);
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
@@ -127,5 +131,4 @@ class ForceFlushOnSelectTest {
       sqlSession.commit();
     }
   }
-
 }

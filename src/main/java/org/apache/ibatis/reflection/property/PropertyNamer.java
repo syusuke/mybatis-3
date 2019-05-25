@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,31 +16,36 @@
 package org.apache.ibatis.reflection.property;
 
 import java.util.Locale;
-
 import org.apache.ibatis.reflection.ReflectionException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public final class PropertyNamer {
 
   private PropertyNamer() {
     // Prevent Instantiation of Static Class
   }
 
+  /**
+   * set/get 方法获取属性名 isEnable => enable getCreateTime => createTime ...
+   *
+   * @param name
+   * @return
+   */
   public static String methodToProperty(String name) {
     if (name.startsWith("is")) {
       name = name.substring(2);
     } else if (name.startsWith("get") || name.startsWith("set")) {
       name = name.substring(3);
     } else {
-      throw new ReflectionException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+      throw new ReflectionException(
+          "Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
     }
 
     if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
       name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
     }
-
+    // 不符合 标准的 setXXX/getXXX/isXXX方法
+    // getabc => abc
     return name;
   }
 
@@ -55,5 +60,4 @@ public final class PropertyNamer {
   public static boolean isSetter(String name) {
     return name.startsWith("set");
   }
-
 }

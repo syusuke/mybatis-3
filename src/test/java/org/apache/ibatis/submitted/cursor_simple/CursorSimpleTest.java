@@ -15,6 +15,12 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.io.Resources;
@@ -26,13 +32,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 class CursorSimpleTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -40,12 +39,15 @@ class CursorSimpleTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cursor_simple/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/cursor_simple/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/cursor_simple/CreateDB.sql");
   }
 
@@ -161,7 +163,8 @@ class CursorSimpleTest {
   void testCursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
-        Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
+        Cursor<User> usersCursor =
+            sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
       try {
         Iterator<User> iterator = usersCursor.iterator();
 
@@ -182,7 +185,8 @@ class CursorSimpleTest {
   @Test
   void testCursorIteratorNoSuchElementExceptionNoHasNext() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
-        Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
+        Cursor<User> usersCursor =
+            sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
       try {
         Iterator<User> iterator = usersCursor.iterator();
         User user = iterator.next();
@@ -368,7 +372,8 @@ class CursorSimpleTest {
     }
     try {
       usersCursor.iterator();
-      Assertions.fail("Should throws the IllegalStateException when call the iterator method after session is closed.");
+      Assertions.fail(
+          "Should throws the IllegalStateException when call the iterator method after session is closed.");
     } catch (IllegalStateException e) {
       Assertions.assertEquals("A Cursor is already closed.", e.getMessage());
     }
@@ -384,7 +389,5 @@ class CursorSimpleTest {
     } catch (IllegalStateException e) {
       Assertions.assertEquals("Cannot open more than one iterator on a Cursor", e.getMessage());
     }
-
   }
-
 }

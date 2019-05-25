@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,16 +27,16 @@ import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ScriptRunner {
 
   private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+  private static final Pattern DELIMITER_PATTERN =
+      Pattern.compile(
+          "^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
 
   private final Connection connection;
 
@@ -77,9 +77,7 @@ public class ScriptRunner {
     this.removeCRs = removeCRs;
   }
 
-  /**
-   * @since 3.1.1
-   */
+  /** @since 3.1.1 */
   public void setEscapeProcessing(boolean escapeProcessing) {
     this.escapeProcessing = escapeProcessing;
   }
@@ -165,7 +163,8 @@ public class ScriptRunner {
         connection.setAutoCommit(autoCommit);
       }
     } catch (Throwable t) {
-      throw new RuntimeSqlException("Could not set AutoCommit to " + autoCommit + ". Cause: " + t, t);
+      throw new RuntimeSqlException(
+          "Could not set AutoCommit to " + autoCommit + ". Cause: " + t, t);
     }
   }
 
@@ -191,7 +190,8 @@ public class ScriptRunner {
 
   private void checkForMissingLineTerminator(StringBuilder command) {
     if (command != null && command.toString().trim().length() > 0) {
-      throw new RuntimeSqlException("Line missing end-of-line terminator (" + delimiter + ") => " + command);
+      throw new RuntimeSqlException(
+          "Line missing end-of-line terminator (" + delimiter + ") => " + command);
     }
   }
 
@@ -221,7 +221,8 @@ public class ScriptRunner {
 
   private boolean commandReadyToExecute(String trimmedLine) {
     // issue #561 remove anything after the delimiter
-    return !fullLineDelimiter && trimmedLine.contains(delimiter) || fullLineDelimiter && trimmedLine.equals(delimiter);
+    return !fullLineDelimiter && trimmedLine.contains(delimiter)
+        || fullLineDelimiter && trimmedLine.equals(delimiter);
   }
 
   private void executeStatement(String command) throws SQLException {
@@ -315,5 +316,4 @@ public class ScriptRunner {
       errorLogWriter.flush();
     }
   }
-
 }

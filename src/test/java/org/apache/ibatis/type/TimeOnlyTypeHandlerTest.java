@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
-
 import org.junit.jupiter.api.Test;
 
 class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
@@ -85,5 +84,4 @@ class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
     assertNull(TYPE_HANDLER.getResult(cs, 1));
     verify(cs, never()).wasNull();
   }
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,15 +16,12 @@
 package org.apache.ibatis.builder;
 
 import java.util.List;
-
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class StaticSqlSource implements SqlSource {
 
   private final String sql;
@@ -35,7 +32,8 @@ public class StaticSqlSource implements SqlSource {
     this(configuration, sql, null);
   }
 
-  public StaticSqlSource(Configuration configuration, String sql, List<ParameterMapping> parameterMappings) {
+  public StaticSqlSource(
+      Configuration configuration, String sql, List<ParameterMapping> parameterMappings) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.configuration = configuration;
@@ -45,5 +43,4 @@ public class StaticSqlSource implements SqlSource {
   public BoundSql getBoundSql(Object parameterObject) {
     return new BoundSql(configuration, sql, parameterMappings, parameterObject);
   }
-
 }

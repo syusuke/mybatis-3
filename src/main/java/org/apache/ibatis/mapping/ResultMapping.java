@@ -19,15 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ResultMapping {
 
   private Configuration configuration;
@@ -46,13 +43,13 @@ public class ResultMapping {
   private String foreignColumn;
   private boolean lazy;
 
-  ResultMapping() {
-  }
+  ResultMapping() {}
 
   public static class Builder {
     private ResultMapping resultMapping = new ResultMapping();
 
-    public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
+    public Builder(
+        Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
       this(configuration, property);
       resultMapping.column = column;
       resultMapping.typeHandler = typeHandler;
@@ -144,15 +141,23 @@ public class ResultMapping {
     private void validate() {
       // Issue #697: cannot define both nestedQueryId and nestedResultMapId
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
-        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
+        throw new IllegalStateException(
+            "Cannot define both nestedQueryId and nestedResultMapId in property "
+                + resultMapping.property);
       }
       // Issue #5: there should be no mappings without typehandler
-      if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
-        throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
+      if (resultMapping.nestedQueryId == null
+          && resultMapping.nestedResultMapId == null
+          && resultMapping.typeHandler == null) {
+        throw new IllegalStateException(
+            "No typehandler found for property " + resultMapping.property);
       }
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
-      if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty()) {
-        throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
+      if (resultMapping.nestedResultMapId == null
+          && resultMapping.column == null
+          && resultMapping.composites.isEmpty()) {
+        throw new IllegalStateException(
+            "Mapping is missing column attribute for property " + resultMapping.property);
       }
       if (resultMapping.getResultSet() != null) {
         int numColumns = 0;
@@ -164,7 +169,9 @@ public class ResultMapping {
           numForeignColumns = resultMapping.foreignColumn.split(",").length;
         }
         if (numColumns != numForeignColumns) {
-          throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property);
+          throw new IllegalStateException(
+              "There should be the same number of columns and foreignColumns in property "
+                  + resultMapping.property);
         }
       }
     }
@@ -173,7 +180,8 @@ public class ResultMapping {
       if (resultMapping.typeHandler == null && resultMapping.javaType != null) {
         Configuration configuration = resultMapping.configuration;
         TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        resultMapping.typeHandler = typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
+        resultMapping.typeHandler =
+            typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
       }
     }
 
@@ -283,12 +291,14 @@ public class ResultMapping {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("ResultMapping{");
-    //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
+    // sb.append("configuration=").append(configuration); // configuration doesn't have a useful
+    // .toString()
     sb.append("property='").append(property).append('\'');
     sb.append(", column='").append(column).append('\'');
     sb.append(", javaType=").append(javaType);
     sb.append(", jdbcType=").append(jdbcType);
-    //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
+    // sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful
+    // .toString()
     sb.append(", nestedResultMapId='").append(nestedResultMapId).append('\'');
     sb.append(", nestedQueryId='").append(nestedQueryId).append('\'');
     sb.append(", notNullColumns=").append(notNullColumns);
@@ -301,5 +311,4 @@ public class ResultMapping {
     sb.append('}');
     return sb.toString();
   }
-
 }

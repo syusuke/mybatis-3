@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
-
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
@@ -72,7 +71,8 @@ public class SqlSessionFactoryBuilder {
     return build(inputStream, null, properties);
   }
 
-  public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
+  public SqlSessionFactory build(
+      InputStream inputStream, String environment, Properties properties) {
     try {
       XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
       return build(parser.parse());
@@ -91,5 +91,4 @@ public class SqlSessionFactoryBuilder {
   public SqlSessionFactory build(Configuration config) {
     return new DefaultSqlSessionFactory(config);
   }
-
 }

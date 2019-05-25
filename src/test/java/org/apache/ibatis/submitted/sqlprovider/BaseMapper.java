@@ -15,18 +15,17 @@
  */
 package org.apache.ibatis.submitted.sqlprovider;
 
-import org.apache.ibatis.annotations.Lang;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
-import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Lang;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 public interface BaseMapper<T> {
 
@@ -37,32 +36,44 @@ public interface BaseMapper<T> {
   @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByIdProviderContextOnly")
   T selectActiveById(Integer id);
 
-  @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByNameOneParamAndProviderContext")
+  @SelectProvider(
+      type = OurSqlBuilder.class,
+      method = "buildSelectByNameOneParamAndProviderContext")
   @ContainsLogicalDelete
   List<T> selectByName(String name);
 
-  @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByNameOneParamAndProviderContext")
+  @SelectProvider(
+      type = OurSqlBuilder.class,
+      method = "buildSelectByNameOneParamAndProviderContext")
   List<T> selectActiveByName(String name);
 
-  @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByIdAndNameMultipleParamAndProviderContextWithAtParam")
+  @SelectProvider(
+      type = OurSqlBuilder.class,
+      method = "buildSelectByIdAndNameMultipleParamAndProviderContextWithAtParam")
   @ContainsLogicalDelete
   List<T> selectByIdAndNameWithAtParam(@Param("id") Integer id, @Param("name") String name);
 
-  @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByIdAndNameMultipleParamAndProviderContextWithAtParam")
+  @SelectProvider(
+      type = OurSqlBuilder.class,
+      method = "buildSelectByIdAndNameMultipleParamAndProviderContextWithAtParam")
   List<T> selectActiveByIdAndNameWithAtParam(@Param("id") Integer id, @Param("name") String name);
 
-  @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByIdAndNameMultipleParamAndProviderContext")
+  @SelectProvider(
+      type = OurSqlBuilder.class,
+      method = "buildSelectByIdAndNameMultipleParamAndProviderContext")
   @ContainsLogicalDelete
   List<T> selectByIdAndName(Integer id, String name);
 
-  @SelectProvider(type = OurSqlBuilder.class, method = "buildSelectByIdAndNameMultipleParamAndProviderContext")
+  @SelectProvider(
+      type = OurSqlBuilder.class,
+      method = "buildSelectByIdAndNameMultipleParamAndProviderContext")
   List<T> selectActiveByIdAndName(Integer id, String name);
 
   @Lang(XMLLanguageDriver.class)
   @InsertProvider(type = OurSqlBuilder.class, method = "buildInsertSelective")
   void insertSelective(T entity);
 
-  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdateSelective")
+  @UpdateProvider(type = OurSqlBuilder.class, method = "buildUpdateSelective")
   void updateSelective(T entity);
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetByEntityQuery")
@@ -85,5 +96,4 @@ public interface BaseMapper<T> {
   @interface Column {
     String value() default "";
   }
-
 }

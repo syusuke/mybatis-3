@@ -16,14 +16,11 @@
 package org.apache.ibatis.reflection.wrapper;
 
 import java.util.List;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public interface ObjectWrapper {
 
   Object get(PropertyTokenizer prop);
@@ -44,12 +41,12 @@ public interface ObjectWrapper {
 
   boolean hasGetter(String name);
 
-  MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory);
+  MetaObject instantiatePropertyValue(
+      String name, PropertyTokenizer prop, ObjectFactory objectFactory);
 
   boolean isCollection();
 
   void add(Object element);
 
   <E> void addAll(List<E> element);
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,12 +21,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
-
 import org.apache.ibatis.session.Configuration;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class TrimSqlNode implements SqlNode {
 
   private final SqlNode contents;
@@ -36,11 +33,29 @@ public class TrimSqlNode implements SqlNode {
   private final List<String> suffixesToOverride;
   private final Configuration configuration;
 
-  public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride, String suffix, String suffixesToOverride) {
-    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix, parseOverrides(suffixesToOverride));
+  public TrimSqlNode(
+      Configuration configuration,
+      SqlNode contents,
+      String prefix,
+      String prefixesToOverride,
+      String suffix,
+      String suffixesToOverride) {
+    this(
+        configuration,
+        contents,
+        prefix,
+        parseOverrides(prefixesToOverride),
+        suffix,
+        parseOverrides(suffixesToOverride));
   }
 
-  protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List<String> prefixesToOverride, String suffix, List<String> suffixesToOverride) {
+  protected TrimSqlNode(
+      Configuration configuration,
+      SqlNode contents,
+      String prefix,
+      List<String> prefixesToOverride,
+      String suffix,
+      List<String> suffixesToOverride) {
     this.contents = contents;
     this.prefix = prefix;
     this.prefixesToOverride = prefixesToOverride;
@@ -141,7 +156,8 @@ public class TrimSqlNode implements SqlNode {
         suffixApplied = true;
         if (suffixesToOverride != null) {
           for (String toRemove : suffixesToOverride) {
-            if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {
+            if (trimmedUppercaseSql.endsWith(toRemove)
+                || trimmedUppercaseSql.endsWith(toRemove.trim())) {
               int start = sql.length() - toRemove.trim().length();
               int end = sql.length();
               sql.delete(start, end);
@@ -155,7 +171,5 @@ public class TrimSqlNode implements SqlNode {
         }
       }
     }
-
   }
-
 }

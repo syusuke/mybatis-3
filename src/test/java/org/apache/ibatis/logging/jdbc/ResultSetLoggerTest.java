@@ -22,7 +22,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import org.apache.ibatis.logging.Log;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,14 +31,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ResultSetLoggerTest {
 
-  @Mock
-  private ResultSet rs;
+  @Mock private ResultSet rs;
 
-  @Mock
-  private Log log;
+  @Mock private Log log;
 
-  @Mock
-  private ResultSetMetaData metaData;
+  @Mock private ResultSetMetaData metaData;
 
   private void setup(int type) throws SQLException {
     when(rs.next()).thenReturn(true);
@@ -66,5 +62,4 @@ class ResultSetLoggerTest {
     verify(log).trace("<==    Columns: ColumnName");
     verify(log).trace("<==        Row: value");
   }
-
 }

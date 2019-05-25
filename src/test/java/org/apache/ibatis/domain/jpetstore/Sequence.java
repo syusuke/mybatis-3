@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ public class Sequence implements Serializable {
   private String name;
   private int nextId;
 
-  public Sequence() {
-  }
+  public Sequence() {}
 
   public Sequence(String name, int nextId) {
     this.name = name;
@@ -47,5 +46,4 @@ public class Sequence implements Serializable {
   public void setNextId(int nextId) {
     this.nextId = nextId;
   }
-
 }

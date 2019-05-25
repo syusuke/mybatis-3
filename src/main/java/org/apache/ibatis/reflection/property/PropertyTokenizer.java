@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@ import java.util.Iterator;
 
 /**
  * @author Clinton Begin
+ *     <p>属性分词器
+ *     <p>
+ *     <p>举个例子，在访问 "order[0].item[0].name" 时，我们希望拆分成 "order[0]"、"item[0]"、"name" 三段，那么就可以通过
+ *     PropertyTokenizer 来实现。
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   private String name;
@@ -29,15 +33,19 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   public PropertyTokenizer(String fullname) {
     int delim = fullname.indexOf('.');
     if (delim > -1) {
+      // 1. order[0]
       name = fullname.substring(0, delim);
+      // item[0].name
       children = fullname.substring(delim + 1);
     } else {
+      // order
       name = fullname;
       children = null;
     }
     indexedName = name;
     delim = name.indexOf('[');
     if (delim > -1) {
+      // #1 order[0] => 0
       index = name.substring(delim + 1, name.length() - 1);
       name = name.substring(0, delim);
     }
@@ -66,11 +74,13 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
 
   @Override
   public PropertyTokenizer next() {
+    // 循环
     return new PropertyTokenizer(children);
   }
 
   @Override
   public void remove() {
-    throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
+    throw new UnsupportedOperationException(
+        "Remove is not supported, as it has no meaning in the context of properties.");
   }
 }

@@ -25,7 +25,6 @@ import java.sql.Types;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringJoiner;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
@@ -34,7 +33,6 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
- *
  */
 public final class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -127,7 +125,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   public static ResultSet newInstance(ResultSet rs, Log statementLog, int queryStack) {
     InvocationHandler handler = new ResultSetLogger(rs, statementLog, queryStack);
     ClassLoader cl = ResultSet.class.getClassLoader();
-    return (ResultSet) Proxy.newProxyInstance(cl, new Class[]{ResultSet.class}, handler);
+    return (ResultSet) Proxy.newProxyInstance(cl, new Class[] {ResultSet.class}, handler);
   }
 
   /**
@@ -138,5 +136,4 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   public ResultSet getRs() {
     return rs;
   }
-
 }

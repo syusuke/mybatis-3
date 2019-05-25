@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ package org.apache.ibatis.datasource.pooled;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class PoolState {
 
   protected PooledDataSource dataSource;
@@ -50,7 +48,6 @@ public class PoolState {
 
   public synchronized long getAverageWaitTime() {
     return hadToWaitCount == 0 ? 0 : accumulatedWaitTime / hadToWaitCount;
-
   }
 
   public synchronized long getHadToWaitCount() {
@@ -66,13 +63,14 @@ public class PoolState {
   }
 
   public synchronized long getAverageOverdueCheckoutTime() {
-    return claimedOverdueConnectionCount == 0 ? 0 : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
+    return claimedOverdueConnectionCount == 0
+        ? 0
+        : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
   }
 
   public synchronized long getAverageCheckoutTime() {
     return requestCount == 0 ? 0 : accumulatedCheckoutTime / requestCount;
   }
-
 
   public synchronized int getIdleConnectionCount() {
     return idleConnections.size();
@@ -89,14 +87,22 @@ public class PoolState {
     builder.append("\n jdbcDriver                     ").append(dataSource.getDriver());
     builder.append("\n jdbcUrl                        ").append(dataSource.getUrl());
     builder.append("\n jdbcUsername                   ").append(dataSource.getUsername());
-    builder.append("\n jdbcPassword                   ").append(dataSource.getPassword() == null ? "NULL" : "************");
-    builder.append("\n poolMaxActiveConnections       ").append(dataSource.poolMaximumActiveConnections);
-    builder.append("\n poolMaxIdleConnections         ").append(dataSource.poolMaximumIdleConnections);
+    builder
+        .append("\n jdbcPassword                   ")
+        .append(dataSource.getPassword() == null ? "NULL" : "************");
+    builder
+        .append("\n poolMaxActiveConnections       ")
+        .append(dataSource.poolMaximumActiveConnections);
+    builder
+        .append("\n poolMaxIdleConnections         ")
+        .append(dataSource.poolMaximumIdleConnections);
     builder.append("\n poolMaxCheckoutTime            ").append(dataSource.poolMaximumCheckoutTime);
     builder.append("\n poolTimeToWait                 ").append(dataSource.poolTimeToWait);
     builder.append("\n poolPingEnabled                ").append(dataSource.poolPingEnabled);
     builder.append("\n poolPingQuery                  ").append(dataSource.poolPingQuery);
-    builder.append("\n poolPingConnectionsNotUsedFor  ").append(dataSource.poolPingConnectionsNotUsedFor);
+    builder
+        .append("\n poolPingConnectionsNotUsedFor  ")
+        .append(dataSource.poolPingConnectionsNotUsedFor);
     builder.append("\n ---STATUS-----------------------------------------------------");
     builder.append("\n activeConnections              ").append(getActiveConnectionCount());
     builder.append("\n idleConnections                ").append(getIdleConnectionCount());
@@ -111,5 +117,4 @@ public class PoolState {
     builder.append("\n===============================================================");
     return builder.toString();
   }
-
 }

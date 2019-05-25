@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.apache.ibatis.executor.statement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -33,9 +32,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public abstract class BaseStatementHandler implements StatementHandler {
 
   protected final Configuration configuration;
@@ -50,7 +47,13 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected BoundSql boundSql;
 
-  protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+  protected BaseStatementHandler(
+      Executor executor,
+      MappedStatement mappedStatement,
+      Object parameterObject,
+      RowBounds rowBounds,
+      ResultHandler resultHandler,
+      BoundSql boundSql) {
     this.configuration = mappedStatement.getConfiguration();
     this.executor = executor;
     this.mappedStatement = mappedStatement;
@@ -66,8 +69,11 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
     this.boundSql = boundSql;
 
-    this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
-    this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);
+    this.parameterHandler =
+        configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
+    this.resultSetHandler =
+        configuration.newResultSetHandler(
+            executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);
   }
 
   @Override
@@ -100,7 +106,8 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
-  protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
+  protected void setStatementTimeout(Statement stmt, Integer transactionTimeout)
+      throws SQLException {
     Integer queryTimeout = null;
     if (mappedStatement.getTimeout() != null) {
       queryTimeout = mappedStatement.getTimeout();
@@ -131,7 +138,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
         statement.close();
       }
     } catch (SQLException e) {
-      //ignore
+      // ignore
     }
   }
 
@@ -141,5 +148,4 @@ public abstract class BaseStatementHandler implements StatementHandler {
     keyGenerator.processBefore(executor, mappedStatement, null, parameter);
     ErrorContext.instance().recall();
   }
-
 }

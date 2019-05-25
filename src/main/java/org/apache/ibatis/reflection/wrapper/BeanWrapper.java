@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.reflection.wrapper;
 
 import java.util.List;
-
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
@@ -26,12 +25,12 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class BeanWrapper extends BaseWrapper {
 
+  /** 原始的Bean对象 */
   private final Object object;
+
   private final MetaClass metaClass;
 
   public BeanWrapper(MetaObject metaObject, Object object) {
@@ -42,10 +41,15 @@ public class BeanWrapper extends BaseWrapper {
 
   @Override
   public Object get(PropertyTokenizer prop) {
+    // 获得集合类型的属性的指定位置的值
     if (prop.getIndex() != null) {
+      // 获得集合类型的属性,
+      // @see org.apache.ibatis.reflection.wrapper.BaseWrapper#resolveCollection
       Object collection = resolveCollection(prop, object);
+      // 获得指定位置的值
       return getCollectionValue(prop, collection);
     } else {
+      // 获得属性的值
       return getBeanProperty(prop, object);
     }
   }
@@ -92,6 +96,7 @@ public class BeanWrapper extends BaseWrapper {
 
   @Override
   public Class<?> getGetterType(String name) {
+    // name = richType.richMap.nihao
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
@@ -144,15 +149,30 @@ public class BeanWrapper extends BaseWrapper {
   }
 
   @Override
-  public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
+  public MetaObject instantiatePropertyValue(
+      String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
     MetaObject metaValue;
     Class<?> type = getSetterType(prop.getName());
     try {
       Object newObject = objectFactory.create(type);
-      metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());
+      metaValue =
+          MetaObject.forObject(
+              newObject,
+              metaObject.getObjectFactory(),
+              metaObject.getObjectWrapperFactory(),
+              metaObject.getReflectorFactory());
       set(prop, newObject);
     } catch (Exception e) {
-      throw new ReflectionException("Cannot set value of property '" + name + "' because '" + name + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
+      throw new ReflectionException(
+          "Cannot set value of property '"
+              + name
+              + "' because '"
+              + name
+              + "' is null and cannot be instantiated on instance of "
+              + type.getName()
+              + ". Cause:"
+              + e.toString(),
+          e);
     }
     return metaValue;
   }
@@ -161,6 +181,7 @@ public class BeanWrapper extends BaseWrapper {
     try {
       Invoker method = metaClass.getGetInvoker(prop.getName());
       try {
+        // 由于是get方法,所以没有参数,而且开始的时候已经跳过 getXXX 方法有参数的
         return method.invoke(object, NO_ARGUMENTS);
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
@@ -168,7 +189,14 @@ public class BeanWrapper extends BaseWrapper {
     } catch (RuntimeException e) {
       throw e;
     } catch (Throwable t) {
-      throw new ReflectionException("Could not get property '" + prop.getName() + "' from " + object.getClass() + ".  Cause: " + t.toString(), t);
+      throw new ReflectionException(
+          "Could not get property '"
+              + prop.getName()
+              + "' from "
+              + object.getClass()
+              + ".  Cause: "
+              + t.toString(),
+          t);
     }
   }
 
@@ -182,7 +210,16 @@ public class BeanWrapper extends BaseWrapper {
         throw ExceptionUtil.unwrapThrowable(t);
       }
     } catch (Throwable t) {
-      throw new ReflectionException("Could not set property '" + prop.getName() + "' of '" + object.getClass() + "' with value '" + value + "' Cause: " + t.toString(), t);
+      throw new ReflectionException(
+          "Could not set property '"
+              + prop.getName()
+              + "' of '"
+              + object.getClass()
+              + "' with value '"
+              + value
+              + "' Cause: "
+              + t.toString(),
+          t);
     }
   }
 
@@ -200,5 +237,4 @@ public class BeanWrapper extends BaseWrapper {
   public <E> void addAll(List<E> list) {
     throw new UnsupportedOperationException();
   }
-
 }

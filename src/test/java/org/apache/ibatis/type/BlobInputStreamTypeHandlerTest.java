@@ -15,6 +15,17 @@
  */
 package org.apache.ibatis.type;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Blob;
+import javax.sql.DataSource;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -29,14 +40,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import javax.sql.DataSource;
-import java.io.*;
-import java.sql.Blob;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 /**
  * Tests for {@link BlobInputStreamTypeHandler}.
  *
@@ -49,20 +52,21 @@ class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Mock
-  protected Blob blob;
+  @Mock protected Blob blob;
 
   @BeforeAll
   static void setupSqlSessionFactory() throws Exception {
-    DataSource dataSource = BaseDataTest.createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
+    DataSource dataSource =
+        BaseDataTest.createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
     TransactionFactory transactionFactory = new JdbcTransactionFactory();
     Environment environment = new Environment("Production", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/type/BlobInputStreamTypeHandlerTest.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/type/BlobInputStreamTypeHandlerTest.sql");
   }
 
   @Override
@@ -80,7 +84,6 @@ class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
     when(rs.getBlob("column")).thenReturn(blob);
     when(blob.getBinaryStream()).thenReturn(in);
     assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(in);
-
   }
 
   @Override
@@ -137,10 +140,10 @@ class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
       // select (Blob -> InputStream)
       {
         BlobContent blobContent = mapper.findOne(1);
-        assertThat(new BufferedReader(new InputStreamReader(blobContent.getContent())).readLine()).isEqualTo("Hello");
+        assertThat(new BufferedReader(new InputStreamReader(blobContent.getContent())).readLine())
+            .isEqualTo("Hello");
       }
     }
-
   }
 
   interface Mapper {
@@ -171,5 +174,4 @@ class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
       this.content = content;
     }
   }
-
 }

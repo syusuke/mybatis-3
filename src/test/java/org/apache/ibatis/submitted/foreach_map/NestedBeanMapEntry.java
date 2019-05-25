@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package org.apache.ibatis.submitted.foreach_map;
 
 public class NestedBeanMapEntry {
-  public NestedBeanMapEntry() {
-  }
+  public NestedBeanMapEntry() {}
 
   public NestedBeanMapEntry(Integer keya, Boolean keyb, Integer valuea, Boolean valueb) {
     this.keya = keya;
@@ -60,21 +59,15 @@ public class NestedBeanMapEntry {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
     NestedBeanMapEntry map3Entry = (NestedBeanMapEntry) o;
 
-    if (keya != null ? !keya.equals(map3Entry.keya) : map3Entry.keya != null)
-      return false;
-    if (keyb != null ? !keyb.equals(map3Entry.keyb) : map3Entry.keyb != null)
-      return false;
-    if (valuea != null ? !valuea.equals(map3Entry.valuea) : map3Entry.valuea != null)
-      return false;
-    if (valueb != null ? !valueb.equals(map3Entry.valueb) : map3Entry.valueb != null)
-      return false;
+    if (keya != null ? !keya.equals(map3Entry.keya) : map3Entry.keya != null) return false;
+    if (keyb != null ? !keyb.equals(map3Entry.keyb) : map3Entry.keyb != null) return false;
+    if (valuea != null ? !valuea.equals(map3Entry.valuea) : map3Entry.valuea != null) return false;
+    if (valueb != null ? !valueb.equals(map3Entry.valueb) : map3Entry.valueb != null) return false;
 
     return true;
   }
@@ -90,7 +83,16 @@ public class NestedBeanMapEntry {
 
   @Override
   public String toString() {
-    return "NestedBeanMapEntry{" + "keya=" + keya + ", valuea=" + valuea + ", keyb=" + keyb + ", valueb=" + valueb + '}';
+    return "NestedBeanMapEntry{"
+        + "keya="
+        + keya
+        + ", valuea="
+        + valuea
+        + ", keyb="
+        + keyb
+        + ", valueb="
+        + valueb
+        + '}';
   }
 
   private Integer keya;

@@ -74,5 +74,4 @@ class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getObject(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
-
 }

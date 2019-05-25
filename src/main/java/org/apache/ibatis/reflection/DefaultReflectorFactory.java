@@ -22,8 +22,7 @@ public class DefaultReflectorFactory implements ReflectorFactory {
   private boolean classCacheEnabled = true;
   private final ConcurrentMap<Class<?>, Reflector> reflectorMap = new ConcurrentHashMap<>();
 
-  public DefaultReflectorFactory() {
-  }
+  public DefaultReflectorFactory() {}
 
   @Override
   public boolean isClassCacheEnabled() {
@@ -44,5 +43,4 @@ public class DefaultReflectorFactory implements ReflectorFactory {
       return new Reflector(type);
     }
   }
-
 }

@@ -15,16 +15,17 @@
  */
 package org.apache.ibatis.io;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class ExternalResourcesTest {
 
@@ -51,7 +52,6 @@ class ExternalResourcesTest {
       ExternalResources.copyExternalResource(sourceFile, destFile);
     } catch (IOException e) {
     }
-
   }
 
   @Test
@@ -63,7 +63,6 @@ class ExternalResourcesTest {
     } catch (IOException e) {
       assertTrue(e instanceof FileNotFoundException);
     }
-
   }
 
   @Test
@@ -75,7 +74,6 @@ class ExternalResourcesTest {
     } catch (Exception e) {
       assertTrue(e instanceof FileNotFoundException);
     }
-
   }
 
   @Test
@@ -85,7 +83,9 @@ class ExternalResourcesTest {
     try (FileWriter fileWriter = new FileWriter(tempFile)) {
       fileWriter.append("new_command.template=templates/col_new_template_migration.sql");
       fileWriter.flush();
-      templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), "new_command.template");
+      templateName =
+          ExternalResources.getConfiguredTemplate(
+              tempFile.getAbsolutePath(), "new_command.template");
       assertEquals("templates/col_new_template_migration.sql", templateName);
     } catch (Exception e) {
       fail("Test failed with execption: " + e.getMessage());

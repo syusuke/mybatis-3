@@ -15,22 +15,20 @@
  */
 package org.apache.ibatis.type;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.sql.Array;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Array;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
 class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Object> TYPE_HANDLER = new ArrayTypeHandler();
 
-  @Mock
-  Array mockArray;
+  @Mock Array mockArray;
 
   @Override
   @Test
@@ -43,7 +41,7 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getArray("column")).thenReturn(mockArray);
-    String[] stringArray = new String[]{"a", "b"};
+    String[] stringArray = new String[] {"a", "b"};
     when(mockArray.getArray()).thenReturn(stringArray);
     assertEquals(stringArray, TYPE_HANDLER.getResult(rs, "column"));
     verify(mockArray).free();
@@ -60,7 +58,7 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getArray(1)).thenReturn(mockArray);
-    String[] stringArray = new String[]{"a", "b"};
+    String[] stringArray = new String[] {"a", "b"};
     when(mockArray.getArray()).thenReturn(stringArray);
     assertEquals(stringArray, TYPE_HANDLER.getResult(rs, 1));
     verify(mockArray).free();
@@ -77,7 +75,7 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getArray(1)).thenReturn(mockArray);
-    String[] stringArray = new String[]{"a", "b"};
+    String[] stringArray = new String[] {"a", "b"};
     when(mockArray.getArray()).thenReturn(stringArray);
     assertEquals(stringArray, TYPE_HANDLER.getResult(cs, 1));
     verify(mockArray).free();
@@ -89,5 +87,4 @@ class ArrayTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getArray(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
-
 }

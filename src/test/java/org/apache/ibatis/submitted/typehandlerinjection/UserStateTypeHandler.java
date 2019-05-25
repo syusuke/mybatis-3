@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -56,7 +55,8 @@ public class UserStateTypeHandler<E> implements TypeHandler<Object> {
   }
 
   @Override
-  public void setParameter(PreparedStatement ps, int i, Object value, JdbcType jdbcType) throws SQLException {
+  public void setParameter(PreparedStatement ps, int i, Object value, JdbcType jdbcType)
+      throws SQLException {
 
     String key = "";
     for (Entry<String, String> entry : lookup.entrySet()) {

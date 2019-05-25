@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,7 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-/**
- * @author Frank D. Martinez [mnesarco]
- */
+/** @author Frank D. Martinez [mnesarco] */
 public class VarDeclSqlNode implements SqlNode {
 
   private final String name;
@@ -34,5 +32,4 @@ public class VarDeclSqlNode implements SqlNode {
     context.bind(name, value);
     return true;
   }
-
 }

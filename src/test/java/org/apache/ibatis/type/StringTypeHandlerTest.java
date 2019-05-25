@@ -71,5 +71,4 @@ class StringTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     // Unnecessary
   }
-
 }

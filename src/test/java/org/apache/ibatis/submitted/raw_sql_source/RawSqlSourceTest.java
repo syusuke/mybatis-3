@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.raw_sql_source;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.SqlSource;
@@ -36,13 +35,16 @@ class RawSqlSourceTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/raw_sql_source/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/raw_sql_source/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/raw_sql_source/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/raw_sql_source/CreateDB.sql");
   }
 
   @Test
@@ -62,12 +64,19 @@ class RawSqlSourceTest {
 
   private void test(String statement, Class<? extends SqlSource> sqlSource) {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Assertions.assertEquals(sqlSource, sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getClass());
-      String sql = sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getBoundSql('?').getSql();
+      Assertions.assertEquals(
+          sqlSource,
+          sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getClass());
+      String sql =
+          sqlSession
+              .getConfiguration()
+              .getMappedStatement(statement)
+              .getSqlSource()
+              .getBoundSql('?')
+              .getSql();
       Assertions.assertEquals("select * from users where id = ?", sql);
       User user = sqlSession.selectOne(statement, 1);
       Assertions.assertEquals("User1", user.getName());
     }
   }
-
 }

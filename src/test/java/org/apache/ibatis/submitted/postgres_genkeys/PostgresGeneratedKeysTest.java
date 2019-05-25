@@ -15,11 +15,10 @@
  */
 package org.apache.ibatis.submitted.postgres_genkeys;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Paths;
 import java.util.Collections;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
@@ -32,7 +31,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
@@ -46,17 +44,30 @@ class PostgresGeneratedKeysTest {
   @BeforeAll
   static void setUp() throws Exception {
     //  Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "postgres_genkeys", "postgres", "root", Collections.emptyList());
+    String url =
+        postgres.start(
+            EmbeddedPostgres.cachedRuntimeConfig(
+                Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")),
+            "localhost",
+            SocketUtil.findFreePort(),
+            "postgres_genkeys",
+            "postgres",
+            "root",
+            Collections.emptyList());
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment =
+        new Environment(
+            "development",
+            new JdbcTransactionFactory(),
+            new UnpooledDataSource("org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
     configuration.setUseGeneratedKeys(true);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/postgres_genkeys/CreateDB.sql");
   }
 

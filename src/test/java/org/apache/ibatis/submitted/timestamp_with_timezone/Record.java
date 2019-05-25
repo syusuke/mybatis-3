@@ -49,5 +49,4 @@ public class Record {
   public void setOt(OffsetTime ot) {
     this.ot = ot;
   }
-
 }

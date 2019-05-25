@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,9 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
   private final Class<E> type;
@@ -35,7 +33,8 @@ public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
   }
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
+      throws SQLException {
     if (jdbcType == null) {
       ps.setString(i, parameter.name());
     } else {

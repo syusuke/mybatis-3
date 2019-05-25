@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -41,11 +40,14 @@ class SPTest {
 
   @BeforeAll
   static void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    ScriptRunner runner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
+    ScriptRunner runner =
+        new ScriptRunner(
+            sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
     runner.setDelimiter("go");
     runner.setLogWriter(null);
     runner.setErrorLogWriter(null);
@@ -290,7 +292,7 @@ class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
+      Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] {1, 2, 5});
 
       Map<String, Object> parms = new HashMap<>();
       parms.put("ids", array);
@@ -648,7 +650,7 @@ class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
+      Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] {1, 2, 5});
 
       Map<String, Object> parms = new HashMap<>();
       parms.put("ids", array);
@@ -673,7 +675,7 @@ class SPTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
-      Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] { 1, 2, 5 });
+      Array array = sqlSession.getConnection().createArrayOf("int", new Integer[] {1, 2, 5});
 
       Map<String, Object> parms = new HashMap<>();
       parms.put("ids", array);

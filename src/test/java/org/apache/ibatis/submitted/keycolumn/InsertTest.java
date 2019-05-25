@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.executor.BatchResult;
@@ -36,13 +35,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
-/**
- * @author Jeff Butler
- */
+/** @author Jeff Butler */
 @Tag("EmbeddedPostgresqlTests")
 class InsertTest {
 
@@ -53,16 +49,29 @@ class InsertTest {
   @BeforeAll
   static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "keycolumn", "postgres", "root", Collections.emptyList());
+    String url =
+        postgres.start(
+            EmbeddedPostgres.cachedRuntimeConfig(
+                Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")),
+            "localhost",
+            SocketUtil.findFreePort(),
+            "keycolumn",
+            "postgres",
+            "root",
+            Collections.emptyList());
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment =
+        new Environment(
+            "development",
+            new JdbcTransactionFactory(),
+            new UnpooledDataSource("org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
     configuration.addMapper(InsertMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/keycolumn/CreateDB.sql");
   }
 
@@ -119,5 +128,4 @@ class InsertTest {
       assertEquals(1, batchResults.size());
     }
   }
-
 }

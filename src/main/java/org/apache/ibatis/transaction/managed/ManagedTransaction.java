@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,20 +18,17 @@ package org.apache.ibatis.transaction.managed;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
- * {@link Transaction} that lets the container manage the full lifecycle of the transaction.
- * Delays connection retrieval until getConnection() is called.
- * Ignores all commit or rollback requests.
- * By default, it closes the connection but can be configured not to do it.
+ * {@link Transaction} that lets the container manage the full lifecycle of the transaction. Delays
+ * connection retrieval until getConnection() is called. Ignores all commit or rollback requests. By
+ * default, it closes the connection but can be configured not to do it.
  *
  * @author Clinton Begin
- *
  * @see ManagedTransactionFactory
  */
 public class ManagedTransaction implements Transaction {
@@ -48,7 +45,8 @@ public class ManagedTransaction implements Transaction {
     this.closeConnection = closeConnection;
   }
 
-  public ManagedTransaction(DataSource ds, TransactionIsolationLevel level, boolean closeConnection) {
+  public ManagedTransaction(
+      DataSource ds, TransactionIsolationLevel level, boolean closeConnection) {
     this.dataSource = ds;
     this.level = level;
     this.closeConnection = closeConnection;
@@ -96,5 +94,4 @@ public class ManagedTransaction implements Transaction {
   public Integer getTimeout() throws SQLException {
     return null;
   }
-
 }

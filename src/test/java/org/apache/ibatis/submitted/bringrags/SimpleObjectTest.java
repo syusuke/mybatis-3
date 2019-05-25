@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.bringrags;
 import java.io.Reader;
 import java.io.StringReader;
 import java.sql.Connection;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -36,7 +35,8 @@ class SimpleObjectTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/bringrags/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/bringrags/mybatis-config.xml")) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 
       sqlSession = sqlSessionFactory.openSession();
@@ -46,9 +46,13 @@ class SimpleObjectTest {
       runner.runScript(new StringReader("DROP TABLE IF EXISTS SimpleObject;"));
       runner.runScript(new StringReader("DROP TABLE IF EXISTS SimpleChildObject;"));
       runner.runScript(new StringReader("CREATE TABLE SimpleObject (id VARCHAR(5) NOT NULL);"));
-      runner.runScript(new StringReader("CREATE TABLE SimpleChildObject (id VARCHAR(5) NOT NULL, simple_object_id VARCHAR(5) NOT NULL);"));
+      runner.runScript(
+          new StringReader(
+              "CREATE TABLE SimpleChildObject (id VARCHAR(5) NOT NULL, simple_object_id VARCHAR(5) NOT NULL);"));
       runner.runScript(new StringReader("INSERT INTO SimpleObject (id) values ('10000');"));
-      runner.runScript(new StringReader("INSERT INTO SimpleChildObject (id, simple_object_id) values ('20000', '10000');"));
+      runner.runScript(
+          new StringReader(
+              "INSERT INTO SimpleChildObject (id, simple_object_id) values ('20000', '10000');"));
       simpleChildObjectMapper = sqlSession.getMapper(SimpleChildObjectMapper.class);
     }
   }
@@ -65,5 +69,4 @@ class SimpleObjectTest {
     Assertions.assertNotNull(sc);
     Assertions.assertNotNull(sc.getSimpleObject());
   }
-
 }

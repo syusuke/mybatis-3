@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
@@ -33,7 +32,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
@@ -51,17 +49,30 @@ class MultipleResultTest {
   @BeforeAll
   static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
+    String url =
+        postgres.start(
+            EmbeddedPostgres.cachedRuntimeConfig(
+                Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")),
+            "localhost",
+            SocketUtil.findFreePort(),
+            "multiple_resultsets",
+            "postgres",
+            "root",
+            Collections.emptyList());
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment =
+        new Environment(
+            "development",
+            new JdbcTransactionFactory(),
+            new UnpooledDataSource("org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
     configuration.setMapUnderscoreToCamelCase(true);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/multiple_resultsets/CreateDB.sql");
   }
 
@@ -78,14 +89,14 @@ class MultipleResultTest {
       Assertions.assertEquals(2, results.size());
 
       Assertions.assertEquals(6, results.get(0).size());
-      OrderDetail detail = (OrderDetail)results.get(0).get(0);
+      OrderDetail detail = (OrderDetail) results.get(0).get(0);
       Assertions.assertEquals(1, detail.getOrderId());
       Assertions.assertEquals(1, detail.getLineNumber());
       Assertions.assertEquals(1, detail.getQuantity());
       Assertions.assertEquals("Pen", detail.getItemDescription());
 
       Assertions.assertEquals(2, results.get(1).size());
-      OrderHeader header = (OrderHeader)results.get(1).get(0);
+      OrderHeader header = (OrderHeader) results.get(1).get(0);
       Assertions.assertEquals(1, header.getOrderId());
       Assertions.assertEquals("Fred", header.getCustName());
     }

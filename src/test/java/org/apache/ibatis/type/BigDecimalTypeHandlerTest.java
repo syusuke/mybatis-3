@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-
 import org.junit.jupiter.api.Test;
 
 class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
@@ -73,5 +72,4 @@ class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     // Unnecessary
   }
-
 }

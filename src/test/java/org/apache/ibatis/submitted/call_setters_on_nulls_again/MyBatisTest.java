@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.call_setters_on_nulls_again;
 
 import java.io.Reader;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -32,7 +31,9 @@ class MyBatisTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls_again/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/call_setters_on_nulls_again/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
   }
@@ -44,5 +45,4 @@ class MyBatisTest {
       Assertions.assertEquals("p1", parentBean.getName());
     }
   }
-
 }

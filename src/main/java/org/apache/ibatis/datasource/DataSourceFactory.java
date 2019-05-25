@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,13 +18,20 @@ package org.apache.ibatis.datasource;
 import java.util.Properties;
 import javax.sql.DataSource;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public interface DataSourceFactory {
 
+  /**
+   * 设置属性
+   *
+   * @param props
+   */
   void setProperties(Properties props);
 
+  /**
+   * 返回数据源
+   *
+   * @return
+   */
   DataSource getDataSource();
-
 }

@@ -16,10 +16,8 @@
 package org.apache.ibatis.submitted.sqlprovider;
 
 public class User {
-  @BaseMapper.Column
-  private Integer id;
-  @BaseMapper.Column
-  private String name;
+  @BaseMapper.Column private Integer id;
+  @BaseMapper.Column private String name;
 
   public Integer getId() {
     return id;

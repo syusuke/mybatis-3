@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.cacheorder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
@@ -35,13 +34,16 @@ class CacheOrderTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cacheorder/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/cacheorder/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cacheorder/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/cacheorder/CreateDB.sql");
   }
 
   @Test
@@ -50,5 +52,4 @@ class CacheOrderTest {
     Cache cache = ms.getCache();
     assertEquals("org.apache.ibatis.submitted.cacheorder.Mapper2", cache.getId());
   }
-
 }

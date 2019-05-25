@@ -15,22 +15,22 @@
  */
 package org.apache.ibatis.datasource.jndi;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class JndiDataSourceFactoryTest extends BaseDataTest {
 
@@ -48,13 +48,16 @@ class JndiDataSourceFactoryTest extends BaseDataTest {
   void shouldRetrieveDataSourceFromJNDI() {
     createJndiDataSource();
     JndiDataSourceFactory factory = new JndiDataSourceFactory();
-    factory.setProperties(new Properties() {
-      {
-        setProperty(JndiDataSourceFactory.ENV_PREFIX + Context.INITIAL_CONTEXT_FACTORY, TEST_INITIAL_CONTEXT_FACTORY);
-        setProperty(JndiDataSourceFactory.INITIAL_CONTEXT, TEST_INITIAL_CONTEXT);
-        setProperty(JndiDataSourceFactory.DATA_SOURCE, TEST_DATA_SOURCE);
-      }
-    });
+    factory.setProperties(
+        new Properties() {
+          {
+            setProperty(
+                JndiDataSourceFactory.ENV_PREFIX + Context.INITIAL_CONTEXT_FACTORY,
+                TEST_INITIAL_CONTEXT_FACTORY);
+            setProperty(JndiDataSourceFactory.INITIAL_CONTEXT, TEST_INITIAL_CONTEXT);
+            setProperty(JndiDataSourceFactory.DATA_SOURCE, TEST_DATA_SOURCE);
+          }
+        });
     DataSource actualDataSource = factory.getDataSource();
     assertEquals(expectedDataSource, actualDataSource);
   }
@@ -70,7 +73,8 @@ class JndiDataSourceFactoryTest extends BaseDataTest {
       InitialContext initCtx = new InitialContext(env);
       initCtx.bind(TEST_INITIAL_CONTEXT, ctx);
     } catch (NamingException e) {
-      throw new DataSourceException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
+      throw new DataSourceException(
+          "There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
     }
   }
 
@@ -82,7 +86,7 @@ class JndiDataSourceFactoryTest extends BaseDataTest {
   }
 
   public static class MockContext extends InitialContext {
-    private static Map<String,Object> bindings = new HashMap<>();
+    private static Map<String, Object> bindings = new HashMap<>();
 
     MockContext(boolean lazy) throws NamingException {
       super(lazy);
@@ -98,5 +102,4 @@ class JndiDataSourceFactoryTest extends BaseDataTest {
       bindings.put(name, obj);
     }
   }
-
 }

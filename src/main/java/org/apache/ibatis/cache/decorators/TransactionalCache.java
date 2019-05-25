@@ -20,17 +20,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
 /**
  * The 2nd level cache transactional buffer.
- * <p>
- * This class holds all cache entries that are to be added to the 2nd level cache during a Session.
- * Entries are sent to the cache when commit is called or discarded if the Session is rolled back.
- * Blocking cache support has been added. Therefore any get() that returns a cache miss
+ *
+ * <p>This class holds all cache entries that are to be added to the 2nd level cache during a
+ * Session. Entries are sent to the cache when commit is called or discarded if the Session is
+ * rolled back. Blocking cache support has been added. Therefore any get() that returns a cache miss
  * will be followed by a put() so any lock associated with the key can be released.
  *
  * @author Clinton Begin
@@ -133,10 +132,11 @@ public class TransactionalCache implements Cache {
       try {
         delegate.removeObject(entry);
       } catch (Exception e) {
-        log.warn("Unexpected exception while notifiying a rollback to the cache adapter."
-            + "Consider upgrading your cache adapter to the latest version.  Cause: " + e);
+        log.warn(
+            "Unexpected exception while notifiying a rollback to the cache adapter."
+                + "Consider upgrading your cache adapter to the latest version.  Cause: "
+                + e);
       }
     }
   }
-
 }

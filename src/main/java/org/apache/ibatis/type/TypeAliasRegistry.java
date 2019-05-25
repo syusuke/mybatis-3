@@ -28,16 +28,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
+ *     <p>
+ *     <p>别名的处理
  */
 public class TypeAliasRegistry {
 
-  private final Map<String, Class<?>> typeAliases = new HashMap<>();
+  /** 别名和类的对应关系 */
+  private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
@@ -110,8 +112,8 @@ public class TypeAliasRegistry {
       // issue #748
       String key = string.toLowerCase(Locale.ENGLISH);
       Class<T> value;
-      if (typeAliases.containsKey(key)) {
-        value = (Class<T>) typeAliases.get(key);
+      if (TYPE_ALIASES.containsKey(key)) {
+        value = (Class<T>) TYPE_ALIASES.get(key);
       } else {
         value = (Class<T>) Resources.classForName(string);
       }
@@ -121,10 +123,21 @@ public class TypeAliasRegistry {
     }
   }
 
+  /**
+   * 注册别名(包下自动扫描)
+   *
+   * @param packageName 包名
+   */
   public void registerAliases(String packageName) {
     registerAliases(packageName, Object.class);
   }
 
+  /**
+   * 注册包下所有类的别名
+   *
+   * @param packageName
+   * @param superType
+   */
   public void registerAliases(String packageName, Class<?> superType) {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
@@ -138,6 +151,11 @@ public class TypeAliasRegistry {
     }
   }
 
+  /**
+   * 注册一个类,如果类上有注解 {@link Alias}
+   *
+   * @param type
+   */
   public void registerAlias(Class<?> type) {
     String alias = type.getSimpleName();
     Alias aliasAnnotation = type.getAnnotation(Alias.class);
@@ -153,25 +171,30 @@ public class TypeAliasRegistry {
     }
     // issue #748
     String key = alias.toLowerCase(Locale.ENGLISH);
-    if (typeAliases.containsKey(key) && typeAliases.get(key) != null && !typeAliases.get(key).equals(value)) {
-      throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(key).getName() + "'.");
+    if (TYPE_ALIASES.containsKey(key)
+        && TYPE_ALIASES.get(key) != null
+        && !TYPE_ALIASES.get(key).equals(value)) {
+      throw new TypeException(
+          "The alias '"
+              + alias
+              + "' is already mapped to the value '"
+              + TYPE_ALIASES.get(key).getName()
+              + "'.");
     }
-    typeAliases.put(key, value);
+    TYPE_ALIASES.put(key, value);
   }
 
   public void registerAlias(String alias, String value) {
     try {
       registerAlias(alias, Resources.classForName(value));
     } catch (ClassNotFoundException e) {
-      throw new TypeException("Error registering type alias " + alias + " for " + value + ". Cause: " + e, e);
+      throw new TypeException(
+          "Error registering type alias " + alias + " for " + value + ". Cause: " + e, e);
     }
   }
 
-  /**
-   * @since 3.2.2
-   */
+  /** @since 3.2.2 */
   public Map<String, Class<?>> getTypeAliases() {
-    return Collections.unmodifiableMap(typeAliases);
+    return Collections.unmodifiableMap(TYPE_ALIASES);
   }
-
 }

@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -55,16 +54,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class DefaultResultSetHandlerTest {
 
-  @Mock
-  private Statement stmt;
-  @Mock
-  private ResultSet rs;
-  @Mock
-  private ResultSetMetaData rsmd;
-  @Mock
-  private Connection conn;
-  @Mock
-  private DatabaseMetaData dbmd;
+  @Mock private Statement stmt;
+  @Mock private ResultSet rs;
+  @Mock private ResultSetMetaData rsmd;
+  @Mock private Connection conn;
+  @Mock private DatabaseMetaData dbmd;
 
   /**
    * Contrary to the spec, some drivers require case-sensitive column names when getting result.
@@ -81,7 +75,9 @@ class DefaultResultSetHandlerTest {
     final ResultHandler resultHandler = null;
     final BoundSql boundSql = null;
     final RowBounds rowBounds = new RowBounds(0, 100);
-    final DefaultResultSetHandler fastResultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler, resultHandler, boundSql, rowBounds);
+    final DefaultResultSetHandler fastResultSetHandler =
+        new DefaultResultSetHandler(
+            executor, ms, parameterHandler, resultHandler, boundSql, rowBounds);
 
     when(stmt.getResultSet()).thenReturn(rs);
     when(rs.getMetaData()).thenReturn(rsmd);
@@ -106,8 +102,14 @@ class DefaultResultSetHandlerTest {
     final MappedStatement ms = getMappedStatement();
     final RowBounds rowBounds = new RowBounds(0, 100);
 
-    final DefaultResultSetHandler defaultResultSetHandler = new DefaultResultSetHandler(null/*executor*/, ms,
-            null/*parameterHandler*/, null/*resultHandler*/, null/*boundSql*/, rowBounds);
+    final DefaultResultSetHandler defaultResultSetHandler =
+        new DefaultResultSetHandler(
+            null /*executor*/,
+            ms,
+            null /*parameterHandler*/,
+            null /*resultHandler*/,
+            null /*boundSql*/,
+            rowBounds);
 
     final ResultSetWrapper rsw = mock(ResultSetWrapper.class);
     when(rsw.getResultSet()).thenReturn(mock(ResultSet.class));
@@ -116,12 +118,18 @@ class DefaultResultSetHandlerTest {
     final TypeHandler typeHandler = mock(TypeHandler.class);
     when(resultMapping.getColumn()).thenReturn("column");
     when(resultMapping.getTypeHandler()).thenReturn(typeHandler);
-    when(typeHandler.getResult(any(ResultSet.class), any(String.class))).thenThrow(new SQLException("exception"));
+    when(typeHandler.getResult(any(ResultSet.class), any(String.class)))
+        .thenThrow(new SQLException("exception"));
     List<ResultMapping> constructorMappings = Collections.singletonList(resultMapping);
 
     try {
-      defaultResultSetHandler.createParameterizedResultObject(rsw, null/*resultType*/, constructorMappings,
-              null/*constructorArgTypes*/, null/*constructorArgs*/, null/*columnPrefix*/);
+      defaultResultSetHandler.createParameterizedResultObject(
+          rsw,
+          null /*resultType*/,
+          constructorMappings,
+          null /*constructorArgTypes*/,
+          null /*constructorArgs*/,
+          null /*columnPrefix*/);
       Assertions.fail("Should have thrown ExecutorException");
     } catch (Exception e) {
       Assertions.assertTrue(e instanceof ExecutorException, "Expected ExecutorException");
@@ -132,16 +140,33 @@ class DefaultResultSetHandlerTest {
   MappedStatement getMappedStatement() {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
-          {
-            add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
+    return new MappedStatement.Builder(
+            config,
+            "testSelect",
+            new StaticSqlSource(config, "some select statement"),
+            SqlCommandType.SELECT)
+        .resultMaps(
+            new ArrayList<ResultMap>() {
               {
-                add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class)).build());
+                add(
+                    new ResultMap.Builder(
+                            config,
+                            "testMap",
+                            HashMap.class,
+                            new ArrayList<ResultMapping>() {
+                              {
+                                add(
+                                    new ResultMapping.Builder(
+                                            config,
+                                            "cOlUmN1",
+                                            "CoLuMn1",
+                                            registry.getTypeHandler(Integer.class))
+                                        .build());
+                              }
+                            })
+                        .build());
               }
-            }).build());
-          }
-        }).build();
+            })
+        .build();
   }
-
 }

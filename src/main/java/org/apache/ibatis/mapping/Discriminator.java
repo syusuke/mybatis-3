@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,24 +17,23 @@ package org.apache.ibatis.mapping;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.ibatis.session.Configuration;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class Discriminator {
 
   private ResultMapping resultMapping;
   private Map<String, String> discriminatorMap;
 
-  Discriminator() {
-  }
+  Discriminator() {}
 
   public static class Builder {
     private Discriminator discriminator = new Discriminator();
 
-    public Builder(Configuration configuration, ResultMapping resultMapping, Map<String, String> discriminatorMap) {
+    public Builder(
+        Configuration configuration,
+        ResultMapping resultMapping,
+        Map<String, String> discriminatorMap) {
       discriminator.resultMapping = resultMapping;
       discriminator.discriminatorMap = discriminatorMap;
     }
@@ -43,7 +42,7 @@ public class Discriminator {
       assert discriminator.resultMapping != null;
       assert discriminator.discriminatorMap != null;
       assert !discriminator.discriminatorMap.isEmpty();
-      //lock down map
+      // lock down map
       discriminator.discriminatorMap = Collections.unmodifiableMap(discriminator.discriminatorMap);
       return discriminator;
     }
@@ -60,5 +59,4 @@ public class Discriminator {
   public String getMapIdFor(String s) {
     return discriminatorMap.get(s);
   }
-
 }

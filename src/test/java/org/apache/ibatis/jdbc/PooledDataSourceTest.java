@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.hsqldb.jdbc.JDBCConnection;
@@ -40,12 +40,13 @@ class PooledDataSourceTest extends BaseDataTest {
     try {
       runScript(ds, JPETSTORE_DDL);
       ds.setDefaultAutoCommit(false);
-      ds.setDriverProperties(new Properties() {
-        {
-          setProperty("username", "sa");
-          setProperty("password", "");
-        }
-      });
+      ds.setDriverProperties(
+          new Properties() {
+            {
+              setProperty("username", "sa");
+              setProperty("password", "");
+            }
+          });
       ds.setPoolMaximumActiveConnections(3);
       ds.setPoolMaximumIdleConnections(2);
       ds.setPoolMaximumCheckoutTime(10000);
@@ -138,7 +139,7 @@ class PooledDataSourceTest extends BaseDataTest {
 
   private void exexuteQuery(Connection con) throws SQLException {
     try (PreparedStatement st = con.prepareStatement("select 1");
-         ResultSet rs = st.executeQuery()) {
+        ResultSet rs = st.executeQuery()) {
       while (rs.next()) {
         assertEquals(1, rs.getInt(1));
       }

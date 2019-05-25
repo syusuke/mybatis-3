@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,23 +24,24 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
 
-/**
- * Just a test case. Not a real Velocity implementation.
- */
+/** Just a test case. Not a real Velocity implementation. */
 public class VelocityLanguageDriver implements LanguageDriver {
 
   @Override
-  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+  public ParameterHandler createParameterHandler(
+      MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
   @Override
-  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+  public SqlSource createSqlSource(
+      Configuration configuration, XNode script, Class<?> parameterType) {
     return new VelocitySqlSource(configuration, script.getStringBody(""));
   }
 
   @Override
-  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+  public SqlSource createSqlSource(
+      Configuration configuration, String script, Class<?> parameterType) {
     return new VelocitySqlSource(configuration, script);
   }
 }

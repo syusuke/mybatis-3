@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,13 +21,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * @author Eduardo Macarron
- */
+/** @author Eduardo Macarron */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MappedJdbcTypes {
+  /**
+   * 匹配的 JDBC Type 类型的注解
+   *
+   * @return
+   */
   JdbcType[] value();
+
+  /** @return 是否包含 {@link java.sql.JDBCType#NULL} */
   boolean includeNullJdbcType() default false;
 }

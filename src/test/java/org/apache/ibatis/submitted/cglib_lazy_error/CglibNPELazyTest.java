@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.cglib_lazy_error;
 
 import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -32,14 +31,17 @@ class CglibNPELazyTest {
 
   @BeforeAll
   static void initDatabase() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/cglib_lazy_error/ibatisConfigLazy.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/cglib_lazy_error/ibatisConfigLazy.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().setLazyLoadingEnabled(true);
       sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/cglib_lazy_error/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/cglib_lazy_error/CreateDB.sql");
   }
 
   @Test
@@ -74,7 +76,8 @@ class CglibNPELazyTest {
       Assertions.assertNotNull(person, "Persons must not be null");
       Assertions.assertNotNull(person.getParent(), "Parent must not be null");
       Assertions.assertNotNull(person.getParent().getParent(), "Grandparent must not be null");
-      Assertions.assertEquals(expectedAncestor, person.getAncestor(), "Ancestor must be John Smith sr.");
+      Assertions.assertEquals(
+          expectedAncestor, person.getAncestor(), "Ancestor must be John Smith sr.");
     }
   }
 
@@ -104,5 +107,4 @@ class CglibNPELazyTest {
       Assertions.assertEquals(expectedAncestor, actualAncestor);
     }
   }
-
 }

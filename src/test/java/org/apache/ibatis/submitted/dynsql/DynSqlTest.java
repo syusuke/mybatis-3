@@ -17,6 +17,12 @@ package org.apache.ibatis.submitted.dynsql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -25,25 +31,20 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 class DynSqlTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/MapperConfig.xml")) {
+    try (Reader configReader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/dynsql/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/dynsql/CreateDB.sql");
   }
 
   @Test
@@ -58,7 +59,8 @@ class DynSqlTest {
       parameter.setSchema("ibtest");
       parameter.setIds(ids);
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.select", parameter);
+      List<Map<String, Object>> answer =
+          sqlSession.selectList("org.apache.ibatis.submitted.dynsql.select", parameter);
 
       assertEquals(3, answer.size());
     }
@@ -76,7 +78,8 @@ class DynSqlTest {
       parameter.setSchema("ibtest");
       parameter.setIds(ids);
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.select_simple", parameter);
+      List<Map<String, Object>> answer =
+          sqlSession.selectList("org.apache.ibatis.submitted.dynsql.select_simple", parameter);
 
       assertEquals(3, answer.size());
     }
@@ -86,7 +89,8 @@ class DynSqlTest {
   void testSelectLike() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectLike", "Ba");
+      List<Map<String, Object>> answer =
+          sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectLike", "Ba");
 
       assertEquals(2, answer.size());
       assertEquals(4, answer.get(0).get("ID"));
@@ -97,7 +101,8 @@ class DynSqlTest {
   @Test
   void testNumerics() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<NumericRow> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectNumerics");
+      List<NumericRow> answer =
+          sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectNumerics");
 
       assertEquals(1, answer.size());
 
@@ -118,7 +123,9 @@ class DynSqlTest {
   @Test
   void testOgnlStaticMethodCall() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.ognlStaticMethodCall", "Rock 'n Roll");
+      List<Map<String, Object>> answer =
+          sqlSession.selectList(
+              "org.apache.ibatis.submitted.dynsql.ognlStaticMethodCall", "Rock 'n Roll");
       assertEquals(1, answer.size());
       assertEquals(7, answer.get(0).get("ID"));
     }
@@ -132,5 +139,4 @@ class DynSqlTest {
       assertEquals("Pebbles", description);
     }
   }
-
 }

@@ -21,7 +21,6 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -36,12 +35,14 @@ class NestedForEachTest {
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nested/MapperConfig.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/nested/MapperConfig.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/nested/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/nested/CreateDB.sql");
   }
 
   @Test
@@ -53,7 +54,8 @@ class NestedForEachTest {
       parameter.addName(name);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.simpleSelect", parameter);
+          sqlSession.selectList(
+              "org.apache.ibatis.submitted.nested.Mapper.simpleSelect", parameter);
 
       assertEquals(3, answer.size());
     }
@@ -67,7 +69,8 @@ class NestedForEachTest {
       parameter.put("ids", array);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.simpleSelectWithPrimitives", parameter);
+          sqlSession.selectList(
+              "org.apache.ibatis.submitted.nested.Mapper.simpleSelectWithPrimitives", parameter);
 
       assertEquals(3, answer.size());
     }
@@ -94,7 +97,8 @@ class NestedForEachTest {
       parameter.addName(name);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
+          sqlSession.selectList(
+              "org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
 
       assertEquals(2, answer.size());
     }
@@ -117,7 +121,8 @@ class NestedForEachTest {
       parameter.addName(name);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
+          sqlSession.selectList(
+              "org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
 
       assertEquals(3, answer.size());
     }

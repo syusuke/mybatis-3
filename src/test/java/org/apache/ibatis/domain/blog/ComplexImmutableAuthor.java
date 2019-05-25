@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ public class ComplexImmutableAuthor implements Serializable {
   protected final String bio;
   protected final Section favouriteSection;
 
-  public ComplexImmutableAuthor(ComplexImmutableAuthorId aComplexImmutableAuthorId, String bio, Section section) {
+  public ComplexImmutableAuthor(
+      ComplexImmutableAuthorId aComplexImmutableAuthorId, String bio, Section section) {
     theComplexImmutableAuthorId = aComplexImmutableAuthorId;
     this.bio = bio;
     this.favouriteSection = section;
@@ -57,7 +58,9 @@ public class ComplexImmutableAuthor implements Serializable {
     if (favouriteSection != that.favouriteSection) {
       return false;
     }
-    if (theComplexImmutableAuthorId != null ? !theComplexImmutableAuthorId.equals(that.theComplexImmutableAuthorId) : that.theComplexImmutableAuthorId != null) {
+    if (theComplexImmutableAuthorId != null
+        ? !theComplexImmutableAuthorId.equals(that.theComplexImmutableAuthorId)
+        : that.theComplexImmutableAuthorId != null) {
       return false;
     }
 

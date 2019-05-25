@@ -20,7 +20,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 
@@ -32,10 +31,25 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CacheNamespace {
+  /**
+   * 负责存储的 Cache 实现类
+   *
+   * @return
+   */
   Class<? extends org.apache.ibatis.cache.Cache> implementation() default PerpetualCache.class;
 
+  /**
+   * 负责过期的 Cache 实现类
+   *
+   * @return
+   */
   Class<? extends org.apache.ibatis.cache.Cache> eviction() default LruCache.class;
 
+  /**
+   * 清空缓存的频率。0 代表不清空
+   *
+   * @return
+   */
   long flushInterval() default 0;
 
   int size() default 1024;
@@ -46,8 +60,8 @@ public @interface CacheNamespace {
 
   /**
    * Property values for a implementation object.
+   *
    * @since 3.4.2
    */
   Property[] properties() default {};
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,11 +20,15 @@ import java.lang.reflect.Method;
 
 /**
  * @author Clinton Begin
+ *     <p>类似动态代理的封装
  */
 public class Invocation {
 
+  /** 对象 */
   private final Object target;
+  /** 执行方法 */
   private final Method method;
+  /** 方法参数 */
   private final Object[] args;
 
   public Invocation(Object target, Method method, Object[] args) {
@@ -48,5 +52,4 @@ public class Invocation {
   public Object proceed() throws InvocationTargetException, IllegalAccessException {
     return method.invoke(target, args);
   }
-
 }

@@ -21,8 +21,7 @@ import org.junit.jupiter.api.Test;
 class ReuseExecutorTest extends BaseExecutorTest {
 
   @Test
-  void dummy() {
-  }
+  void dummy() {}
 
   @Override
   @Test
@@ -32,6 +31,6 @@ class ReuseExecutorTest extends BaseExecutorTest {
 
   @Override
   protected Executor createExecutor(Transaction transaction) {
-    return new ReuseExecutor(config,transaction);
+    return new ReuseExecutor(config, transaction);
   }
 }

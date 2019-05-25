@@ -18,14 +18,12 @@ package org.apache.ibatis.submitted.parametrizedlist;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
-import org.junit.jupiter.api.Assertions;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,12 +33,14 @@ class ParametrizedListTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader("org/apache/ibatis/submitted/parametrizedlist/Config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/parametrizedlist/CreateDB.sql");
   }
 
   @Test
@@ -78,5 +78,4 @@ class ParametrizedListTest {
       Assertions.assertEquals(1, map.get(0).get("ID"));
     }
   }
-
 }

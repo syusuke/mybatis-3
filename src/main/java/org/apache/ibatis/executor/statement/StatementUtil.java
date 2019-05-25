@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,16 +32,18 @@ public class StatementUtil {
 
   /**
    * Apply a transaction timeout.
-   * <p>
-   * Update a query timeout to apply a transaction timeout.
-   * </p>
+   *
+   * <p>Update a query timeout to apply a transaction timeout.
+   *
    * @param statement a target statement
    * @param queryTimeout a query timeout
    * @param transactionTimeout a transaction timeout
-   * @throws SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
+   * @throws SQLException if a database access error occurs, this method is called on a closed
+   *     <code>Statement</code>
    */
-  public static void applyTransactionTimeout(Statement statement, Integer queryTimeout, Integer transactionTimeout) throws SQLException {
-    if (transactionTimeout == null){
+  public static void applyTransactionTimeout(
+      Statement statement, Integer queryTimeout, Integer transactionTimeout) throws SQLException {
+    if (transactionTimeout == null) {
       return;
     }
     Integer timeToLiveOfQuery = null;
@@ -54,5 +56,4 @@ public class StatementUtil {
       statement.setQueryTimeout(timeToLiveOfQuery);
     }
   }
-
 }

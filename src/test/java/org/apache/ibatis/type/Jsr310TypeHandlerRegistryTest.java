@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.type;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -28,13 +28,10 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.time.chrono.JapaneseDate;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Kazuki Shimizu
- */
+/** @author Kazuki Shimizu */
 class Jsr310TypeHandlerRegistryTest {
 
   private TypeHandlerRegistry typeHandlerRegistry;
@@ -62,8 +59,7 @@ class Jsr310TypeHandlerRegistryTest {
         .isInstanceOf(ZonedDateTimeTypeHandler.class);
     assertThat(typeHandlerRegistry.getTypeHandler(Month.class))
         .isInstanceOf(MonthTypeHandler.class);
-    assertThat(typeHandlerRegistry.getTypeHandler(Year.class))
-        .isInstanceOf(YearTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(Year.class)).isInstanceOf(YearTypeHandler.class);
     assertThat(typeHandlerRegistry.getTypeHandler(YearMonth.class))
         .isInstanceOf(YearMonthTypeHandler.class);
     assertThat(typeHandlerRegistry.getTypeHandler(JapaneseDate.class))

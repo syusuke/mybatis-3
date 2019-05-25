@@ -16,15 +16,12 @@
 package org.apache.ibatis.mapping;
 
 import java.sql.ResultSet;
-
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ParameterMapping {
 
   private Configuration configuration;
@@ -39,8 +36,7 @@ public class ParameterMapping {
   private String jdbcTypeName;
   private String expression;
 
-  private ParameterMapping() {
-  }
+  private ParameterMapping() {}
 
   public static class Builder {
     private ParameterMapping parameterMapping = new ParameterMapping();
@@ -108,15 +104,22 @@ public class ParameterMapping {
     private void validate() {
       if (ResultSet.class.equals(parameterMapping.javaType)) {
         if (parameterMapping.resultMapId == null) {
-          throw new IllegalStateException("Missing resultmap in property '"
-              + parameterMapping.property + "'.  "
-              + "Parameters of type java.sql.ResultSet require a resultmap.");
+          throw new IllegalStateException(
+              "Missing resultmap in property '"
+                  + parameterMapping.property
+                  + "'.  "
+                  + "Parameters of type java.sql.ResultSet require a resultmap.");
         }
       } else {
         if (parameterMapping.typeHandler == null) {
-          throw new IllegalStateException("Type handler was null on parameter mapping for property '"
-            + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
-            + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
+          throw new IllegalStateException(
+              "Type handler was null on parameter mapping for property '"
+                  + parameterMapping.property
+                  + "'. It was either not specified and/or could not be found for the javaType ("
+                  + parameterMapping.javaType.getName()
+                  + ") : jdbcType ("
+                  + parameterMapping.jdbcType
+                  + ") combination.");
         }
       }
     }
@@ -125,10 +128,11 @@ public class ParameterMapping {
       if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
         Configuration configuration = parameterMapping.configuration;
         TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+        parameterMapping.typeHandler =
+            typeHandlerRegistry.getTypeHandler(
+                parameterMapping.javaType, parameterMapping.jdbcType);
       }
     }
-
   }
 
   public String getProperty() {
@@ -137,6 +141,7 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
+   *
    * @return
    */
   public ParameterMode getMode() {
@@ -145,6 +150,7 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
+   *
    * @return
    */
   public Class<?> getJavaType() {
@@ -153,6 +159,7 @@ public class ParameterMapping {
 
   /**
    * Used in the UnknownTypeHandler in case there is no handler for the property type.
+   *
    * @return
    */
   public JdbcType getJdbcType() {
@@ -161,6 +168,7 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
+   *
    * @return
    */
   public Integer getNumericScale() {
@@ -169,6 +177,7 @@ public class ParameterMapping {
 
   /**
    * Used when setting parameters to the PreparedStatement.
+   *
    * @return
    */
   public TypeHandler<?> getTypeHandler() {
@@ -177,6 +186,7 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
+   *
    * @return
    */
   public String getResultMapId() {
@@ -185,6 +195,7 @@ public class ParameterMapping {
 
   /**
    * Used for handling output of callable statements.
+   *
    * @return
    */
   public String getJdbcTypeName() {
@@ -193,6 +204,7 @@ public class ParameterMapping {
 
   /**
    * Not used
+   *
    * @return
    */
   public String getExpression() {
@@ -202,13 +214,15 @@ public class ParameterMapping {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("ParameterMapping{");
-    //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
+    // sb.append("configuration=").append(configuration); // configuration doesn't have a useful
+    // .toString()
     sb.append("property='").append(property).append('\'');
     sb.append(", mode=").append(mode);
     sb.append(", javaType=").append(javaType);
     sb.append(", jdbcType=").append(jdbcType);
     sb.append(", numericScale=").append(numericScale);
-    //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
+    // sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful
+    // .toString()
     sb.append(", resultMapId='").append(resultMapId).append('\'');
     sb.append(", jdbcTypeName='").append(jdbcTypeName).append('\'');
     sb.append(", expression='").append(expression).append('\'');

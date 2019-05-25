@@ -17,7 +17,6 @@ package org.apache.ibatis.executor;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;
@@ -54,7 +53,7 @@ public class CachingExecutor implements Executor {
   @Override
   public void close(boolean forceRollback) {
     try {
-      //issues #499, #524 and #573
+      // issues #499, #524 and #573
       if (forceRollback) {
         tcm.rollback();
       } else {
@@ -77,20 +76,29 @@ public class CachingExecutor implements Executor {
   }
 
   @Override
-  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> List<E> query(
+      MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler)
+      throws SQLException {
     BoundSql boundSql = ms.getBoundSql(parameterObject);
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
   @Override
-  public <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException {
+  public <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds)
+      throws SQLException {
     flushCacheIfRequired(ms);
     return delegate.queryCursor(ms, parameter, rowBounds);
   }
 
   @Override
-  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
+  public <E> List<E> query(
+      MappedStatement ms,
+      Object parameterObject,
+      RowBounds rowBounds,
+      ResultHandler resultHandler,
+      CacheKey key,
+      BoundSql boundSql)
       throws SQLException {
     Cache cache = ms.getCache();
     if (cache != null) {
@@ -135,14 +143,18 @@ public class CachingExecutor implements Executor {
     if (ms.getStatementType() == StatementType.CALLABLE) {
       for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
         if (parameterMapping.getMode() != ParameterMode.IN) {
-          throw new ExecutorException("Caching stored procedures with OUT params is not supported.  Please configure useCache=false in " + ms.getId() + " statement.");
+          throw new ExecutorException(
+              "Caching stored procedures with OUT params is not supported.  Please configure useCache=false in "
+                  + ms.getId()
+                  + " statement.");
         }
       }
     }
   }
 
   @Override
-  public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
+  public CacheKey createCacheKey(
+      MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
     return delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);
   }
 
@@ -152,7 +164,12 @@ public class CachingExecutor implements Executor {
   }
 
   @Override
-  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
+  public void deferLoad(
+      MappedStatement ms,
+      MetaObject resultObject,
+      String property,
+      CacheKey key,
+      Class<?> targetType) {
     delegate.deferLoad(ms, resultObject, property, key, targetType);
   }
 
@@ -172,5 +189,4 @@ public class CachingExecutor implements Executor {
   public void setExecutorWrapper(Executor executor) {
     throw new UnsupportedOperationException("This method should not be called");
   }
-
 }

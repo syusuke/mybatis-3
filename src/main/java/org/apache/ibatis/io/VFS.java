@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
@@ -36,7 +35,7 @@ public abstract class VFS {
   private static final Log log = LogFactory.getLog(VFS.class);
 
   /** The built-in implementations. */
-  public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
+  public static final Class<?>[] IMPLEMENTATIONS = {JBoss6VFS.class, DefaultVFS.class};
 
   /** The list to which implementations are added by {@link #addImplClass(Class)}. */
   public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<>();
@@ -60,11 +59,14 @@ public abstract class VFS {
           vfs = impl.newInstance();
           if (vfs == null || !vfs.isValid()) {
             if (log.isDebugEnabled()) {
-              log.debug("VFS implementation " + impl.getName() +
-                  " is not valid in this environment.");
+              log.debug(
+                  "VFS implementation " + impl.getName() + " is not valid in this environment.");
             }
           }
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException e) {
+          log.error("Failed to instantiate " + impl, e);
+          return null;
+        } catch (IllegalAccessException e) {
           log.error("Failed to instantiate " + impl, e);
           return null;
         }
@@ -102,7 +104,7 @@ public abstract class VFS {
   protected static Class<?> getClass(String className) {
     try {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
-//      return ReflectUtil.findClass(className);
+      //      return ReflectUtil.findClass(className);
     } catch (ClassNotFoundException e) {
       if (log.isDebugEnabled()) {
         log.debug("Class not found: " + className);
@@ -125,10 +127,24 @@ public abstract class VFS {
     try {
       return clazz.getMethod(methodName, parameterTypes);
     } catch (SecurityException e) {
-      log.error("Security exception looking for method " + clazz.getName() + "." + methodName + ".  Cause: " + e);
+      log.error(
+          "Security exception looking for method "
+              + clazz.getName()
+              + "."
+              + methodName
+              + ".  Cause: "
+              + e);
       return null;
     } catch (NoSuchMethodException e) {
-      log.error("Method not found " + clazz.getName() + "." + methodName + "." + methodName + ".  Cause: " + e);
+      log.error(
+          "Method not found "
+              + clazz.getName()
+              + "."
+              + methodName
+              + "."
+              + methodName
+              + ".  Cause: "
+              + e);
       return null;
     }
   }
@@ -175,12 +191,12 @@ public abstract class VFS {
   public abstract boolean isValid();
 
   /**
-   * Recursively list the full resource path of all the resources that are children of the
-   * resource identified by a URL.
+   * Recursively list the full resource path of all the resources that are children of the resource
+   * identified by a URL.
    *
    * @param url The URL that identifies the resource to list.
    * @param forPath The path to the resource that is identified by the URL. Generally, this is the
-   *            value passed to {@link #getResources(String)} to get the resource URL.
+   *     value passed to {@link #getResources(String)} to get the resource URL.
    * @return A list containing the names of the child resources.
    * @throws IOException If I/O errors occur
    */

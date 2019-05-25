@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.cursor.Cursor;
@@ -57,21 +56,24 @@ public class MapperMethod {
   public Object execute(SqlSession sqlSession, Object[] args) {
     Object result;
     switch (command.getType()) {
-      case INSERT: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.insert(command.getName(), param));
-        break;
-      }
-      case UPDATE: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.update(command.getName(), param));
-        break;
-      }
-      case DELETE: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.delete(command.getName(), param));
-        break;
-      }
+      case INSERT:
+        {
+          Object param = method.convertArgsToSqlCommandParam(args);
+          result = rowCountResult(sqlSession.insert(command.getName(), param));
+          break;
+        }
+      case UPDATE:
+        {
+          Object param = method.convertArgsToSqlCommandParam(args);
+          result = rowCountResult(sqlSession.update(command.getName(), param));
+          break;
+        }
+      case DELETE:
+        {
+          Object param = method.convertArgsToSqlCommandParam(args);
+          result = rowCountResult(sqlSession.delete(command.getName(), param));
+          break;
+        }
       case SELECT:
         if (method.returnsVoid() && method.hasResultHandler()) {
           executeWithResultHandler(sqlSession, args);
@@ -98,8 +100,12 @@ public class MapperMethod {
         throw new BindingException("Unknown execution method for: " + command.getName());
     }
     if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
-      throw new BindingException("Mapper method '" + command.getName()
-          + " attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
+      throw new BindingException(
+          "Mapper method '"
+              + command.getName()
+              + " attempted to return null from a method with a primitive return type ("
+              + method.getReturnType()
+              + ").");
     }
     return result;
   }
@@ -108,14 +114,21 @@ public class MapperMethod {
     final Object result;
     if (method.returnsVoid()) {
       result = null;
-    } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
+    } else if (Integer.class.equals(method.getReturnType())
+        || Integer.TYPE.equals(method.getReturnType())) {
       result = rowCount;
-    } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
-      result = (long)rowCount;
-    } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
+    } else if (Long.class.equals(method.getReturnType())
+        || Long.TYPE.equals(method.getReturnType())) {
+      result = (long) rowCount;
+    } else if (Boolean.class.equals(method.getReturnType())
+        || Boolean.TYPE.equals(method.getReturnType())) {
       result = rowCount > 0;
     } else {
-      throw new BindingException("Mapper method '" + command.getName() + "' has an unsupported return type: " + method.getReturnType());
+      throw new BindingException(
+          "Mapper method '"
+              + command.getName()
+              + "' has an unsupported return type: "
+              + method.getReturnType());
     }
     return result;
   }
@@ -124,9 +137,11 @@ public class MapperMethod {
     MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
     if (!StatementType.CALLABLE.equals(ms.getStatementType())
         && void.class.equals(ms.getResultMaps().get(0).getType())) {
-      throw new BindingException("method " + command.getName()
-          + " needs either a @ResultMap annotation, a @ResultType annotation,"
-          + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
+      throw new BindingException(
+          "method "
+              + command.getName()
+              + " needs either a @ResultMap annotation, a @ResultType annotation,"
+              + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
     }
     Object param = method.convertArgsToSqlCommandParam(args);
     if (method.hasRowBounds()) {
@@ -186,7 +201,7 @@ public class MapperMethod {
       }
       return array;
     } else {
-      return list.toArray((E[])array);
+      return list.toArray((E[]) array);
     }
   }
 
@@ -209,11 +224,11 @@ public class MapperMethod {
     @Override
     public V get(Object key) {
       if (!super.containsKey(key)) {
-        throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + keySet());
+        throw new BindingException(
+            "Parameter '" + key + "' not found. Available parameters are " + keySet());
       }
       return super.get(key);
     }
-
   }
 
   public static class SqlCommand {
@@ -224,15 +239,18 @@ public class MapperMethod {
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
-      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
-          configuration);
+      MappedStatement ms =
+          resolveMappedStatement(mapperInterface, methodName, declaringClass, configuration);
       if (ms == null) {
         if (method.getAnnotation(Flush.class) != null) {
           name = null;
           type = SqlCommandType.FLUSH;
         } else {
-          throw new BindingException("Invalid bound statement (not found): "
-              + mapperInterface.getName() + "." + methodName);
+          throw new BindingException(
+              "Invalid bound statement (not found): "
+                  + mapperInterface.getName()
+                  + "."
+                  + methodName);
         }
       } else {
         name = ms.getId();
@@ -251,8 +269,11 @@ public class MapperMethod {
       return type;
     }
 
-    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
-        Class<?> declaringClass, Configuration configuration) {
+    private MappedStatement resolveMappedStatement(
+        Class<?> mapperInterface,
+        String methodName,
+        Class<?> declaringClass,
+        Configuration configuration) {
       String statementId = mapperInterface.getName() + "." + methodName;
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
@@ -261,8 +282,8 @@ public class MapperMethod {
       }
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
         if (declaringClass.isAssignableFrom(superInterface)) {
-          MappedStatement ms = resolveMappedStatement(superInterface, methodName,
-              declaringClass, configuration);
+          MappedStatement ms =
+              resolveMappedStatement(superInterface, methodName, declaringClass, configuration);
           if (ms != null) {
             return ms;
           }
@@ -295,7 +316,9 @@ public class MapperMethod {
         this.returnType = method.getReturnType();
       }
       this.returnsVoid = void.class.equals(this.returnType);
-      this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
+      this.returnsMany =
+          configuration.getObjectFactory().isCollection(this.returnType)
+              || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
       this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
@@ -351,6 +374,7 @@ public class MapperMethod {
 
     /**
      * return whether return type is {@code java.util.Optional}.
+     *
      * @return return {@code true}, if return type is {@code java.util.Optional}
      * @since 3.5.0
      */
@@ -366,7 +390,11 @@ public class MapperMethod {
           if (index == null) {
             index = i;
           } else {
-            throw new BindingException(method.getName() + " cannot have multiple " + paramType.getSimpleName() + " parameters");
+            throw new BindingException(
+                method.getName()
+                    + " cannot have multiple "
+                    + paramType.getSimpleName()
+                    + " parameters");
           }
         }
       }
@@ -384,5 +412,4 @@ public class MapperMethod {
       return mapKey;
     }
   }
-
 }

@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.apache.ibatis.logging.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,11 +34,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class StatementLoggerTest {
 
-  @Mock
-  Statement statement;
+  @Mock Statement statement;
 
-  @Mock
-  Log log;
+  @Mock Log log;
 
   private Statement st;
 

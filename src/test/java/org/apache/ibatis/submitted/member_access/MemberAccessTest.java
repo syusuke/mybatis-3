@@ -15,10 +15,11 @@
  */
 package org.apache.ibatis.submitted.member_access;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Result;
@@ -31,19 +32,16 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * Tests for member access of Java Object.
- */
+/** Tests for member access of Java Object. */
 class MemberAccessTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
   @BeforeAll
   static void setUp() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/member_access/mybatis-config.xml")) {
+    try (Reader reader =
+        Resources.getResourceAsReader(
+            "org/apache/ibatis/submitted/member_access/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
     }
@@ -62,8 +60,8 @@ class MemberAccessTest {
       assertEquals(params.protectedField, bean.protectedField);
       assertEquals(params.publicField, bean.publicField);
       assertEquals(params.getPrivateProperty(), bean.properties.get("privateProperty"));
-      assertEquals(params.getPackagePrivateProperty(),
-          bean.properties.get("packagePrivateProperty"));
+      assertEquals(
+          params.getPackagePrivateProperty(), bean.properties.get("packagePrivateProperty"));
       assertEquals(params.getProtectedProperty(), bean.properties.get("protectedProperty"));
       assertEquals(params.getPublicProperty(), bean.properties.get("publicProperty"));
     }
@@ -82,8 +80,8 @@ class MemberAccessTest {
       assertEquals(params.protectedField + "%", bean.protectedField);
       assertEquals(params.publicField + "%", bean.publicField);
       assertEquals(params.getPrivateProperty() + "%", bean.properties.get("privateProperty"));
-      assertEquals(params.getPackagePrivateProperty() + "%",
-          bean.properties.get("packagePrivateProperty"));
+      assertEquals(
+          params.getPackagePrivateProperty() + "%", bean.properties.get("packagePrivateProperty"));
       assertEquals(params.getProtectedProperty() + "%", bean.properties.get("protectedProperty"));
       assertEquals(params.getPublicProperty() + "%", bean.properties.get("publicProperty"));
     }
@@ -102,8 +100,8 @@ class MemberAccessTest {
       assertEquals(params.protectedField, bean.protectedField);
       assertEquals(params.publicField, bean.publicField);
       assertEquals(params.getPrivateProperty(), bean.properties.get("privateProperty"));
-      assertEquals(params.getPackagePrivateProperty(),
-          bean.properties.get("packagePrivateProperty"));
+      assertEquals(
+          params.getPackagePrivateProperty(), bean.properties.get("packagePrivateProperty"));
       assertEquals(params.getProtectedProperty(), bean.properties.get("protectedProperty"));
       assertEquals(params.getPublicProperty(), bean.properties.get("publicProperty"));
     }
@@ -144,7 +142,6 @@ class MemberAccessTest {
         assertEquals("4", immutable.properties.get("arg4"));
       }
     }
-
   }
 
   @Test
@@ -182,84 +179,80 @@ class MemberAccessTest {
         assertEquals("4", immutable.properties.get("arg4"));
       }
     }
-
   }
 
   interface Mapper {
     @Select({
-        // @formatter:off
-        "SELECT"
-          ,"#{privateField} as privateField"
-          ,",#{packagePrivateField} as packagePrivateField"
-          ,",#{protectedField} as protectedField"
-          ,",#{publicField} as publicField"
-          ,",#{privateProperty} as privateProperty"
-          ,",#{packagePrivateProperty} as packagePrivateProperty"
-          ,",#{protectedProperty} as protectedProperty"
-          ,",#{publicProperty} as publicProperty"
-        ,"FROM"
-          ,"INFORMATION_SCHEMA.SYSTEM_USERS"
-        // @formatter:on
+      // @formatter:off
+      "SELECT",
+      "#{privateField} as privateField",
+      ",#{packagePrivateField} as packagePrivateField",
+      ",#{protectedField} as protectedField",
+      ",#{publicField} as publicField",
+      ",#{privateProperty} as privateProperty",
+      ",#{packagePrivateProperty} as packagePrivateProperty",
+      ",#{protectedProperty} as protectedProperty",
+      ",#{publicProperty} as publicProperty",
+      "FROM",
+      "INFORMATION_SCHEMA.SYSTEM_USERS"
+      // @formatter:on
     })
     Bean resultAutoMapping(Params params);
 
     @Select({
-        // @formatter:off
-        "<script>"
-
-          ,"<bind name=\"privateFieldValue\" value=\"_parameter.privateField + '%'\" />"
-          ,"<bind name=\"packagePrivateFieldValue\" value=\"_parameter.packagePrivateField + '%'\" />"
-          ,"<bind name=\"protectedFieldValue\" value=\"_parameter.protectedField + '%'\" />"
-          ,"<bind name=\"publicFieldValue\" value=\"_parameter.publicField + '%'\" />"
-          ,"<bind name=\"privatePropertyValue\" value=\"_parameter.privateProperty + '%'\" />"
-          ,"<bind name=\"packagePrivatePropertyValue\" value=\"_parameter.packagePrivateProperty + '%'\" />"
-          ,"<bind name=\"protectedPropertyValue\" value=\"_parameter.getProtectedProperty() + '%'\" />"
-          ,"<bind name=\"publicPropertyValue\" value=\"_parameter.publicProperty + '%'\" />"
-
-          ,"SELECT"
-          ,"#{privateFieldValue} as privateField"
-          ,",#{packagePrivateFieldValue} as packagePrivateField"
-          ,",#{protectedFieldValue} as protectedField"
-          ,",#{publicFieldValue} as publicField"
-          ,",#{privatePropertyValue} as privateProperty"
-          ,",#{packagePrivatePropertyValue} as packagePrivateProperty"
-          ,",#{protectedPropertyValue} as protectedProperty"
-          ,",#{publicPropertyValue} as publicProperty"
-
-          ,"FROM"
-            ,"INFORMATION_SCHEMA.SYSTEM_USERS"
-
-        ,"</script>"}
-        // @formatter:on
+      // @formatter:off
+      "<script>",
+      "<bind name=\"privateFieldValue\" value=\"_parameter.privateField + '%'\" />",
+      "<bind name=\"packagePrivateFieldValue\" value=\"_parameter.packagePrivateField + '%'\" />",
+      "<bind name=\"protectedFieldValue\" value=\"_parameter.protectedField + '%'\" />",
+      "<bind name=\"publicFieldValue\" value=\"_parameter.publicField + '%'\" />",
+      "<bind name=\"privatePropertyValue\" value=\"_parameter.privateProperty + '%'\" />",
+      "<bind name=\"packagePrivatePropertyValue\" value=\"_parameter.packagePrivateProperty + '%'\" />",
+      "<bind name=\"protectedPropertyValue\" value=\"_parameter.getProtectedProperty() + '%'\" />",
+      "<bind name=\"publicPropertyValue\" value=\"_parameter.publicProperty + '%'\" />",
+      "SELECT",
+      "#{privateFieldValue} as privateField",
+      ",#{packagePrivateFieldValue} as packagePrivateField",
+      ",#{protectedFieldValue} as protectedField",
+      ",#{publicFieldValue} as publicField",
+      ",#{privatePropertyValue} as privateProperty",
+      ",#{packagePrivatePropertyValue} as packagePrivateProperty",
+      ",#{protectedPropertyValue} as protectedProperty",
+      ",#{publicPropertyValue} as publicProperty",
+      "FROM",
+      "INFORMATION_SCHEMA.SYSTEM_USERS",
+      "</script>"
+    }
+    // @formatter:on
     )
     Bean resultAutoMappingUsingOgnl(Params params);
 
     @Results({
-        // @formatter:off
-        @Result(property = "privateField", column = "private_field")
-        ,@Result(property = "packagePrivateField", column = "package_private_field")
-        ,@Result(property = "protectedField", column = "protected_field")
-        ,@Result(property = "publicField", column = "public_field")
-        ,@Result(property = "privateProperty", column = "private_property")
-        ,@Result(property = "packagePrivateProperty", column = "package_private_property")
-        ,@Result(property = "protectedProperty", column = "protected_property")
-        ,@Result(property = "publicProperty", column = "public_property")
-        // @formatter:on
+      // @formatter:off
+      @Result(property = "privateField", column = "private_field"),
+      @Result(property = "packagePrivateField", column = "package_private_field"),
+      @Result(property = "protectedField", column = "protected_field"),
+      @Result(property = "publicField", column = "public_field"),
+      @Result(property = "privateProperty", column = "private_property"),
+      @Result(property = "packagePrivateProperty", column = "package_private_property"),
+      @Result(property = "protectedProperty", column = "protected_property"),
+      @Result(property = "publicProperty", column = "public_property")
+      // @formatter:on
     })
     @Select({
-        // @formatter:off
-        "SELECT"
-          ,"#{privateField} as private_field"
-          ,",#{packagePrivateField} as package_private_field"
-          ,",#{protectedField} as protected_field"
-          ,",#{publicField} as public_field"
-          ,",#{privateProperty} as private_property"
-          ,",#{packagePrivateProperty} as package_private_property"
-          ,",#{protectedProperty} as protected_property"
-          ,",#{publicProperty} as public_property"
-        ,"FROM"
-          ,"INFORMATION_SCHEMA.SYSTEM_USERS"
-        // @formatter:on
+      // @formatter:off
+      "SELECT",
+      "#{privateField} as private_field",
+      ",#{packagePrivateField} as package_private_field",
+      ",#{protectedField} as protected_field",
+      ",#{publicField} as public_field",
+      ",#{privateProperty} as private_property",
+      ",#{packagePrivateProperty} as package_private_property",
+      ",#{protectedProperty} as protected_property",
+      ",#{publicProperty} as public_property",
+      "FROM",
+      "INFORMATION_SCHEMA.SYSTEM_USERS"
+      // @formatter:on
     })
     Bean resultMapping(Params params);
 
@@ -280,35 +273,35 @@ class MemberAccessTest {
     Immutable privateConstructorMapping();
 
     @ConstructorArgs({
-        // @formatter:off
-        @Arg(column = "c1", javaType = String.class)
-        ,@Arg(column = "c2", javaType = String.class)
-        // @formatter:on
+      // @formatter:off
+      @Arg(column = "c1", javaType = String.class),
+      @Arg(column = "c2", javaType = String.class)
+      // @formatter:on
     })
     @Select("SELECT '1' as c1, '2' as c2 FROM INFORMATION_SCHEMA.SYSTEM_USERS")
     Immutable packagePrivateConstructorMapping();
 
     @ConstructorArgs({
-        // @formatter:off
-        @Arg(column = "c1", javaType = String.class)
-        ,@Arg(column = "c2", javaType = String.class)
-        ,@Arg(column = "c3", javaType = String.class)
-        // @formatter:on
+      // @formatter:off
+      @Arg(column = "c1", javaType = String.class),
+      @Arg(column = "c2", javaType = String.class),
+      @Arg(column = "c3", javaType = String.class)
+      // @formatter:on
     })
     @Select("SELECT '1' as c1, '2' as c2, '3' as c3 FROM INFORMATION_SCHEMA.SYSTEM_USERS")
     Immutable protectedConstructorMapping();
 
     @ConstructorArgs({
-        // @formatter:off
-        @Arg(column = "c1", javaType = String.class)
-        ,@Arg(column = "c2", javaType = String.class)
-        ,@Arg(column = "c3", javaType = String.class)
-        ,@Arg(column = "c4", javaType = String.class)
-        // @formatter:on
+      // @formatter:off
+      @Arg(column = "c1", javaType = String.class),
+      @Arg(column = "c2", javaType = String.class),
+      @Arg(column = "c3", javaType = String.class),
+      @Arg(column = "c4", javaType = String.class)
+      // @formatter:on
     })
-    @Select("SELECT '1' as c1, '2' as c2, '3' as c3, '4' as c4 FROM INFORMATION_SCHEMA.SYSTEM_USERS")
+    @Select(
+        "SELECT '1' as c1, '2' as c2, '3' as c3, '4' as c4 FROM INFORMATION_SCHEMA.SYSTEM_USERS")
     Immutable publicConstructorMapping();
-
   }
 
   static class Params {
@@ -384,7 +377,5 @@ class MemberAccessTest {
       properties.put("arg3", arg3);
       properties.put("arg4", arg4);
     }
-
   }
-
 }

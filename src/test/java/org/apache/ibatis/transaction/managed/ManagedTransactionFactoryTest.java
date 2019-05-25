@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.sql.Connection;
 import java.util.Properties;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
@@ -33,11 +32,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ManagedTransactionFactoryTest extends BaseDataTest {
 
-  @Mock
-  private Connection conn;
+  @Mock private Connection conn;
 
   @Test
-  void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnections() throws Exception {
+  void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnections()
+      throws Exception {
     TransactionFactory tf = new ManagedTransactionFactory();
     tf.setProperties(new Properties());
     Transaction tx = tf.newTransaction(conn);
@@ -49,7 +48,9 @@ class ManagedTransactionFactoryTest extends BaseDataTest {
   }
 
   @Test
-  void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnectionsAndDoesNotCloseConnection() throws Exception {
+  void
+      shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnectionsAndDoesNotCloseConnection()
+          throws Exception {
     TransactionFactory tf = new ManagedTransactionFactory();
     Properties props = new Properties();
     props.setProperty("closeConnection", "false");
@@ -61,5 +62,4 @@ class ManagedTransactionFactoryTest extends BaseDataTest {
     tx.close();
     verifyNoMoreInteractions(conn);
   }
-
 }

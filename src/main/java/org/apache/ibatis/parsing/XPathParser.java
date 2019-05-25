@@ -21,14 +21,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
 import org.apache.ibatis.builder.BuilderException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -39,16 +37,18 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-/**
- * @author Clinton Begin
- * @author Kazuki Shimizu
- */
+/** @author Clinton Begin */
 public class XPathParser {
 
+  /** DOM对象 */
   private final Document document;
+  /** 验证 */
   private boolean validation;
+  /** 用于加载本地DTD文件 */
   private EntityResolver entityResolver;
+  /** mybatis-config.xml 中的 <properities></properities> 中定义的属性 */
   private Properties variables;
+  /** XPath对象 */
   private XPath xpath;
 
   public XPathParser(String xml) {
@@ -111,22 +111,29 @@ public class XPathParser {
     this.document = document;
   }
 
-  public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
+  public XPathParser(
+      String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
-  public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
+  public XPathParser(
+      Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(reader));
   }
 
-  public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
+  public XPathParser(
+      InputStream inputStream,
+      boolean validation,
+      Properties variables,
+      EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(inputStream));
   }
 
-  public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
+  public XPathParser(
+      Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = document;
   }
@@ -240,33 +247,33 @@ public class XPathParser {
 
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);
-      builder.setErrorHandler(new ErrorHandler() {
-        @Override
-        public void error(SAXParseException exception) throws SAXException {
-          throw exception;
-        }
+      builder.setErrorHandler(
+          new ErrorHandler() {
+            @Override
+            public void error(SAXParseException exception) throws SAXException {
+              throw exception;
+            }
 
-        @Override
-        public void fatalError(SAXParseException exception) throws SAXException {
-          throw exception;
-        }
+            @Override
+            public void fatalError(SAXParseException exception) throws SAXException {
+              throw exception;
+            }
 
-        @Override
-        public void warning(SAXParseException exception) throws SAXException {
-        }
-      });
+            @Override
+            public void warning(SAXParseException exception) throws SAXException {}
+          });
       return builder.parse(inputSource);
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
     }
   }
 
-  private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
+  private void commonConstructor(
+      boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
     this.entityResolver = entityResolver;
     this.variables = variables;
     XPathFactory factory = XPathFactory.newInstance();
     this.xpath = factory.newXPath();
   }
-
 }

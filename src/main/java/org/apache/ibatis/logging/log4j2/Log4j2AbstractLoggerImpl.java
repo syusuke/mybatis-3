@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,9 +25,7 @@ import org.apache.logging.log4j.message.SimpleMessage;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.apache.logging.log4j.spi.ExtendedLoggerWrapper;
 
-/**
- * @author Eduardo Macarron
- */
+/** @author Eduardo Macarron */
 public class Log4j2AbstractLoggerImpl implements Log {
 
   private static final Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
@@ -37,7 +35,9 @@ public class Log4j2AbstractLoggerImpl implements Log {
   private final ExtendedLoggerWrapper log;
 
   public Log4j2AbstractLoggerImpl(AbstractLogger abstractLogger) {
-    log = new ExtendedLoggerWrapper(abstractLogger, abstractLogger.getName(), abstractLogger.getMessageFactory());
+    log =
+        new ExtendedLoggerWrapper(
+            abstractLogger, abstractLogger.getName(), abstractLogger.getMessageFactory());
   }
 
   @Override
@@ -74,5 +74,4 @@ public class Log4j2AbstractLoggerImpl implements Log {
   public void warn(String s) {
     log.logIfEnabled(FQCN, Level.WARN, MARKER, (Message) new SimpleMessage(s), null);
   }
-
 }

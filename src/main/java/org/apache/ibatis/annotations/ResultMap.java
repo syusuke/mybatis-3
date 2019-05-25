@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,12 +21,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * @author Jeff Butler
- */
+/** @author Jeff Butler */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ResultMap {
+  /**
+   * 在注解中使用,value = "sqlBlogsMap"
+   *
+   * <pre>
+   *     <resultMap type="Blog" id="sqlBlogsMap">
+   *     ...
+   *     </resultMap>
+   * </pre>
+   *
+   * @return
+   */
   String[] value();
 }

@@ -15,6 +15,18 @@
  */
 package org.apache.ibatis.type;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.sql.Clob;
+import javax.sql.DataSource;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -29,16 +41,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import javax.sql.DataSource;
-import java.io.*;
-import java.sql.Clob;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 /**
  * Tests for {@link ClobReaderTypeHandler}.
  *
@@ -51,20 +53,21 @@ class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Mock
-  protected Clob clob;
+  @Mock protected Clob clob;
 
   @BeforeAll
   static void setupSqlSessionFactory() throws Exception {
-    DataSource dataSource = BaseDataTest.createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
+    DataSource dataSource =
+        BaseDataTest.createUnpooledDataSource("org/apache/ibatis/type/jdbc.properties");
     TransactionFactory transactionFactory = new JdbcTransactionFactory();
     Environment environment = new Environment("Production", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/type/ClobReaderTypeHandlerTest.sql");
+    BaseDataTest.runScript(
+        sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/type/ClobReaderTypeHandlerTest.sql");
   }
 
   @Override
@@ -139,7 +142,6 @@ class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
         assertThat(new BufferedReader(clobContent.getContent()).readLine()).isEqualTo("Hello");
       }
     }
-
   }
 
   interface Mapper {
@@ -170,5 +172,4 @@ class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
       this.content = content;
     }
   }
-
 }

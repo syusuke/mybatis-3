@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.submitted.association_nested;
 
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.util.List;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -22,21 +27,14 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.util.List;
-
-/**
- * @author Loïc Guerrin <guerrin@fullsix.com>
- */
+/** @author Loïc Guerrin <guerrin@fullsix.com> */
 class FolderMapperTest {
 
   @Test
   void testFindWithChildren() throws Exception {
-    try (Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:association_nested", "SA", "");
-         Statement stmt = conn.createStatement()) {
+    try (Connection conn =
+            DriverManager.getConnection("jdbc:hsqldb:mem:association_nested", "SA", "");
+        Statement stmt = conn.createStatement()) {
       stmt.execute("create table folder (id int, name varchar(100), parent_id int)");
       stmt.execute("insert into folder (id, name) values(1, 'Root')");
       stmt.execute("insert into folder values(2, 'Folder 1', 1)");
@@ -45,14 +43,7 @@ class FolderMapperTest {
       stmt.execute("insert into folder values(5, 'Folder 2_2', 3)");
     }
 
-    /**
-     * Root/
-     *    Folder 1/
-     *    Folder 2/
-     *      Folder 2_1
-     *      Folder 2_2
-     */
-
+    /** Root/ Folder 1/ Folder 2/ Folder 2_1 Folder 2_2 */
     String resource = "org/apache/ibatis/submitted/association_nested/mybatis-config.xml";
     try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -65,5 +56,4 @@ class FolderMapperTest {
       }
     }
   }
-
 }

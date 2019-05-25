@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.Date;
-
 import org.junit.jupiter.api.Test;
 
 class DateTypeHandlerTest extends BaseTypeHandlerTest {
@@ -86,5 +85,4 @@ class DateTypeHandlerTest extends BaseTypeHandlerTest {
     assertNull(TYPE_HANDLER.getResult(cs, 1));
     verify(cs, never()).wasNull();
   }
-
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,17 +20,48 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public interface TypeHandler<T> {
 
-  void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
+  /**
+   * 设置 PreparedStatement 的指定参数 Java Type => JDBC Type
+   *
+   * @param ps PreparedStatement 对象
+   * @param i 位置
+   * @param parameter 参数
+   * @param jdbcType jdbc的数据类型
+   * @throws SQLException
+   */
+  void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
+      throws SQLException;
 
+  /**
+   * 获得 ResultSet 的指定字段的值 JDBC Type => Java Type
+   *
+   * @param rs
+   * @param columnName
+   * @return
+   * @throws SQLException
+   */
   T getResult(ResultSet rs, String columnName) throws SQLException;
 
+  /**
+   * 获得 ResultSet 的指定字段的值 JDBC Type => Java Type
+   *
+   * @param rs
+   * @param columnIndex
+   * @return
+   * @throws SQLException
+   */
   T getResult(ResultSet rs, int columnIndex) throws SQLException;
 
+  /**
+   * 获得 CallableStatement 的指定字段的值 JDBC Type => Java Type
+   *
+   * @param cs
+   * @param columnIndex
+   * @return
+   * @throws SQLException
+   */
   T getResult(CallableStatement cs, int columnIndex) throws SQLException;
-
 }

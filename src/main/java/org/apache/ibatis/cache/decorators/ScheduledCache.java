@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,24 +16,29 @@
 package org.apache.ibatis.cache.decorators;
 
 import java.util.concurrent.locks.ReadWriteLock;
-
 import org.apache.ibatis.cache.Cache;
 
-/**
- * @author Clinton Begin
- */
+/** @author Clinton Begin */
 public class ScheduledCache implements Cache {
 
   private final Cache delegate;
+  /** 清理间隔,默认1小时 */
   protected long clearInterval;
+  /** 上一次清理的时间 */
   protected long lastClear;
 
   public ScheduledCache(Cache delegate) {
     this.delegate = delegate;
-    this.clearInterval = 60 * 60 * 1000; // 1 hour
+    // 1 hour
+    this.clearInterval = 60 * 60 * 1000;
     this.lastClear = System.currentTimeMillis();
   }
 
+  /**
+   * 设置清除时间
+   *
+   * @param clearInterval
+   */
   public void setClearInterval(long clearInterval) {
     this.clearInterval = clearInterval;
   }
@@ -87,6 +92,13 @@ public class ScheduledCache implements Cache {
     return delegate.equals(obj);
   }
 
+  /**
+   * 取的时候才去删除
+   *
+   * <p>惰性删除
+   *
+   * @return
+   */
   private boolean clearWhenStale() {
     if (System.currentTimeMillis() - lastClear > clearInterval) {
       clear();
@@ -94,5 +106,4 @@ public class ScheduledCache implements Cache {
     }
     return false;
   }
-
 }

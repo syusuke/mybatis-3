@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 package org.apache.ibatis.submitted.simplelistparameter;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Select;
 
 public interface CarMapper {
 
-  @Select({ "select name from car where doors = #{doors[1]}" })
+  @Select({"select name from car where doors = #{doors[1]}"})
   List<Car> getCar(Car car);
 
-  @Select({ "select name from car where doors = #{doors1[1]}" })
+  @Select({"select name from car where doors = #{doors1[1]}"})
   List<Rv> getRv1(Rv rv);
 
-  @Select({ "select name from car where doors = #{doors2[1]}" })
+  @Select({"select name from car where doors = #{doors2[1]}"})
   List<Rv> getRv2(Rv rv);
 }

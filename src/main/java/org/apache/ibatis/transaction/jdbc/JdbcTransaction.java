@@ -18,7 +18,6 @@ package org.apache.ibatis.transaction.jdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.TransactionIsolationLevel;
@@ -26,13 +25,12 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionException;
 
 /**
- * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly.
- * It relies on the connection retrieved from the dataSource to manage the scope of the transaction.
- * Delays connection retrieval until getConnection() is called.
- * Ignores commit or rollback requests when autocommit is on.
+ * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly. It relies
+ * on the connection retrieved from the dataSource to manage the scope of the transaction. Delays
+ * connection retrieval until getConnection() is called. Ignores commit or rollback requests when
+ * autocommit is on.
  *
  * @author Clinton Begin
- *
  * @see JdbcTransactionFactory
  */
 public class JdbcTransaction implements Transaction {
@@ -41,10 +39,13 @@ public class JdbcTransaction implements Transaction {
 
   protected Connection connection;
   protected DataSource dataSource;
+  /** 事务隔离级别 */
   protected TransactionIsolationLevel level;
+  /** 自动提交 */
   protected boolean autoCommit;
 
-  public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
+  public JdbcTransaction(
+      DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
     dataSource = ds;
     level = desiredLevel;
     autoCommit = desiredAutoCommit;
@@ -97,16 +98,26 @@ public class JdbcTransaction implements Transaction {
     try {
       if (connection.getAutoCommit() != desiredAutoCommit) {
         if (log.isDebugEnabled()) {
-          log.debug("Setting autocommit to " + desiredAutoCommit + " on JDBC Connection [" + connection + "]");
+          log.debug(
+              "Setting autocommit to "
+                  + desiredAutoCommit
+                  + " on JDBC Connection ["
+                  + connection
+                  + "]");
         }
         connection.setAutoCommit(desiredAutoCommit);
       }
     } catch (SQLException e) {
       // Only a very poorly implemented driver would fail here,
       // and there's not much we can do about that.
-      throw new TransactionException("Error configuring AutoCommit.  "
-          + "Your driver may not support getAutoCommit() or setAutoCommit(). "
-          + "Requested setting: " + desiredAutoCommit + ".  Cause: " + e, e);
+      throw new TransactionException(
+          "Error configuring AutoCommit.  "
+              + "Your driver may not support getAutoCommit() or setAutoCommit(). "
+              + "Requested setting: "
+              + desiredAutoCommit
+              + ".  Cause: "
+              + e,
+          e);
     }
   }
 
@@ -125,8 +136,8 @@ public class JdbcTransaction implements Transaction {
       }
     } catch (SQLException e) {
       if (log.isDebugEnabled()) {
-        log.debug("Error resetting autocommit to true "
-            + "before closing the connection.  Cause: " + e);
+        log.debug(
+            "Error resetting autocommit to true " + "before closing the connection.  Cause: " + e);
       }
     }
   }
@@ -146,5 +157,4 @@ public class JdbcTransaction implements Transaction {
   public Integer getTimeout() throws SQLException {
     return null;
   }
-
 }

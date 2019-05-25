@@ -15,9 +15,12 @@
  */
 package org.apache.ibatis.cache;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.ibatis.cache.decorators.FifoCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class FifoCacheTest {
@@ -56,5 +59,4 @@ class FifoCacheTest {
     assertNull(cache.getObject(0));
     assertNull(cache.getObject(4));
   }
-
 }
