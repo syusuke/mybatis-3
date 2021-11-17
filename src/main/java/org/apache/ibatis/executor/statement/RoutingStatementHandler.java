@@ -56,6 +56,7 @@ public class RoutingStatementHandler implements StatementHandler {
 
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
+    // 如: 这里的 delegate 都是 org.apache.ibatis.executor.statement.BaseStatementHandler.prepare 子类
     return delegate.prepare(connection, transactionTimeout);
   }
 

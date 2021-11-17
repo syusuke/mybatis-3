@@ -34,6 +34,9 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  */
 public final class ConnectionLogger extends BaseJdbcLogger implements InvocationHandler {
 
+  /**
+   * 包装的Connection对象
+   */
   private final Connection connection;
 
   private ConnectionLogger(Connection conn, Log statementLog, int queryStack) {
@@ -50,13 +53,19 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
       }
       if ("prepareStatement".equals(method.getName())) {
         if (isDebugEnabled()) {
+          // 打印SQL
           debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
         }
+        // 执行方法 => 最终调用下面的实例方法
+        // java.sql.Connection.prepareStatement(java.lang.String)
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
+        // 包装 stmt 为生成的代理对象: PreparedStatement 实例,里面包含了 PreparedStatementLogger
+        // PreparedStatementLogger#invoke 时打印
         stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
         return stmt;
       } else if ("prepareCall".equals(method.getName())) {
         if (isDebugEnabled()) {
+          // 存储过程
           debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
         }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);

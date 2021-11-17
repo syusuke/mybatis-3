@@ -55,11 +55,15 @@ public class SimpleExecutor extends BaseExecutor {
 
   @Override
   public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+    // mybatis 查询入口
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
+      // 通过配置文件获取 StatementHandler ==> RoutingStatementHandler
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
+      // 获取 Statement
       stmt = prepareStatement(handler, ms.getStatementLog());
+      // SQL 查询
       return handler.query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
@@ -83,8 +87,11 @@ public class SimpleExecutor extends BaseExecutor {
 
   private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
     Statement stmt;
+    // 如果打印 获取连接 ConnectionLogger
     Connection connection = getConnection(statementLog);
+    // 创建 Statement/prepareStatement
     stmt = handler.prepare(connection, transaction.getTimeout());
+    // 处理参数
     handler.parameterize(stmt);
     return stmt;
   }

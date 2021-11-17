@@ -358,23 +358,33 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   private void mapperElement(XNode parent) throws Exception {
+    // mybatis-config.xml <mappers> tag
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
+        // <package/> tag
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
+          // <mapper/> tag
+
+          // *Mapper.xml 位置
           String resource = child.getStringAttribute("resource");
+          // *Mapper URL 位置
           String url = child.getStringAttribute("url");
+          // Mapper 对应的接口全限定名称
           String mapperClass = child.getStringAttribute("class");
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
+            // resource & url != null resource 优先
             InputStream inputStream = Resources.getResourceAsStream(resource);
+            // 解析Mapper.Xml 文件
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
+            // 解析Mapper.Xml 文件
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
             mapperParser.parse();
           } else if (resource == null && url == null && mapperClass != null) {

@@ -41,6 +41,7 @@ class AutoConstructorTest {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
+
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/autoconstructor/CreateDB.sql");
