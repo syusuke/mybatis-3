@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ * Copyright 2009-2018 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.executor.statement;
 
@@ -21,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -37,7 +34,8 @@ import org.apache.ibatis.session.RowBounds;
  */
 public class PreparedStatementHandler extends BaseStatementHandler {
 
-  public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+  public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement,
+    Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
@@ -61,14 +59,18 @@ public class PreparedStatementHandler extends BaseStatementHandler {
   @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
+    // 如果有日志的话执行 ==> org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke 打印参数
     ps.execute();
+    // 查询结果处理器
     return resultSetHandler.handleResultSets(ps);
   }
 
   @Override
   public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
+    // 执行SQL
     ps.execute();
+    // 处理SQL返回的结果集
     return resultSetHandler.handleCursorResultSets(ps);
   }
 
@@ -83,14 +85,17 @@ public class PreparedStatementHandler extends BaseStatementHandler {
         return connection.prepareStatement(sql, keyColumnNames);
       }
     } else if (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) {
+      // 如果 connection ==> ConnectionLogger 对象的话,那就会调用 ConnectionLogger#invoke 里面打印了SQL
       return connection.prepareStatement(sql);
     } else {
-      return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
+      return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(),
+        ResultSet.CONCUR_READ_ONLY);
     }
   }
 
   @Override
   public void parameterize(Statement statement) throws SQLException {
+    // 参数处理器
     parameterHandler.setParameters((PreparedStatement) statement);
   }
 
